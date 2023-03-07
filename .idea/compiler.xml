@@ -5,16 +5,11 @@
       <profile name="Gradle Imported" enabled="true">
         <outputRelativeToContentRoot value="true" />
         <processorPath useClasspath="false">
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.24/13a394eed5c4f9efb2a6d956e2086f1d81e857d9/lombok-1.18.24.jar" />
-          <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.6.14/8969322ab6a64270d5740a1dd5181286f651cfd3/spring-boot-configuration-processor-2.6.14.jar" />
+          <entry name="$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.24/13a394eed5c4f9efb2a6d956e2086f1d81e857d9/lombok-1.18.24.jar" />
+          <entry name="$PROJECT_DIR$/../.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-configuration-processor/2.6.14/8969322ab6a64270d5740a1dd5181286f651cfd3/spring-boot-configuration-processor-2.6.14.jar" />
         </processorPath>
-        <module name="Guardians.main" />
+        <module name="pets.example.Guardians.main" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Guardians" target="17" />
-      <module name="Guardians.test" target="17" />
-      <module name="pets.example.Guardians.main" target="17" />
-    </bytecodeTargetLevel>
   </component>
 </project>
