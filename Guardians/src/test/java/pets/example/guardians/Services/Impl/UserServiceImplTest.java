@@ -15,9 +15,12 @@ import pets.example.guardians.Repository.UserRepo;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -77,39 +80,7 @@ class UserServiceImplTest {
     }
 
 
-//    @Test
-//    void getAllUsers() {
-//
-//        User user1 = new User();
-//
-//        user1.setName("John");
-//        user1.setLast_name("Doe");
-//        user1.setUser_name("jdoe");
-//        user1.setEmail("jdiue@example.com");
-//        user1.setAddress("123 Main St");
-//        user1.setPassword(4321);
-//        user1.setPhone(1267890);
-//        user1.setBirthdate(new Date());
-//        user1.setUserRole(UserRole.User);
-//        userServiceImpl.createUser(user1);
-//
-//        User user2 = new User();
-//
-//        user2.setName("Jane");
-//        user2.setLast_name("Doe");
-//        user2.setUser_name("jane");
-//        user2.setEmail("januiuie@example.com");
-//        user2.setAddress("456 Main St");
-//        user2.setPassword(1234);
-//        user2.setPhone(98754321);
-//        user2.setBirthdate(new Date());
-//        user2.setUserRole(UserRole.Admin);
-//        userServiceImpl.createUser(user2);
-//
-//        List<User> userList = userServiceImpl.getAllUsers();
-//        Assertions.assertNotNull(userList);
-//        Assertions.assertEquals(2, userList.size());
-//    }
+
 
     @Test
     public void testGetAllUsers() {
@@ -149,13 +120,94 @@ class UserServiceImplTest {
     }
     @Test
     void deleteUser() {
+        // Arrange
+        Long id = 1L;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(id);
+        when(userRepo.findById(id)).thenReturn(Optional.of(userEntity));
+
+        userServiceImpl.deleteUser(id);
+
+        verify(userRepo).delete(userEntity);
     }
 
     @Test
     void getUserById() {
+
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setName("John");
+        userEntity.setLast_name("Doe");
+        userEntity.setUser_name("johndoe");
+        userEntity.setEmail("johndoe@example.com");
+        userEntity.setAddress("123 Main St");
+        userEntity.setPassword(123456);
+        userEntity.setPhone(1234567);
+        userEntity.setBirthdate(new Date());
+        userEntity.setUserRole(UserRole.User);
+
+
+        when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
+
+
+        User user = userServiceImpl.getUserById(1L);
+
+
+        assertEquals(1L, user.getId());
+        assertEquals("John", user.getName());
+        assertEquals("Doe", user.getLast_name());
+        assertEquals("johndoe", user.getUser_name());
+        assertEquals("johndoe@example.com", user.getEmail());
+        assertEquals("123 Main St", user.getAddress());
+        assertEquals(123456, user.getPassword());
+        assertEquals(1234567, user.getPhone());
+        assertNotNull(user.getBirthdate());
+        assertEquals(UserRole.User, user.getUserRole());
     }
 
-    @Test
-    void updateUser() {
-    }
+//    @Test
+//    void updateUser() {
+//        UserEntity userEntity = new UserEntity();
+//        userEntity.setName("John");
+//        userEntity.setLast_name("Doe");
+//        userEntity.setUser_name("jdoe");
+//        userEntity.setEmail("jdoe@example.com");
+//        userEntity.setAddress("123 Main St");
+//        userEntity.setPassword(1234);
+//        userEntity.setPhone(1234567890);
+//        userEntity.setBirthdate(new Date());
+//        userEntity.setUserRole(UserRole.User);
+//        userRepo.save(userEntity);
+//
+//        // Create a user object with updated values
+//        User updatedUser = new User();
+//        updatedUser.setName("Jane");
+//        updatedUser.setLast_name("Doe");
+//        updatedUser.setUser_name("jdoe");
+//        updatedUser.setEmail("jdoe@example.com");
+//        updatedUser.setAddress("456 Oak St");
+//        updatedUser.setPassword(5678);
+//        updatedUser.setPhone(987654321);
+//        updatedUser.setBirthdate(new Date());
+//        updatedUser.setUserRole(UserRole.Admin);
+//
+//        // Call the updateUser method
+//        User result = userServiceImpl.updateUser(userEntity.getId(), updatedUser);
+//
+//        // Verify that the user entity was updated and saved to the database
+//        verify(userRepo).findById(userEntity.getId());
+//        verify(userRepo).save(userEntity);
+//
+//        // Verify that the returned user object has the updated values
+//        Assertions.assertNotNull(result);
+//        Assertions.assertEquals(updatedUser.getName(), result.getName());
+//        Assertions.assertEquals(updatedUser.getLast_name(), result.getLast_name());
+//        Assertions.assertEquals(updatedUser.getUser_name(), result.getUser_name());
+//        Assertions.assertEquals(updatedUser.getEmail(), result.getEmail());
+//        Assertions.assertEquals(updatedUser.getAddress(), result.getAddress());
+//        Assertions.assertEquals(updatedUser.getPassword(), result.getPassword());
+//        Assertions.assertEquals(updatedUser.getPhone(), result.getPhone());
+//        Assertions.assertEquals(updatedUser.getBirthdate(), result.getBirthdate());
+//        Assertions.assertEquals(updatedUser.getUserRole(), result.getUserRole());
+//    }
 }
