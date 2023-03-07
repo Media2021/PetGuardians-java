@@ -8,10 +8,10 @@ stages:
 build:
   stage: build
   script:
+    - cd Guardians
     - ./gradlew assemble
 
 test:
   stage: test
   script:
     - ./gradlew test
-#dddds
