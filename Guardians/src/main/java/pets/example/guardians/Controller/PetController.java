@@ -18,26 +18,26 @@ public class PetController {
 
 
 
-    @PostMapping("/pet")
+    @PostMapping()
     public Pet createPet(@RequestBody Pet pet)
     {
         return petService.createPet(pet);
 
     }
-    @GetMapping("/getPets")
+    @GetMapping()
     public ResponseEntity<List<Pet>> getAllPets() {
         List<Pet> pets = petService.getAllPets();
         return ResponseEntity.ok(pets);
     }
 
-    @DeleteMapping("/getPets/{id}")
-    public ResponseEntity<Void> deletePet(@PathVariable Long id)
+    @DeleteMapping("{petId}")
+    public ResponseEntity<Void> deletePet(@PathVariable Long petId)
     {
 
-        petService.deletePet(id);
+        petService.deletePet(petId);
         return ResponseEntity.noContent().build();
     }
-    @GetMapping("/getPets/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Pet> getPetById(@PathVariable Long id)
     {
         Pet pet = null;
@@ -45,7 +45,7 @@ public class PetController {
         pet= petService. getPetById(id);
         return ResponseEntity.ok(pet);
     }
-    @PutMapping("/getPets/{id}")
+    @PutMapping("{id}")
     public ResponseEntity< Pet > updatePetById(@PathVariable Long id , @RequestBody Pet pet)
     {
         pet = petService.updatePetById(id, pet);

@@ -1,4 +1,4 @@
-package pets.example.guardians.Entity;
+package pets.example.guardians.Repository.Entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

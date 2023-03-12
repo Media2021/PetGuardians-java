@@ -6,7 +6,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import pets.example.guardians.Entity.UserEntity;
+import pets.example.guardians.Repository.Entity.UserEntity;
 import pets.example.guardians.Model.User;
 import pets.example.guardians.Model.UserRole;
 import pets.example.guardians.Repository.UserRepo;

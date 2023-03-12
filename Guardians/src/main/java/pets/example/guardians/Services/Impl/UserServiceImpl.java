@@ -3,7 +3,7 @@ package pets.example.guardians.Services.Impl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import pets.example.guardians.Entity.UserEntity;
+import pets.example.guardians.Repository.Entity.UserEntity;
 import pets.example.guardians.Model.User;
 import pets.example.guardians.Repository.UserRepo;
 import pets.example.guardians.Services.UserService;
