@@ -6,8 +6,7 @@ import lombok.NonNull;
 import pets.example.guardians.Model.UserRole;
 
 import javax.persistence.*;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.Date;
@@ -30,15 +29,15 @@ public class UserEntity {
     private String email;
     @NonNull
     private String address;
-    @NonNull
-    @Min(value = 3, message = "The password must be at least 3 numbers long")
-    @Max(value = 6, message = "Password must be less than or equal to 6 numbers")
+//
+//    @Min(value = 3, message = "The password must be at least 3 numbers long")
+//    @Max(value = 6, message = "Password must be less than or equal to 6 numbers")
 
     private int password;
 
-    @NotBlank(message = "Phone number is required")
-    @Min(value = 7, message = "The password must be at least 7 numbers long")
-    @Max(value = 10, message = "Password must be less than or equal to 10 numbers")
+//
+//    @Min(value = 7, message = "The password must be at least 7 numbers long")
+//    @Max(value = 10, message = "Password must be less than or equal to 10 numbers")
 
     private int phone;
     @Temporal(TemporalType.DATE)

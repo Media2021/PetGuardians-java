@@ -7,7 +7,7 @@ import pets.example.guardians.Model.User;
 import pets.example.guardians.Services.UserService;
 
 import java.util.List;
-
+@CrossOrigin(origins = "http://localhost:3000/")
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class UserController {
 
 
 
-    @PostMapping()
+    @PostMapping
     public User createUser(@RequestBody User user)
     {
        return userService.createUser(user);
@@ -41,7 +41,7 @@ public class UserController {
     @GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id)
     {
-        User user = null;
+        User user;
 
         user= userService.getUserById(id);
         return ResponseEntity.ok(user);
