@@ -73,7 +73,7 @@ class UserServiceImplTest {
         user.setBirthdate(new Date());
         user.setUserRole(UserRole.User);
 
-        doThrow(new DataIntegrityViolationException("duplicate key value violates unique constraint")).when(userRepo).save(any(UserEntity.class));
+        doThrow(new DataIntegrityViolationException("username is already exist")).when(userRepo).save(any(UserEntity.class));
 
         assertThrows(DataIntegrityViolationException.class, () -> userServiceImpl.createUser(user));
         verify(userRepo).save(any(UserEntity.class));

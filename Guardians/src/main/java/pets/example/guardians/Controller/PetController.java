@@ -18,7 +18,7 @@ public class PetController {
 
 
 
-    @PostMapping()
+    @PostMapping
     public Pet createPet(@RequestBody Pet pet)
     {
         return petService.createPet(pet);
@@ -40,7 +40,7 @@ public class PetController {
     @GetMapping("{id}")
     public ResponseEntity<Pet> getPetById(@PathVariable Long id)
     {
-        Pet pet = null;
+        Pet pet;
 
         pet= petService. getPetById(id);
         return ResponseEntity.ok(pet);

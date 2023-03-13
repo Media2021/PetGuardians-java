@@ -16,6 +16,7 @@ public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @NonNull
     @NotBlank(message = "name  is required")
     private String name;
     @NonNull
