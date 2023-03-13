@@ -9,6 +9,8 @@ import pets.example.guardians.Repository.PetRepo;
 import pets.example.guardians.Services.PetService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,9 +61,12 @@ public class PetServiceImpl implements PetService {
         return pet;
     }
     @Override
-    public  Pet updatePetById(Long id, Pet pet) {
-
-        PetEntity petEntity = petRepo.findById(id).get();
+    public Pet updatePetById(Long id, Pet pet) {
+        Optional<PetEntity> optionalPetEntity = petRepo.findById(id);
+        if (!optionalPetEntity.isPresent()) {
+            throw new NoSuchElementException("Pet with ID " + id + " not found");
+        }
+        PetEntity petEntity = optionalPetEntity.get();
         petEntity.setName(pet.getName());
         petEntity.setAge(pet.getAge());
         petEntity.setDescription(pet.getDescription());
@@ -71,4 +76,18 @@ public class PetServiceImpl implements PetService {
         petRepo.save(petEntity);
         return pet;
     }
+
+//    @Override
+//    public  Pet updatePetById(Long id, Pet pet) {
+//
+//        PetEntity petEntity = petRepo.findById(id).get();
+//        petEntity.setName(pet.getName());
+//        petEntity.setAge(pet.getAge());
+//        petEntity.setDescription(pet.getDescription());
+//        petEntity.setType(pet.getType());
+//        petEntity.setStatus(pet.getStatus());
+//        petEntity.setGender(pet.getGender());
+//        petRepo.save(petEntity);
+//        return pet;
+//    }
 }

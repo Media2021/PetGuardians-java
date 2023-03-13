@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import pets.example.guardians.Model.Pet;
@@ -12,8 +13,11 @@ import pets.example.guardians.Repository.Entity.PetEntity;
 
 import pets.example.guardians.Repository.PetRepo;
 
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.junit.Assert.assertThrows;
 
@@ -135,13 +139,150 @@ class PetServiceImplTest {
 
     @Test
     void deletePet() {
+
+        Long id = 1L;
+        PetEntity petEntity = new PetEntity();
+        petEntity.setId(id);
+        when(petRepo.findById(id)).thenReturn(Optional.of(petEntity));
+        petServiceImpl.deletePet(id);
+        verify(petRepo).delete(petEntity);
     }
 
     @Test
-    void getPetById() {
+    public void testFindPetById() {
+        // Create a pet with a specific ID
+        Pet pet = new Pet();
+        pet.setId(1L);
+        pet.setName("Fluffy");
+        pet.setAge(2);
+        pet.setDescription("A cute and cuddly pet");
+        pet.setType(PetType.Dog);
+        pet.setStatus("Available");
+        pet.setGender("Female");
+
+        // Define the expected pet entity
+        PetEntity expectedPetEntity = new PetEntity();
+        expectedPetEntity.setId(1L);
+        expectedPetEntity.setName("Fluffy");
+        expectedPetEntity.setAge(2);
+        expectedPetEntity.setDescription("A cute and cuddly pet");
+        expectedPetEntity.setType(PetType.Dog);
+        expectedPetEntity.setStatus("Available");
+        expectedPetEntity.setGender("Female");
+
+        // Mock the pet repository to return the expected pet entity when findById is called
+        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
+
+        // Call the findPetById method in the service
+        Pet result = petServiceImpl.getPetById(1L);
+
+        // Verify that the correct pet was returned
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedPetEntity.getId(), result.getId());
+        Assertions.assertEquals(expectedPetEntity.getName(), result.getName());
+        Assertions.assertEquals(expectedPetEntity.getAge(), result.getAge());
+        Assertions.assertEquals(expectedPetEntity.getDescription(), result.getDescription());
+        Assertions.assertEquals(expectedPetEntity.getType(), result.getType());
+        Assertions.assertEquals(expectedPetEntity.getStatus(), result.getStatus());
+        Assertions.assertEquals(expectedPetEntity.getGender(), result.getGender());
+
+        // Verify that the pet repository's findById method was called with the correct ID
+        verify(petRepo).findById(1L);
     }
 
+
     @Test
-    void updatePetById() {
+    public void testUpdatePetById() {
+        // Create a pet with a specific ID
+        Pet pet = new Pet();
+        pet.setId(1L);
+        pet.setName("Fluffy");
+        pet.setAge(2);
+        pet.setDescription("A cute and cuddly pet");
+        pet.setType(PetType.Dog);
+        pet.setStatus("Available");
+        pet.setGender("Female");
+
+        // Define the expected pet entity
+        PetEntity expectedPetEntity = new PetEntity();
+        expectedPetEntity.setId(1L);
+        expectedPetEntity.setName("Fluffy");
+        expectedPetEntity.setAge(2);
+        expectedPetEntity.setDescription("A cute and cuddly pet");
+        expectedPetEntity.setType(PetType.Dog);
+        expectedPetEntity.setStatus("Available");
+        expectedPetEntity.setGender("Female");
+
+        // Mock the pet repository to return the expected pet entity when findById is called
+        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
+
+        // Update the pet's name and age
+        pet.setName("Fido");
+        pet.setAge(3);
+
+        // Define the expected updated pet entity
+        PetEntity expectedUpdatedPetEntity = new PetEntity();
+        expectedUpdatedPetEntity.setId(1L);
+        expectedUpdatedPetEntity.setName("Fido");
+        expectedUpdatedPetEntity.setAge(3);
+        expectedUpdatedPetEntity.setDescription("A cute and cuddly pet");
+        expectedUpdatedPetEntity.setType(PetType.Dog);
+        expectedUpdatedPetEntity.setStatus("Available");
+        expectedUpdatedPetEntity.setGender("Female");
+
+        // Mock the pet repository to return the expected updated pet entity when save is called
+        Mockito.when(petRepo.save(any(PetEntity.class))).thenReturn(expectedUpdatedPetEntity);
+
+        // Call the updatePetById method in the service
+        Pet result = petServiceImpl.updatePetById(1L, pet);
+
+        // Verify that the correct updated pet was returned
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expectedUpdatedPetEntity.getId(), result.getId());
+        Assertions.assertEquals(expectedUpdatedPetEntity.getName(), result.getName());
+        Assertions.assertEquals(expectedUpdatedPetEntity.getAge(), result.getAge());
+        Assertions.assertEquals(expectedUpdatedPetEntity.getDescription(), result.getDescription());
+        Assertions.assertEquals(expectedUpdatedPetEntity.getType(), result.getType());
+        Assertions.assertEquals(expectedUpdatedPetEntity.getStatus(), result.getStatus());
+        Assertions.assertEquals(expectedUpdatedPetEntity.getGender(), result.getGender());
+
+        // Verify that the pet repository's findById and save methods were called with the correct ID and updated pet entity
+        verify(petRepo).findById(1L);
+        verify(petRepo).save(any(PetEntity.class));
     }
+    @Test
+    public void testUpdatePetByIdNotFound() {
+        // Create a pet with a specific ID
+        Pet pet = new Pet();
+        pet.setId(1L);
+        pet.setName("Fluffy");
+        pet.setAge(2);
+        pet.setDescription("A cute and cuddly pet");
+        pet.setType(PetType.Dog);
+        pet.setStatus("Available");
+        pet.setGender("Female");
+
+        // Mock the pet repository to return an empty Optional when findById is called
+        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.empty());
+
+        // Call the updatePetById method in the service and catch the exception
+        Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
+            petServiceImpl.updatePetById(1L, pet);
+        });
+
+        // Verify that the exception message contains the correct ID
+        String expectedMessage = "Pet with ID 1 not found";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+
+        // Verify that the pet repository's findById method was called with the correct ID
+        verify(petRepo).findById(1L);
+
+        // Verify that the pet repository's save method was not called
+        verify(petRepo, never()).save(any(PetEntity.class));
+    }
+
+
+
+
 }

@@ -2,8 +2,10 @@ package pets.example.guardians.Services.Impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import pets.example.guardians.Repository.Entity.UserEntity;
@@ -12,16 +14,12 @@ import pets.example.guardians.Model.UserRole;
 import pets.example.guardians.Repository.UserRepo;
 
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -164,50 +162,96 @@ class UserServiceImplTest {
         assertNotNull(user.getBirthdate());
         assertEquals(UserRole.User, user.getUserRole());
     }
+    @Test
+    public void testUpdateUser() {
+        // Create a user with a specific ID
+        User user = new User();
+        user.setId(1L);
+        user.setName("John");
+        user.setLast_name("Doe");
+        user.setUser_name("jdoe");
+        user.setEmail("jdoe@example.com");
+        user.setAddress("123 Main St");
+        user.setPassword(4321);
+        user.setPhone(1234567890);
+        user.setBirthdate(new Date());
+        user.setUserRole(UserRole.User);
 
-//    @Test
-//    void updateUser() {
-//        UserEntity userEntity = new UserEntity();
-//        userEntity.setName("John");
-//        userEntity.setLast_name("Doe");
-//        userEntity.setUser_name("jdoe");
-//        userEntity.setEmail("jdoe@example.com");
-//        userEntity.setAddress("123 Main St");
-//        userEntity.setPassword(1234);
-//        userEntity.setPhone(1234567890);
-//        userEntity.setBirthdate(new Date());
-//        userEntity.setUserRole(UserRole.User);
-//        userRepo.save(userEntity);
-//
-//        // Create a user object with updated values
-//        User updatedUser = new User();
-//        updatedUser.setName("Jane");
-//        updatedUser.setLast_name("Doe");
-//        updatedUser.setUser_name("jdoe");
-//        updatedUser.setEmail("jdoe@example.com");
-//        updatedUser.setAddress("456 Oak St");
-//        updatedUser.setPassword(5678);
-//        updatedUser.setPhone(987654321);
-//        updatedUser.setBirthdate(new Date());
-//        updatedUser.setUserRole(UserRole.Admin);
-//
-//        // Call the updateUser method
-//        User result = userServiceImpl.updateUser(userEntity.getId(), updatedUser);
-//
-//        // Verify that the user entity was updated and saved to the database
-//        verify(userRepo).findById(userEntity.getId());
-//        verify(userRepo).save(userEntity);
-//
-//        // Verify that the returned user object has the updated values
-//        Assertions.assertNotNull(result);
-//        Assertions.assertEquals(updatedUser.getName(), result.getName());
-//        Assertions.assertEquals(updatedUser.getLast_name(), result.getLast_name());
-//        Assertions.assertEquals(updatedUser.getUser_name(), result.getUser_name());
-//        Assertions.assertEquals(updatedUser.getEmail(), result.getEmail());
-//        Assertions.assertEquals(updatedUser.getAddress(), result.getAddress());
-//        Assertions.assertEquals(updatedUser.getPassword(), result.getPassword());
-//        Assertions.assertEquals(updatedUser.getPhone(), result.getPhone());
-//        Assertions.assertEquals(updatedUser.getBirthdate(), result.getBirthdate());
-//        Assertions.assertEquals(updatedUser.getUserRole(), result.getUserRole());
-//    }
+        // Mock the user repository to return the user with the given ID when findById is called
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setName("John");
+        userEntity.setLast_name("Doe");
+        userEntity.setUser_name("johndoe");
+        userEntity.setEmail("johndoe@example.com");
+        userEntity.setAddress("123 Main St");
+        userEntity.setPassword(123456);
+        userEntity.setPhone(1234567);
+        userEntity.setBirthdate(new Date());
+        userEntity.setUserRole(UserRole.User);
+
+        Mockito.when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
+
+        // Call the updateUser method in the service
+        User updatedUser = userServiceImpl.updateUser(1L, user);
+
+        // Verify that the user repository's findById method was called with the correct ID
+        verify(userRepo).findById(1L);
+
+        // Verify that the user repository's save method was called with the updated user entity
+        ArgumentCaptor<UserEntity> argumentCaptor = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepo).save(argumentCaptor.capture());
+        UserEntity capturedUserEntity = argumentCaptor.getValue();
+        assertEquals(user.getId(), capturedUserEntity.getId());
+        assertEquals(user.getName(), capturedUserEntity.getName());
+        assertEquals(user.getLast_name(), capturedUserEntity.getLast_name());
+        assertEquals(user.getEmail(), capturedUserEntity.getEmail());
+        assertEquals(user.getAddress(), capturedUserEntity.getAddress());
+        assertEquals(user.getUser_name(), capturedUserEntity.getUser_name());
+        assertEquals(user.getBirthdate(), capturedUserEntity.getBirthdate());
+        assertEquals(user.getPassword(), capturedUserEntity.getPassword());
+        assertEquals(user.getPhone(), capturedUserEntity.getPhone());
+        assertEquals(user.getUserRole(), capturedUserEntity.getUserRole());
+
+        // Verify that the returned user object is the same as the input user object
+        assertSame(updatedUser, user);
+    }
+
+    @Test
+    public void testUpdateUserNotFound() {
+        // Create a user with a specific ID
+        User user = new User();
+        user.setId(1L);
+        user.setName("John");
+        user.setLast_name("Doe");
+        user.setUser_name("jdoe");
+        user.setEmail("jdoe@example.com");
+        user.setAddress("123 Main St");
+        user.setPassword(4321);
+        user.setPhone(1234567890);
+        user.setBirthdate(new Date());
+        user.setUserRole(UserRole.User);
+
+        // Mock the user repository to return an empty Optional when findById is called
+        Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
+
+        // Call the updateUser method in the service and catch the exception
+        Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
+            userServiceImpl.updateUser(1L, user);
+        });
+
+        // Verify that the exception message contains the correct ID
+        String expectedMessage = "User with ID 1 not found";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+
+        // Verify that the user repository's findById method was called with the correct ID
+        verify(userRepo).findById(1L);
+
+        // Verify that the user repository's save method was not called
+        verify(userRepo, never()).save(any(UserEntity.class));
+    }
+
+
+
 }
