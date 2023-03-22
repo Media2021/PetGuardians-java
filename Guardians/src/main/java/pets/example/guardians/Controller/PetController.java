@@ -46,7 +46,7 @@ public class PetController {
         return ResponseEntity.ok(pet);
     }
     @PutMapping("{id}")
-    public ResponseEntity< Pet > updatePetById(@PathVariable Long id , @RequestBody Pet pet)
+    public ResponseEntity<Pet> updatePetById(@PathVariable Long id , @RequestBody Pet pet)
     {
         pet = petService.updatePetById(id, pet);
         return ResponseEntity.ok(pet);

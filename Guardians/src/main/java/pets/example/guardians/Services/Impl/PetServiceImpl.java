@@ -3,9 +3,9 @@ package pets.example.guardians.Services.Impl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import pets.example.guardians.Repository.Entity.PetEntity;
 import pets.example.guardians.Model.Pet;
 import pets.example.guardians.Repository.PetRepo;
+import pets.example.guardians.Repository.Entity.PetEntity;
 import pets.example.guardians.Services.PetService;
 
 import java.util.List;
@@ -32,7 +32,7 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<Pet> getAllPets() {
-        List< PetEntity> petEntities= petRepo.findAll();
+        List<PetEntity> petEntities= petRepo.findAll();
         List<Pet> pets = petEntities
                 .stream()
                 .map(pet-> new Pet(
@@ -78,16 +78,16 @@ public class PetServiceImpl implements PetService {
     }
 
 //    @Override
-//    public  Pet updatePetById(Long id, Pet pet) {
+//    public  Pet updatePetById(Long id, Pet Pet) {
 //
-//        PetEntity petEntity = petRepo.findById(id).get();
-//        petEntity.setName(pet.getName());
-//        petEntity.setAge(pet.getAge());
-//        petEntity.setDescription(pet.getDescription());
-//        petEntity.setType(pet.getType());
-//        petEntity.setStatus(pet.getStatus());
-//        petEntity.setGender(pet.getGender());
-//        petRepo.save(petEntity);
-//        return pet;
+//        PetEntity PetEntity = PetRepo.findById(id).get();
+//        PetEntity.setName(Pet.getName());
+//        PetEntity.setAge(Pet.getAge());
+//        PetEntity.setDescription(Pet.getDescription());
+//        PetEntity.setType(Pet.getType());
+//        PetEntity.setStatus(Pet.getStatus());
+//        PetEntity.setGender(Pet.getGender());
+//        PetRepo.save(PetEntity);
+//        return Pet;
 //    }
 }

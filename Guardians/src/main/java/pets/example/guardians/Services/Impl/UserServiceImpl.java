@@ -4,9 +4,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import pets.example.guardians.Repository.Entity.UserEntity;
 import pets.example.guardians.Model.User;
 import pets.example.guardians.Repository.UserRepo;
+import pets.example.guardians.Repository.Entity.UserEntity;
 import pets.example.guardians.Services.UserService;
 
 import java.util.List;
@@ -28,13 +28,13 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user , userEntity);
         userRepo.save(userEntity);
-      //  UserEntity userEntity = new UserEntity();
-       // userEntity.setName(user.getName());
-       // userEntity.setLastName(user.getLastName());
-       // userEntity.setUserName(user.getUserName());
-      //  userEntity.setEmail(user.getEmail());
+      //  UserEntity UserEntity = new UserEntity();
+       // UserEntity.setName(User.getName());
+       // UserEntity.setLastName(User.getLastName());
+       // UserEntity.setUserName(User.getUserName());
+      //  UserEntity.setEmail(User.getEmail());
 
-      //  userRepo.save(userEntity);
+      //  UserRepo.save(UserEntity);
 
 
         return user;
@@ -46,16 +46,16 @@ public class UserServiceImpl implements UserService {
         List<User> users = userEntities
                 .stream()
                 .map(user-> new User(
-                user.getId(),
-                user.getUser_name(),
-                user.getLast_name(),
-                user.getName(),
+              user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getUserName(),
                 user.getEmail().trim(),
                 user.getAddress(),
                 user.getPassword(),
                 user.getPhone(),
                 user.getBirthdate(),
-                        user.getUserRole()))
+                        user.getRole()))
                 .collect(Collectors.toList());
 
 
@@ -86,15 +86,15 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException("User with ID " + id + " not found");
         }
         UserEntity userEntity = optionalUserEntity.get();
-        userEntity.setName(user.getName());
-        userEntity.setLast_name(user.getLast_name());
+        userEntity.setFirstName(user.getFirstName());
+        userEntity.setLastName(user.getLastName());
         userEntity.setEmail(user.getEmail());
         userEntity.setAddress(user.getAddress());
-        userEntity.setUser_name(user.getUser_name());
+        userEntity.setUserName(user.getUserName());
         userEntity.setBirthdate(user.getBirthdate());
         userEntity.setPassword(user.getPassword());
         userEntity.setPhone(user.getPhone());
-        userEntity.setUserRole(user.getUserRole());
+       userEntity.setRole(user.getRole());
         userRepo.save(userEntity);
         return user;
     }
