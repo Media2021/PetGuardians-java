@@ -4,11 +4,11 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import pets.example.guardians.Configration.AppConfig;
+import pets.example.guardians.Configuration.DateConfig;
 
 @SpringBootApplication
 @Configuration
-@Import(AppConfig.class)
+@Import(DateConfig.class)
 public class GuardiansApplication {
 
 	public static void main(String[] args) {

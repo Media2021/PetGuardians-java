@@ -31,11 +31,11 @@ public class UserController {
         return ResponseEntity.ok(users);
     }
 
-    @DeleteMapping("{userId}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long userId)
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id)
     {
 
-         userService.deleteUser(userId);
+         userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }
     @GetMapping("{id}")
