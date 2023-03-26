@@ -39,8 +39,12 @@ public class User {
 //    @Min(value = 1000000000, message = "Phone number must be 10 digits")
 //    @Max(value = 9999999999L, message = "Phone number must be 10 digits")
 
+    @Min(value = 10, message = "phone number  must be at least 10 numbers long")
 
-    private long phone;
+
+    private Long phone;
+
+
 
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")

@@ -33,18 +33,14 @@ public class UserEntity {
     private String email;
     @NonNull
     private String address;
-//
-//    @Min(value = 3, message = "The password must be at least 3 numbers long")
-//    @Max(value = 6, message = "Password must be less than or equal to 6 numbers")
 
     private String password;
 
-//
-//    @Min(value = 7, message = "The password must be at least 7 numbers long")
-//    @Max(value = 10, message = "Password must be less than or equal to 10 numbers")
-//@Min(value = 1000000000, message = "Phone number must be 10 digits")
-//@Max(value = 9999999999L, message = "Phone number must be 10 digits")
-    private long phone;
+@Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
+
+
+private Long phone;
+
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")
