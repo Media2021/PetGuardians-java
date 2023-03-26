@@ -36,7 +36,7 @@ class UserServiceImplTest {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
-        user.setUserName("jdoe");
+        user.setUsername("jdoe");
         user.setEmail("jdoe@example.com");
         user.setAddress("123 Main St");
         user.setPassword("4321a");
@@ -50,7 +50,7 @@ class UserServiceImplTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(user.getFirstName(), result.getFirstName());
         Assertions.assertEquals(user.getLastName(), result.getLastName());
-        Assertions.assertEquals(user.getUserName(), result.getUserName());
+        Assertions.assertEquals(user.getUsername(), result.getUsername());
         Assertions.assertEquals(user.getEmail(), result.getEmail());
         Assertions.assertEquals(user.getAddress(), result.getAddress());
         Assertions.assertEquals(user.getPassword(), result.getPassword());
@@ -63,7 +63,7 @@ class UserServiceImplTest {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
-        user.setUserName("jdoe");
+        user.setUsername("jdoe");
         user.setEmail("jdoe@example.com");
         user.setAddress("123 Main St");
         user.setPassword("4321a");
@@ -87,7 +87,7 @@ class UserServiceImplTest {
         userEntity1.setId(1L);
         userEntity1.setFirstName("John");
         userEntity1.setLastName("Doe");
-        userEntity1.setUserName("jdoe");
+        userEntity1.setUsername("jdoe");
         userEntity1.setEmail("jdoe@example.com");
         userEntity1.setAddress("123 Main St");
         userEntity1.setPassword("4321a");
@@ -99,7 +99,7 @@ class UserServiceImplTest {
         userEntity2.setId(2L);
         userEntity2.setFirstName("Jane");
         userEntity2.setLastName("Doe");
-        userEntity2.setUserName("jane");
+        userEntity2.setUsername("jane");
         userEntity2.setEmail("jane@example.com");
         userEntity2.setAddress("456 Main St");
         userEntity2.setPassword("4321ab");
@@ -137,7 +137,7 @@ class UserServiceImplTest {
         userEntity.setId(1L);
         userEntity.setFirstName("John");
         userEntity.setLastName("Doe");
-        userEntity.setUserName("jdoe");
+        userEntity.setUsername("jdoe");
         userEntity.setEmail("johndoe@example.com");
         userEntity.setAddress("123 Main St");
         userEntity.setPassword("4321a");
@@ -155,7 +155,7 @@ class UserServiceImplTest {
         assertEquals(1L, user.getId());
         assertEquals("John", user.getFirstName());
         assertEquals("Doe", user.getLastName());
-        assertEquals("jdoe", user.getUserName());
+        assertEquals("jdoe", user.getUsername());
         assertEquals("johndoe@example.com", user.getEmail());
         assertEquals("123 Main St", user.getAddress());
         assertEquals("4321a", user.getPassword());
@@ -170,7 +170,7 @@ class UserServiceImplTest {
         user.setId(1L);
         user.setFirstName("John");
         user.setLastName("Doe");
-        user.setUserName("jdoe");
+        user.setUsername("jdoe");
         user.setEmail("jdoe@example.com");
         user.setAddress("123 Main St");
         user.setPassword("4321a");
@@ -183,7 +183,7 @@ class UserServiceImplTest {
         userEntity.setId(1L);
         userEntity.setFirstName("John");
         userEntity.setLastName("Doe");
-        userEntity.setUserName("jdoe");
+        userEntity.setUsername("jdoe");
         userEntity.setEmail("johndoe@example.com");
         userEntity.setAddress("123 Main St");
         userEntity.setPassword("4321a");
@@ -208,7 +208,7 @@ class UserServiceImplTest {
         assertEquals(user.getLastName(), capturedUserEntity.getLastName());
         assertEquals(user.getEmail(), capturedUserEntity.getEmail());
         assertEquals(user.getAddress(), capturedUserEntity.getAddress());
-        assertEquals(user.getUserName(), capturedUserEntity.getUserName());
+        assertEquals(user.getUsername(), capturedUserEntity.getUsername());
         assertEquals(user.getBirthdate(), capturedUserEntity.getBirthdate());
         assertEquals(user.getPassword(), capturedUserEntity.getPassword());
         assertEquals(user.getPhone(), capturedUserEntity.getPhone());
@@ -225,7 +225,7 @@ class UserServiceImplTest {
         user.setId(1L);
         user.setFirstName("John");
         user.setLastName("Doe");
-        user.setUserName("jdoe");
+        user.setUsername("jdoe");
         user.setEmail("jdoe@example.com");
         user.setAddress("123 Main St");
         user.setPassword("4321a");
@@ -252,7 +252,35 @@ class UserServiceImplTest {
         // Verify that the User Repository's save method was not called
         verify(userRepo, never()).save(any(UserEntity.class));
     }
+    @Test
+    void testGetUserByUsernameAndPassword() {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(1L);
+        userEntity.setFirstName("John");
+        userEntity.setLastName("Doe");
+        userEntity.setUsername("jdoe");
+        userEntity.setEmail("johndoe@example.com");
+        userEntity.setAddress("123 Main St");
+        userEntity.setPassword("4321a");
+        userEntity.setPhone(1234567);
+        userEntity.setBirthdate(new Date());
+        userEntity.setRole(UserRole.User);
 
+        when(userRepo.findByUsernameAndPassword("jdoe", "4321a")).thenReturn(Optional.of(userEntity));
+
+        User user = userServiceImpl.getUserByUsernameAndPassword("jdoe", "4321a");
+
+        assertEquals(1L, user.getId());
+        assertEquals("John", user.getFirstName());
+        assertEquals("Doe", user.getLastName());
+        assertEquals("jdoe", user.getUsername());
+        assertEquals("johndoe@example.com", user.getEmail());
+        assertEquals("123 Main St", user.getAddress());
+        assertEquals("4321a", user.getPassword());
+        assertEquals(1234567, user.getPhone());
+        assertNotNull(user.getBirthdate());
+        assertEquals(UserRole.User, user.getRole());
+    }
 
 
 }

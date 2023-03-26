@@ -5,11 +5,13 @@ import org.springframework.stereotype.Repository;
 import pets.example.guardians.Model.User;
 import pets.example.guardians.Repository.Entity.UserEntity;
 
+import java.util.Optional;
+
 @Repository
 public interface UserRepo extends JpaRepository<UserEntity, Long>
 
 {
 
 
-
+    Optional<UserEntity> findByUsernameAndPassword(String username, String password);
 }

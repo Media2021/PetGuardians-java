@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
               user.getId(),
                 user.getFirstName(),
                 user.getLastName(),
-                user.getUserName(),
+                user.getUsername(),
                 user.getEmail().trim(),
                 user.getAddress(),
                 user.getPassword(),
@@ -90,7 +90,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setLastName(user.getLastName());
         userEntity.setEmail(user.getEmail());
         userEntity.setAddress(user.getAddress());
-        userEntity.setUserName(user.getUserName());
+        userEntity.setUsername(user.getUsername());
         userEntity.setBirthdate(user.getBirthdate());
         userEntity.setPassword(user.getPassword());
         userEntity.setPhone(user.getPhone());
@@ -98,8 +98,26 @@ public class UserServiceImpl implements UserService {
         userRepo.save(userEntity);
         return user;
     }
-
-
+    @Override
+    public User getUserByUsernameAndPassword(String username, String password) {
+        Optional<UserEntity> optionalUserEntity = userRepo.findByUsernameAndPassword(username, password);
+        if (!optionalUserEntity.isPresent()) {
+            throw new NoSuchElementException("Username " + username + " not found");
+        }
+        UserEntity userEntity = optionalUserEntity.get();
+        User user = new User();
+        user.setId(userEntity.getId());
+        user.setFirstName(userEntity.getFirstName());
+        user.setLastName(userEntity.getLastName());
+        user.setEmail(userEntity.getEmail());
+        user.setAddress(userEntity.getAddress());
+        user.setUsername(userEntity.getUsername());
+        user.setBirthdate(userEntity.getBirthdate());
+        user.setPassword(userEntity.getPassword());
+        user.setPhone(userEntity.getPhone());
+        user.setRole(userEntity.getRole());
+        return user;
+    }
 
 
 }

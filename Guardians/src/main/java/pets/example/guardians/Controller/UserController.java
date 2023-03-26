@@ -49,7 +49,12 @@ public class UserController {
     {
         user = userService.updateUser(id, user);
         return ResponseEntity.ok(user);
+    }  @PostMapping("/login")
+    public ResponseEntity<User> loginUser(@RequestBody User user) {
+        User loggedUser = userService.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+        return ResponseEntity.ok(loggedUser);
     }
+
 
 
 

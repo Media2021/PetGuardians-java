@@ -8,6 +8,8 @@ import pets.example.guardians.Model.UserRole;
 
 import javax.persistence.*;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.Date;
@@ -25,7 +27,8 @@ public class UserEntity {
     @NotBlank(message = "last name  is required")
     private String lastName ;
     @NotBlank(message = "username  is required")
-    private String userName;
+    @Column(name = "username")
+    private String username;
     @NotBlank(message = "email is required")
     private String email;
     @NonNull
@@ -39,8 +42,9 @@ public class UserEntity {
 //
 //    @Min(value = 7, message = "The password must be at least 7 numbers long")
 //    @Max(value = 10, message = "Password must be less than or equal to 10 numbers")
-
-    private int phone;
+//@Min(value = 1000000000, message = "Phone number must be 10 digits")
+//@Max(value = 9999999999L, message = "Phone number must be 10 digits")
+    private long phone;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")
