@@ -1,4 +1,4 @@
-package pets.example.guardians.services.Impl;
+package pets.example.guardians.services.impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -11,7 +11,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import pets.example.guardians.model.User;
 import pets.example.guardians.model.UserRole;
 import pets.example.guardians.repository.UserRepo;
-import pets.example.guardians.repository.Entity.UserEntity;
+import pets.example.guardians.repository.entity.UserEntity;
 
 
 import java.util.*;
@@ -42,7 +42,7 @@ class UserServiceImplTest {
         user.setPassword("4321a");
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
-        user.setRole(UserRole.User);
+        user.setRole(UserRole.USER);
 
         User result = userServiceImpl.createUser(user);
 
@@ -69,7 +69,7 @@ class UserServiceImplTest {
         user.setPassword("4321a");
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
-        user.setRole(UserRole.User);
+        user.setRole(UserRole.USER);
 
         doThrow(new DataIntegrityViolationException("username is already exist")).when(userRepo).save(any(UserEntity.class));
 
@@ -81,7 +81,7 @@ class UserServiceImplTest {
 
 
     @Test
-    public void testGetAllUsers() {
+    void testGetAllUsers() {
 
         UserEntity userEntity1 = new UserEntity();
         userEntity1.setId(1L);
@@ -93,7 +93,7 @@ class UserServiceImplTest {
         userEntity1.setPassword("4321a");
         userEntity1.setPhone(1234567890L);
         userEntity1.setBirthdate(new Date());
-        userEntity1.setRole(UserRole.Admin);
+        userEntity1.setRole(UserRole.ADMIN);
 
         UserEntity userEntity2 = new UserEntity();
         userEntity2.setId(2L);
@@ -105,7 +105,7 @@ class UserServiceImplTest {
         userEntity2.setPassword("4321ab");
         userEntity2.setPhone(456789012L);
         userEntity2.setBirthdate(new Date());
-        userEntity2.setRole(UserRole.User);
+        userEntity2.setRole(UserRole.USER);
 
         List<UserEntity> userEntities = Arrays.asList(userEntity1, userEntity2);
         when(userRepo.findAll()).thenReturn(userEntities);
@@ -113,9 +113,9 @@ class UserServiceImplTest {
 
         List<User> users = userServiceImpl.getAllUsers();
         assertThat(users).hasSize(2);
-        assertThat(users.get(0)).isEqualToComparingFieldByField(new User(1L, "John", "Doe", "jdoe", "jdoe@example.com", "123 Main St", "4321a", 1234567890L, userEntity1.getBirthdate(), UserRole.Admin));
+        assertThat(users.get(0)).isEqualToComparingFieldByField(new User(1L, "John", "Doe", "jdoe", "jdoe@example.com", "123 Main St", "4321a", 1234567890L, userEntity1.getBirthdate(), UserRole.ADMIN));
 
-        assertThat(users.get(1)).isEqualToComparingFieldByField(new User(2L, "Jane", "Doe", "jane", "jane@example.com", "456 Main St", "4321ab", 456789012L, userEntity2.getBirthdate(), UserRole.User));
+        assertThat(users.get(1)).isEqualToComparingFieldByField(new User(2L, "Jane", "Doe", "jane", "jane@example.com", "456 Main St", "4321ab", 456789012L, userEntity2.getBirthdate(), UserRole.USER));
     }
     @Test
     void deleteUser() {
@@ -143,7 +143,7 @@ class UserServiceImplTest {
         userEntity.setPassword("4321fdfg");
         userEntity.setPhone(4567890L);
         userEntity.setBirthdate(new Date());
-        userEntity.setRole(UserRole.User);
+        userEntity.setRole(UserRole.USER);
 
 
         when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
@@ -162,11 +162,11 @@ class UserServiceImplTest {
         Assertions.assertEquals(Long.valueOf(4567890L), user.getPhone());
 
         assertNotNull(user.getBirthdate());
-        Assertions.assertEquals(UserRole.User, user.getRole());
+        Assertions.assertEquals(UserRole.USER, user.getRole());
 
     }
     @Test
-    public void testUpdateUser() {
+    void testUpdateUser() {
         // Create a User with a specific ID
         User user = new User();
         user.setId(1L);
@@ -178,7 +178,7 @@ class UserServiceImplTest {
         user.setPassword("4321a");
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
-        user.setRole(UserRole.User);
+        user.setRole(UserRole.USER);
 
         // Mock the User repository to return the User with the given ID when findById is called
         UserEntity userEntity = new UserEntity();
@@ -191,7 +191,7 @@ class UserServiceImplTest {
         userEntity.setPassword("4321a");
         userEntity.setPhone(1234567L);
         userEntity.setBirthdate(new Date());
-        userEntity.setRole(UserRole.User);
+        userEntity.setRole(UserRole.USER);
 
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
 
@@ -201,7 +201,7 @@ class UserServiceImplTest {
         // Verify that the User repository's findById method was called with the correct ID
         verify(userRepo).findById(1L);
 
-        // Verify that the User repository's save method was called with the updated User Entity
+        // Verify that the User repository's save method was called with the updated User entity
         ArgumentCaptor<UserEntity> argumentCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepo).save(argumentCaptor.capture());
         UserEntity capturedUserEntity = argumentCaptor.getValue();
@@ -221,7 +221,7 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void testUpdateUserNotFound() {
+   void testUpdateUserNotFound() {
         // Create a User with a specific ID
         User user = new User();
         user.setId(1L);
@@ -233,7 +233,7 @@ class UserServiceImplTest {
         user.setPassword("4321a");
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
-        user.setRole(UserRole.User);
+        user.setRole(UserRole.USER);
 
         // Mock the User repository to return an empty Optional when findById is called
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
@@ -266,7 +266,7 @@ class UserServiceImplTest {
         userEntity.setPassword("4321a");
         userEntity.setPhone(1234567L);
         userEntity.setBirthdate(new Date());
-        userEntity.setRole(UserRole.User);
+        userEntity.setRole(UserRole.USER);
 
         when(userRepo.findByUsernameAndPassword("jdoe", "4321a")).thenReturn(Optional.of(userEntity));
 
@@ -281,7 +281,7 @@ class UserServiceImplTest {
         assertEquals("4321a", user.getPassword());
         Assertions.assertEquals(Long.valueOf(1234567L), user.getPhone());
         assertNotNull(user.getBirthdate());
-        assertEquals(UserRole.User, user.getRole());
+        assertEquals(UserRole.USER, user.getRole());
     }
 
 

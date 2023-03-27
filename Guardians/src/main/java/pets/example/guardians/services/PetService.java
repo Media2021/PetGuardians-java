@@ -3,6 +3,7 @@ package pets.example.guardians.services;
 import pets.example.guardians.model.Pet;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PetService {
 
@@ -13,7 +14,7 @@ public interface PetService {
 
     void deletePet(Long id);
 
-    Pet getPetById(Long id);
+    Optional<Pet> getPetById(Long id);
 
     Pet updatePetById(Long id, Pet pet);
 }

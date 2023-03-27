@@ -7,6 +7,7 @@ import pets.example.guardians.model.Pet;
 import pets.example.guardians.services.PetService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/pets")
@@ -38,9 +39,9 @@ public class PetController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("{id}")
-    public ResponseEntity<Pet> getPetById(@PathVariable Long id)
+    public ResponseEntity<Optional<Pet>> getPetById(@PathVariable Long id)
     {
-        Pet pet;
+        Optional<Pet> pet;
 
         pet= petService. getPetById(id);
         return ResponseEntity.ok(pet);

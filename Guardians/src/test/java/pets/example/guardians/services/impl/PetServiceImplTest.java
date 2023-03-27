@@ -1,4 +1,4 @@
-//package pets.example.guardians.services.Impl;
+//package pets.example.guardians.services.impl;
 //
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.Test;
@@ -10,7 +10,7 @@
 //import pets.example.guardians.model.Pet;
 //import pets.example.guardians.model.PetType;
 //import pets.example.guardians.repository.PetRepo;
-//import pets.example.guardians.repository.Entity.PetEntity;
+//import pets.example.guardians.repository.entity.PetEntity;
 //
 //
 //import java.util.ArrayList;
@@ -29,7 +29,7 @@
 //    private PetServiceImpl petServiceImpl;
 //
 //    @Test
-//    public void testCreatePet() {
+//     void testCreatePet() {
 //        // Create a new Pet
 //        Pet pet = new Pet();
 //        pet.setName("Fluffy");
@@ -57,7 +57,7 @@
 //
 //    }
 //    @Test
-//    public void testCreatePet_PetNameExists() {
+//     void testCreatePet_PetNameExists() {
 //        // Create a new Pet
 //        Pet pet = new Pet();
 //        pet.setName("Fluffy");
@@ -86,7 +86,7 @@
 //    }
 //
 //    @Test
-//    public void testGetAllPets() {
+//     void testGetAllPets() {
 //        // Create some sample pets
 //        Pet pet1 = new Pet();
 //        pet1.setName("Fluffy");
@@ -147,7 +147,7 @@
 //    }
 //
 //    @Test
-//    public void testFindPetById() {
+//     void testFindPetById() {
 //        // Create a Pet with a specific ID
 //        Pet pet = new Pet();
 //        pet.setId(1L);
@@ -158,7 +158,7 @@
 //        pet.setStatus("Available");
 //        pet.setGender("Female");
 //
-//        // Define the expected Pet Entity
+//        // Define the expected Pet entity
 //        PetEntity expectedPetEntity = new PetEntity();
 //        expectedPetEntity.setId(1L);
 //        expectedPetEntity.setName("Fluffy");
@@ -168,7 +168,7 @@
 //        expectedPetEntity.setStatus("Available");
 //        expectedPetEntity.setGender("Female");
 //
-//        // Mock the Pet repository to return the expected Pet Entity when findById is called
+//        // Mock the Pet repository to return the expected Pet entity when findById is called
 //        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
 //
 //        // Call the findPetById method in the service
@@ -190,7 +190,7 @@
 //
 //
 //    @Test
-//    public void testUpdatePetById() {
+//     void testUpdatePetById() {
 //        // Create a Pet with a specific ID
 //        Pet pet = new Pet();
 //        pet.setId(1L);
@@ -201,7 +201,7 @@
 //        pet.setStatus("Available");
 //        pet.setGender("Female");
 //
-//        // Define the expected Pet Entity
+//        // Define the expected Pet entity
 //        PetEntity expectedPetEntity = new PetEntity();
 //        expectedPetEntity.setId(1L);
 //        expectedPetEntity.setName("Fluffy");
@@ -211,14 +211,14 @@
 //        expectedPetEntity.setStatus("Available");
 //        expectedPetEntity.setGender("Female");
 //
-//        // Mock the Pet repository to return the expected Pet Entity when findById is called
+//        // Mock the Pet repository to return the expected Pet entity when findById is called
 //        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
 //
 //        // Update the Pet's name and age
 //        pet.setName("Fido");
 //        pet.setAge(3);
 //
-//        // Define the expected updated Pet Entity
+//        // Define the expected updated Pet entity
 //        PetEntity expectedUpdatedPetEntity = new PetEntity();
 //        expectedUpdatedPetEntity.setId(1L);
 //        expectedUpdatedPetEntity.setName("Fido");
@@ -228,7 +228,7 @@
 //        expectedUpdatedPetEntity.setStatus("Available");
 //        expectedUpdatedPetEntity.setGender("Female");
 //
-//        // Mock the Pet repository to return the expected updated Pet Entity when save is called
+//        // Mock the Pet repository to return the expected updated Pet entity when save is called
 //        Mockito.when(petRepo.save(any(PetEntity.class))).thenReturn(expectedUpdatedPetEntity);
 //
 //        // Call the updatePetById method in the service
@@ -244,12 +244,12 @@
 //        Assertions.assertEquals(expectedUpdatedPetEntity.getStatus(), result.getStatus());
 //        Assertions.assertEquals(expectedUpdatedPetEntity.getGender(), result.getGender());
 //
-//        // Verify that the Pet repository's findById and save methods were called with the correct ID and updated Pet Entity
+//        // Verify that the Pet repository's findById and save methods were called with the correct ID and updated Pet entity
 //        verify(petRepo).findById(1L);
 //        verify(petRepo).save(any(PetEntity.class));
 //    }
 //    @Test
-//    public void testUpdatePetByIdNotFound() {
+//     void testUpdatePetByIdNotFound() {
 //        // Create a Pet with a specific ID
 //        Pet pet = new Pet();
 //        pet.setId(1L);

@@ -1,4 +1,4 @@
-package pets.example.guardians.services.Impl;
+package pets.example.guardians.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
@@ -6,13 +6,13 @@ import org.springframework.stereotype.Service;
 
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.UserRepo;
-import pets.example.guardians.repository.Entity.UserEntity;
+import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
                 user.getPhone(),
                 user.getBirthdate(),
                         user.getRole()))
-                .collect(Collectors.toList());
+                .toList();
 
 
 
@@ -65,18 +65,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        UserEntity userEntity = userRepo.findById(id).get();
-        userRepo.delete(userEntity);
+        Optional<UserEntity> userEntityOpt = userRepo.findById(id);
+        if (userEntityOpt.isPresent()) {
+            UserEntity userEntity = userEntityOpt.get();
+            userRepo.delete(userEntity);
+        } else {
+            throw new NoSuchElementException("User with id " + id + " not found");
+        }
     }
+
 
     @Override
     public User getUserById(Long id) {
-        UserEntity userEntity =
-                userRepo.findById(id).get();
-        User user = new User();
-        BeanUtils.copyProperties(userEntity, user);
-        return user;
+        Optional<UserEntity> userEntityOpt = userRepo.findById(id);
+        if (userEntityOpt.isPresent()) {
+            UserEntity userEntity = userEntityOpt.get();
+            User user = new User();
+            BeanUtils.copyProperties(userEntity, user);
+            return user;
+        } else {
+            throw new NoSuchElementException("User with id " + id + " not found");
+        }
     }
+
 
     @Override
     public User updateUser(Long id, User user) {

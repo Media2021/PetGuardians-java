@@ -1,4 +1,4 @@
-package pets.example.guardians.repository.Entity;
+package pets.example.guardians.repository.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,8 +43,7 @@ private Long phone;
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")
-  //  @Min(value = 18, message = "Must be at least 18 years old")
-    //  @Age(min= 18, message = "Must be at least 18 years old")
+
     private Date birthdate;
     private UserRole role;
 

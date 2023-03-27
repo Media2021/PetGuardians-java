@@ -1,4 +1,4 @@
-package pets.example.guardians.repository.Entity;
+package pets.example.guardians.repository.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,10 +16,10 @@ public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NonNull
+
     @NotBlank(message = "name  is required")
     private String name;
-    @NonNull
+
     private int age;
     @NonNull
     private String description;

@@ -1,17 +1,16 @@
-package pets.example.guardians.services.Impl;
+package pets.example.guardians.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.repository.PetRepo;
-import pets.example.guardians.repository.Entity.PetEntity;
+import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.services.PetService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -43,22 +42,32 @@ public class PetServiceImpl implements PetService {
                         pet.getType(),
                 pet.getStatus(),
                 pet.getGender()))
-                        .collect(Collectors
-                        .toList());
+                .toList();
         return pets;
     }
     @Override
     public void deletePet(Long id) {
-        PetEntity petEntity = petRepo.findById(id).get();
-        petRepo.delete(petEntity);
+        Optional<PetEntity> petEntityOptional = petRepo.findById(id);
+        if (petEntityOptional.isPresent()) {
+            PetEntity petEntity = petEntityOptional.get();
+            petRepo.delete(petEntity);
+        } else {
+            throw new NoSuchElementException("Pet with ID " + id + " not found");
+        }
     }
+
+
     @Override
-    public Pet getPetById(Long id) {
-        PetEntity petEntity =
-                petRepo.findById(id).get();
-        Pet pet = new Pet();
-        BeanUtils.copyProperties(petEntity,pet);
-        return pet;
+    public Optional<Pet> getPetById(Long id) {
+        Optional<PetEntity> petEntityOptional = petRepo.findById(id);
+        if (petEntityOptional.isPresent()) {
+            PetEntity petEntity = petEntityOptional.get();
+            Pet pet = new Pet();
+            BeanUtils.copyProperties(petEntity, pet);
+            return Optional.of(pet);
+        } else {
+            return Optional.empty();
+        }
     }
     @Override
     public Pet updatePetById(Long id, Pet pet) {

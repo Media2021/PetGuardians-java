@@ -3,8 +3,7 @@ package pets.example.guardians.model;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
+
 import javax.persistence.Column;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -35,8 +34,6 @@ public class User {
     private String password;
 
 
-//    @Min(value = 1000000000, message = "Phone number must be 10 digits")
-//    @Max(value = 9999999999L, message = "Phone number must be 10 digits")
 
     @Min(value = 10, message = "phone number  must be at least 10 numbers long")
 
