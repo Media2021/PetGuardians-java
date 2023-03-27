@@ -5,6 +5,8 @@ plugins {
     id 'org.springframework.boot' version '2.6.+'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'org.graalvm.buildtools.native' version '0.9.18'
+    id "org.sonarqube" version "3.5.0.2730"
+   // id'jacoco'
 }
 
 group = 'pets.example'
@@ -41,7 +43,7 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+//    implementation'org.flywaydb.enterprise:flyway-core:9.0.0'
 
 //    implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
 //    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
