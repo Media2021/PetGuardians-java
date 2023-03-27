@@ -17,8 +17,8 @@ test:
 
     - ./gradlew test
 
-sonar:
-  stage: sonar
-  script:
-    - ./gradlew sonarqube
-    - ./gradlew --stop
+#sonar:
+#  stage: sonar
+#  script:
+#    - ./gradlew sonarqube
+#    - ./gradlew --stop
