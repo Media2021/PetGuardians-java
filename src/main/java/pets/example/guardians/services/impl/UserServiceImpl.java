@@ -89,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserEntity> optionalUserEntity = userRepo.findById(id);
         if (!optionalUserEntity.isPresent()) {
-            throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
+            throw new NoSuchElementException(String.format("User with ID %d not found", id));
         }
         UserEntity userEntity = optionalUserEntity.get();
         userEntity.setFirstName(user.getFirstName());
