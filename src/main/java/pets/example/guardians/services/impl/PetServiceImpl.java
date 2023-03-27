@@ -31,20 +31,18 @@ public class PetServiceImpl implements PetService {
 
     @Override
     public List<Pet> getAllPets() {
-        List<PetEntity> petEntities= petRepo.findAll();
-        List<Pet> pets = petEntities
-                .stream()
+        return petRepo.findAll().stream()
                 .map(pet-> new Pet(
                         pet.getId(),
                         pet.getName(),
                         pet.getAge(),
                         pet.getDescription(),
                         pet.getType(),
-                pet.getStatus(),
-                pet.getGender()))
+                        pet.getStatus(),
+                        pet.getGender()))
                 .toList();
-        return pets;
     }
+
     @Override
     public void deletePet(Long id) {
         Optional<PetEntity> petEntityOptional = petRepo.findById(id);

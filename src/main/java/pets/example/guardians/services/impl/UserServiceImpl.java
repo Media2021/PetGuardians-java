@@ -42,27 +42,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getAllUsers() {
-        List<UserEntity> userEntities= userRepo.findAll();
-        List<User> users = userEntities
-                .stream()
-                .map(user-> new User(
-              user.getId(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getUsername(),
-                user.getEmail().trim(),
-                user.getAddress(),
-                user.getPassword(),
-                user.getPhone(),
-                user.getBirthdate(),
+        return userRepo.findAll().stream()
+                .map(user -> new User(
+                        user.getId(),
+                        user.getFirstName(),
+                        user.getLastName(),
+                        user.getUsername(),
+                        user.getEmail().trim(),
+                        user.getAddress(),
+                        user.getPassword(),
+                        user.getPhone(),
+                        user.getBirthdate(),
                         user.getRole()))
                 .toList();
-
-
-
-        return users;
     }
 
+    private static final String USER_NOT_FOUND_MESSAGE = "User with id %s not found";
     @Override
     public void deleteUser(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
@@ -70,7 +65,7 @@ public class UserServiceImpl implements UserService {
             UserEntity userEntity = userEntityOpt.get();
             userRepo.delete(userEntity);
         } else {
-            throw new NoSuchElementException("User with id " + id + " not found");
+            throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
 
@@ -84,7 +79,7 @@ public class UserServiceImpl implements UserService {
             BeanUtils.copyProperties(userEntity, user);
             return user;
         } else {
-            throw new NoSuchElementException("User with id " + id + " not found");
+            throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
 
@@ -94,7 +89,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserEntity> optionalUserEntity = userRepo.findById(id);
         if (!optionalUserEntity.isPresent()) {
-            throw new NoSuchElementException("User with ID " + id + " not found");
+            throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
         UserEntity userEntity = optionalUserEntity.get();
         userEntity.setFirstName(user.getFirstName());
