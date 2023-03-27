@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Guardians.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Guardians.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pets-guardian-fork-copy.Guardians.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pets-guardian-fork-copy.Guardians.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/pets-guardian-fork-copy.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pets-guardian-fork-copy.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/pets.example.Guardians.main.iml" filepath="$PROJECT_DIR$/.idea/modules/pets.example.Guardians.main.iml" />
     </modules>
   </component>
