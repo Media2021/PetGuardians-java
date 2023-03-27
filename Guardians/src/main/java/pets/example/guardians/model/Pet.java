@@ -1,4 +1,4 @@
-package pets.example.guardians.Model;
+package pets.example.guardians.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

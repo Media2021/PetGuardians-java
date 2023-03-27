@@ -1,10 +1,10 @@
-package pets.example.guardians.Controller;
+package pets.example.guardians.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pets.example.guardians.Model.Pet;
-import pets.example.guardians.Services.PetService;
+import pets.example.guardians.model.Pet;
+import pets.example.guardians.services.PetService;
 
 import java.util.List;
 

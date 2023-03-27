@@ -1,4 +1,4 @@
-package pets.example.guardians.Configuration;
+package pets.example.guardians.configuration;
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.context.annotation.Bean;

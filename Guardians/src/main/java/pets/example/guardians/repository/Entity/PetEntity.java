@@ -1,9 +1,9 @@
-package pets.example.guardians.Repository.Entity;
+package pets.example.guardians.repository.Entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import pets.example.guardians.Model.PetType;
+import pets.example.guardians.model.PetType;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;

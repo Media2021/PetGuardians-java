@@ -1,4 +1,4 @@
-package pets.example.guardians.Services.Impl;
+package pets.example.guardians.services.Impl;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -8,10 +8,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
-import pets.example.guardians.Model.User;
-import pets.example.guardians.Model.UserRole;
-import pets.example.guardians.Repository.UserRepo;
-import pets.example.guardians.Repository.Entity.UserEntity;
+import pets.example.guardians.model.User;
+import pets.example.guardians.model.UserRole;
+import pets.example.guardians.repository.UserRepo;
+import pets.example.guardians.repository.Entity.UserEntity;
 
 
 import java.util.*;
@@ -180,7 +180,7 @@ class UserServiceImplTest {
         user.setBirthdate(new Date());
         user.setRole(UserRole.User);
 
-        // Mock the User Repository to return the User with the given ID when findById is called
+        // Mock the User repository to return the User with the given ID when findById is called
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
         userEntity.setFirstName("John");
@@ -198,10 +198,10 @@ class UserServiceImplTest {
         // Call the updateUser method in the service
         User updatedUser = userServiceImpl.updateUser(1L, user);
 
-        // Verify that the User Repository's findById method was called with the correct ID
+        // Verify that the User repository's findById method was called with the correct ID
         verify(userRepo).findById(1L);
 
-        // Verify that the User Repository's save method was called with the updated User Entity
+        // Verify that the User repository's save method was called with the updated User Entity
         ArgumentCaptor<UserEntity> argumentCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepo).save(argumentCaptor.capture());
         UserEntity capturedUserEntity = argumentCaptor.getValue();
@@ -235,7 +235,7 @@ class UserServiceImplTest {
         user.setBirthdate(new Date());
         user.setRole(UserRole.User);
 
-        // Mock the User Repository to return an empty Optional when findById is called
+        // Mock the User repository to return an empty Optional when findById is called
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
 
         // Call the updateUser method in the service and catch the exception
@@ -248,10 +248,10 @@ class UserServiceImplTest {
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
-        // Verify that the User Repository's findById method was called with the correct ID
+        // Verify that the User repository's findById method was called with the correct ID
         verify(userRepo).findById(1L);
 
-        // Verify that the User Repository's save method was not called
+        // Verify that the User repository's save method was not called
         verify(userRepo, never()).save(any(UserEntity.class));
     }
     @Test

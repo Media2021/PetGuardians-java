@@ -1,12 +1,12 @@
-package pets.example.guardians.Services.Impl;
+package pets.example.guardians.services.Impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
-import pets.example.guardians.Model.Pet;
-import pets.example.guardians.Repository.PetRepo;
-import pets.example.guardians.Repository.Entity.PetEntity;
-import pets.example.guardians.Services.PetService;
+import pets.example.guardians.model.Pet;
+import pets.example.guardians.repository.PetRepo;
+import pets.example.guardians.repository.Entity.PetEntity;
+import pets.example.guardians.services.PetService;
 
 import java.util.List;
 import java.util.NoSuchElementException;

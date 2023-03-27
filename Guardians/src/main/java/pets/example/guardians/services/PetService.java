@@ -1,6 +1,6 @@
-package pets.example.guardians.Services;
+package pets.example.guardians.services;
 
-import pets.example.guardians.Model.Pet;
+import pets.example.guardians.model.Pet;
 
 import java.util.List;
 

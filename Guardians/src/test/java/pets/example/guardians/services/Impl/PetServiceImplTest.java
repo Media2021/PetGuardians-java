@@ -1,4 +1,4 @@
-//package pets.example.guardians.Services.Impl;
+//package pets.example.guardians.services.Impl;
 //
 //import org.junit.jupiter.api.Assertions;
 //import org.junit.jupiter.api.Test;
@@ -7,10 +7,10 @@
 //import org.mockito.Mockito;
 //import org.springframework.boot.test.context.SpringBootTest;
 //import org.springframework.dao.DataIntegrityViolationException;
-//import pets.example.guardians.Model.Pet;
-//import pets.example.guardians.Model.PetType;
-//import pets.example.guardians.Repository.PetRepo;
-//import pets.example.guardians.Repository.Entity.PetEntity;
+//import pets.example.guardians.model.Pet;
+//import pets.example.guardians.model.PetType;
+//import pets.example.guardians.repository.PetRepo;
+//import pets.example.guardians.repository.Entity.PetEntity;
 //
 //
 //import java.util.ArrayList;
@@ -67,7 +67,7 @@
 //        pet.setStatus("Available");
 //        pet.setGender("Female");
 //
-//        // Set up mock Repository to return a PetEntity with the same name as the Pet being created
+//        // Set up mock repository to return a PetEntity with the same name as the Pet being created
 //        doThrow(new DataIntegrityViolationException("Pet name is already exist")).when(petRepo).save(any(PetEntity.class));
 //
 //        assertThrows(DataIntegrityViolationException.class, () -> petServiceImpl.createPet(pet));
@@ -110,16 +110,16 @@
 //        petEntities.add(toEntity(pet1));
 //        petEntities.add(toEntity(pet2));
 //
-//        // Mock the Pet Repository and define its behavior when the findAll method is called
+//        // Mock the Pet repository and define its behavior when the findAll method is called
 //        when(petRepo.findAll()).thenReturn(petEntities);
 //
-//        // Mock the Pet Repository and define its behavior when the findAll method is called
+//        // Mock the Pet repository and define its behavior when the findAll method is called
 //        when(petRepo.findAll()).thenReturn(petEntities);
 //
 //        // Call the getAllPets method in the service
 //        List<Pet> result = petServiceImpl.getAllPets();
 //
-//        // Verify that the Repository's findAll method was called once
+//        // Verify that the repository's findAll method was called once
 //        verify(petRepo).findAll();
 //
 //        // Verify that the returned list of pets matches the original list of pets
@@ -168,7 +168,7 @@
 //        expectedPetEntity.setStatus("Available");
 //        expectedPetEntity.setGender("Female");
 //
-//        // Mock the Pet Repository to return the expected Pet Entity when findById is called
+//        // Mock the Pet repository to return the expected Pet Entity when findById is called
 //        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
 //
 //        // Call the findPetById method in the service
@@ -184,7 +184,7 @@
 //        Assertions.assertEquals(expectedPetEntity.getStatus(), result.getStatus());
 //        Assertions.assertEquals(expectedPetEntity.getGender(), result.getGender());
 //
-//        // Verify that the Pet Repository's findById method was called with the correct ID
+//        // Verify that the Pet repository's findById method was called with the correct ID
 //        verify(petRepo).findById(1L);
 //    }
 //
@@ -211,7 +211,7 @@
 //        expectedPetEntity.setStatus("Available");
 //        expectedPetEntity.setGender("Female");
 //
-//        // Mock the Pet Repository to return the expected Pet Entity when findById is called
+//        // Mock the Pet repository to return the expected Pet Entity when findById is called
 //        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
 //
 //        // Update the Pet's name and age
@@ -228,7 +228,7 @@
 //        expectedUpdatedPetEntity.setStatus("Available");
 //        expectedUpdatedPetEntity.setGender("Female");
 //
-//        // Mock the Pet Repository to return the expected updated Pet Entity when save is called
+//        // Mock the Pet repository to return the expected updated Pet Entity when save is called
 //        Mockito.when(petRepo.save(any(PetEntity.class))).thenReturn(expectedUpdatedPetEntity);
 //
 //        // Call the updatePetById method in the service
@@ -244,7 +244,7 @@
 //        Assertions.assertEquals(expectedUpdatedPetEntity.getStatus(), result.getStatus());
 //        Assertions.assertEquals(expectedUpdatedPetEntity.getGender(), result.getGender());
 //
-//        // Verify that the Pet Repository's findById and save methods were called with the correct ID and updated Pet Entity
+//        // Verify that the Pet repository's findById and save methods were called with the correct ID and updated Pet Entity
 //        verify(petRepo).findById(1L);
 //        verify(petRepo).save(any(PetEntity.class));
 //    }
@@ -260,7 +260,7 @@
 //        pet.setStatus("Available");
 //        pet.setGender("Female");
 //
-//        // Mock the Pet Repository to return an empty Optional when findById is called
+//        // Mock the Pet repository to return an empty Optional when findById is called
 //        Mockito.when(petRepo.findById(1L)).thenReturn(Optional.empty());
 //
 //        // Call the updatePetById method in the service and catch the exception
@@ -273,10 +273,10 @@
 //        String actualMessage = exception.getMessage();
 //        Assertions.assertTrue(actualMessage.contains(expectedMessage));
 //
-//        // Verify that the Pet Repository's findById method was called with the correct ID
+//        // Verify that the Pet repository's findById method was called with the correct ID
 //        verify(petRepo).findById(1L);
 //
-//        // Verify that the Pet Repository's save method was not called
+//        // Verify that the Pet repository's save method was not called
 //        verify(petRepo, never()).save(any(PetEntity.class));
 //    }
 //

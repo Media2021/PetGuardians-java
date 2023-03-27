@@ -4,7 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import pets.example.guardians.Configuration.DateConfig;
+import pets.example.guardians.configuration.DateConfig;
 
 @SpringBootApplication
 @Configuration

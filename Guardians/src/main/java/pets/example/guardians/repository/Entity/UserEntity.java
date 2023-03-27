@@ -1,24 +1,25 @@
-package pets.example.guardians.Model;
+package pets.example.guardians.repository.Entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import org.springframework.format.annotation.DateTimeFormat;
+import pets.example.guardians.model.UserRole;
 
-//import javax.persistence.Temporal;
-//import javax.persistence.TemporalType;
-import javax.persistence.Column;
-import javax.validation.constraints.Max;
+import javax.persistence.*;
+
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.Date;
 
-
+@Entity
 @Data
-@Builder
-@AllArgsConstructor
+@Table(name = "pet_users")
 @NoArgsConstructor
-public class User {
-
+public class UserEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotBlank(message = "name  is required")
     private String firstName;
@@ -32,24 +33,19 @@ public class User {
     @NonNull
     private String address;
 
-    @NotBlank(message = "password is required")
     private String password;
 
-
-//    @Min(value = 1000000000, message = "Phone number must be 10 digits")
-//    @Max(value = 9999999999L, message = "Phone number must be 10 digits")
-
-    @Min(value = 10, message = "phone number  must be at least 10 numbers long")
+@Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
 
 
-    private Long phone;
-
-
+private Long phone;
 
 
     @DateTimeFormat(pattern = "dd-MM-yyyy")
-    @Past(message = "Birth date must be in the past")
+   @Past(message = "Birth date must be in the past")
+  //  @Min(value = 18, message = "Must be at least 18 years old")
+    //  @Age(min= 18, message = "Must be at least 18 years old")
     private Date birthdate;
-
     private UserRole role;
+
 }

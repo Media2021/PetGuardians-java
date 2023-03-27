@@ -1,10 +1,10 @@
-package pets.example.guardians.Controller;
+package pets.example.guardians.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pets.example.guardians.Model.User;
-import pets.example.guardians.Services.UserService;
+import pets.example.guardians.model.User;
+import pets.example.guardians.services.UserService;
 
 import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
