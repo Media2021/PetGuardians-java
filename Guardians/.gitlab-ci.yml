@@ -16,3 +16,9 @@ test:
   script:
     - cd Guardians
     - ./gradlew test
+
+sonar:
+  stage: sonar
+  script:
+    - ./gradlew sonarqube
+    - ./gradlew --stop
