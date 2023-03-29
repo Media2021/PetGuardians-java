@@ -84,17 +84,6 @@ public class PetServiceImpl implements PetService {
         return pet;
     }
 
-//    @Override
-//    public  Pet updatePetById(Long id, Pet Pet) {
-//
-//        PetEntity PetEntity = PetRepo.findById(id).get();
-//        PetEntity.setName(Pet.getName());
-//        PetEntity.setAge(Pet.getAge());
-//        PetEntity.setDescription(Pet.getDescription());
-//        PetEntity.setType(Pet.getType());
-//        PetEntity.setStatus(Pet.getStatus());
-//        PetEntity.setGender(Pet.getGender());
-//        PetRepo.save(PetEntity);
-//        return Pet;
-//    }
+
+
 }
