@@ -18,11 +18,9 @@ public class PetServiceImpl implements PetService {
     private final PetRepo petRepo;
 
 
-
-
     @Override
     public Pet createPet(Pet pet) {
-        PetEntity petEntity= new PetEntity();
+        PetEntity petEntity = new PetEntity();
         BeanUtils.copyProperties(pet, petEntity);
         petRepo.save(petEntity);
 
@@ -32,7 +30,7 @@ public class PetServiceImpl implements PetService {
     @Override
     public List<Pet> getAllPets() {
         return petRepo.findAll().stream()
-                .map(pet-> new Pet(
+                .map(pet -> new Pet(
                         pet.getId(),
                         pet.getName(),
                         pet.getAge(),
@@ -67,6 +65,7 @@ public class PetServiceImpl implements PetService {
             return Optional.empty();
         }
     }
+
     @Override
     public Pet updatePetById(Long id, Pet pet) {
         Optional<PetEntity> optionalPetEntity = petRepo.findById(id);
@@ -83,7 +82,6 @@ public class PetServiceImpl implements PetService {
         petRepo.save(petEntity);
         return pet;
     }
-
 
 
 }
