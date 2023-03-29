@@ -20,5 +20,5 @@ test:
 sonar:
   stage: .post
   script:
-    - ./gradlew sonarqube
+    - ./gradlew sonar
     - ./gradlew --stop
