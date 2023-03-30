@@ -22,5 +22,6 @@ test:
 sonar:
   stage: .post
   script:
+    - cd Guardians
     - ./gradlew sonar
     - ./gradlew --stop
