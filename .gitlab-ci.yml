@@ -8,12 +8,14 @@ stages:
 build:
   stage: build
   script:
+    - pets-guardian-fork-copy/Guardians
 
     - ./gradlew assemble
 
 test:
   stage: test
   script:
+    - cd pets-guardian-fork-copy/Guardians
 
     - ./gradlew test
 
