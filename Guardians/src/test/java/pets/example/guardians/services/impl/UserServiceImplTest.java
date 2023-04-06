@@ -33,7 +33,7 @@ class UserServiceImplTest {
     private UserServiceImpl userServiceImpl;
 
     @Test
-    void createUser() {
+    void createUserTest() {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -60,7 +60,7 @@ class UserServiceImplTest {
         Assertions.assertEquals(user.getRole(), result.getRole());
     }
     @Test
-    void createUserThrowsExceptionWhenUserNameExists() {
+    void createUserThrowsExceptionWhenUserNameExistsTest() {
         User user = new User();
         user.setFirstName("John");
         user.setLastName("Doe");
@@ -82,7 +82,7 @@ class UserServiceImplTest {
 
 
     @Test
-    void testGetAllUsers() {
+    void testGetAllUsersTest() {
 
         UserEntity userEntity1 = new UserEntity();
         userEntity1.setId(1L);
@@ -119,7 +119,7 @@ class UserServiceImplTest {
         assertThat(users.get(1)).isEqualToComparingFieldByField(new User(2L, "Jane", "Doe", "jane", "jane@example.com", "456 Main St", "4321ab", 456789012L, userEntity2.getBirthdate(), UserRole.USER));
     }
     @Test
-    void deleteUser() {
+    void deleteUserTest() {
         // Arrange
         Long id = 1L;
         UserEntity userEntity = new UserEntity();
@@ -131,7 +131,7 @@ class UserServiceImplTest {
         verify(userRepo).delete(userEntity);
     }
     @Test
-    void deleteUser_UserNotFound() {
+    void deleteUser_UserNotFoundTest() {
 
         Long id = 1L;
         when(userRepo.findById(id)).thenReturn(Optional.empty());
@@ -149,7 +149,7 @@ class UserServiceImplTest {
 
 
     @Test
-    void getUserById() {
+    void getUserByIdTest() {
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
@@ -184,7 +184,7 @@ class UserServiceImplTest {
 
     }
     @Test
-    void testGetUserById_ThrowsException() {
+    void testGetUserById_ThrowsExceptionTest() {
         Long userId = 1L;
         when(userRepo.findById(userId)).thenReturn(Optional.empty());
 
@@ -199,7 +199,7 @@ class UserServiceImplTest {
 
 
     @Test
-    void testUpdateUser() {
+    void testUpdateUserTest() {
         // Create a User with a specific ID
         User user = new User();
         user.setId(1L);
@@ -253,8 +253,9 @@ class UserServiceImplTest {
         Assertions.assertSame(updatedUser, user);
     }
 
+
     @Test
-   void testUpdateUserNotFound() {
+   void testUpdateUserNotFoundTest() {
         // Create a User with a specific ID
         User user = new User();
         user.setId(1L);
@@ -286,7 +287,7 @@ class UserServiceImplTest {
         verify(userRepo, never()).save(any(UserEntity.class));
     }
     @Test
-    void testGetUserByUsernameAndPassword() {
+    void testGetUserByUsernameAndPasswordTest() {
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
         userEntity.setFirstName("John");
@@ -315,7 +316,7 @@ class UserServiceImplTest {
         Assertions.assertEquals(UserRole.USER, user.getRole());
     }
     @Test
-    void testGetUserByUsernameAndPasswordWhenUserNotFound() {
+    void testGetUserByUsernameAndPasswordWhenUserNotFoundTest() {
 
         when(userRepo.findByUsernameAndPassword("jdoe", "4321a")).thenReturn(Optional.empty());
 
