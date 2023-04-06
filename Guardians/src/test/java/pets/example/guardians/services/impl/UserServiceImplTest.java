@@ -14,7 +14,7 @@ import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
 
 
-import javax.persistence.EntityNotFoundException;
+
 import java.util.*;
 
 
@@ -137,9 +137,8 @@ class UserServiceImplTest {
         when(userRepo.findById(id)).thenReturn(Optional.empty());
 
 
-        Exception exception = assertThrows(NoSuchElementException.class, () -> {
-            userServiceImpl.deleteUser(id);
-        });
+        Exception exception = assertThrows(NoSuchElementException.class, () ->
+                userServiceImpl.deleteUser(id));
 
         String expectedMessage = "User with id " + id + " not found";
         String actualMessage = exception.getMessage();
@@ -180,7 +179,7 @@ class UserServiceImplTest {
         Assertions.assertEquals("4321fdfg", user.getPassword());
         Assertions.assertEquals(Long.valueOf(4567890L), user.getPhone());
 
-        assertNotNull(user.getBirthdate());
+        Assertions.assertNotNull(user.getBirthdate());
         Assertions.assertEquals(UserRole.USER, user.getRole());
 
     }
@@ -189,9 +188,8 @@ class UserServiceImplTest {
         Long userId = 1L;
         when(userRepo.findById(userId)).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(NoSuchElementException.class, () -> {
-            userServiceImpl.getUserById(userId);
-        });
+        Exception exception = assertThrows(NoSuchElementException.class, () ->
+                userServiceImpl.getUserById(userId));
 
         String expectedMessage = "User with id " + userId + " not found";
         String actualMessage = exception.getMessage();
@@ -240,19 +238,19 @@ class UserServiceImplTest {
         ArgumentCaptor<UserEntity> argumentCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepo).save(argumentCaptor.capture());
         UserEntity capturedUserEntity = argumentCaptor.getValue();
-        assertEquals(user.getId(), capturedUserEntity.getId());
-        assertEquals(user.getFirstName(), capturedUserEntity.getFirstName());
-        assertEquals(user.getLastName(), capturedUserEntity.getLastName());
-        assertEquals(user.getEmail(), capturedUserEntity.getEmail());
-        assertEquals(user.getAddress(), capturedUserEntity.getAddress());
-        assertEquals(user.getUsername(), capturedUserEntity.getUsername());
-        assertEquals(user.getBirthdate(), capturedUserEntity.getBirthdate());
-        assertEquals(user.getPassword(), capturedUserEntity.getPassword());
-        assertEquals(user.getPhone(), capturedUserEntity.getPhone());
-        assertEquals(user.getRole(), capturedUserEntity.getRole());
+        Assertions.assertEquals(user.getId(), capturedUserEntity.getId());
+        Assertions.assertEquals(user.getFirstName(), capturedUserEntity.getFirstName());
+        Assertions.assertEquals(user.getLastName(), capturedUserEntity.getLastName());
+        Assertions.assertEquals(user.getEmail(), capturedUserEntity.getEmail());
+        Assertions.assertEquals(user.getAddress(), capturedUserEntity.getAddress());
+        Assertions.assertEquals(user.getUsername(), capturedUserEntity.getUsername());
+        Assertions.assertEquals(user.getBirthdate(), capturedUserEntity.getBirthdate());
+        Assertions.assertEquals(user.getPassword(), capturedUserEntity.getPassword());
+        Assertions.assertEquals(user.getPhone(), capturedUserEntity.getPhone());
+        Assertions.assertEquals(user.getRole(), capturedUserEntity.getRole());
 
         // Verify that the returned User object is the same as the input User object
-        assertSame(updatedUser, user);
+        Assertions.assertSame(updatedUser, user);
     }
 
     @Test
@@ -274,9 +272,7 @@ class UserServiceImplTest {
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
 
         // Call the updateUser method in the service and catch the exception
-        Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> {
-            userServiceImpl.updateUser(1L, user);
-        });
+        Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> userServiceImpl.updateUser(1L, user));
 
         // Verify that the exception message contains the correct ID
         String expectedMessage = "User with ID 1 not found";
@@ -307,16 +303,16 @@ class UserServiceImplTest {
 
         User user = userServiceImpl.getUserByUsernameAndPassword("jdoe", "4321a");
 
-        assertEquals(1L, user.getId());
-        assertEquals("John", user.getFirstName());
-        assertEquals("Doe", user.getLastName());
-        assertEquals("jdoe", user.getUsername());
-        assertEquals("johndoe@example.com", user.getEmail());
-        assertEquals("123 Main St", user.getAddress());
-        assertEquals("4321a", user.getPassword());
+        Assertions.assertEquals(1L, user.getId());
+        Assertions.assertEquals("John", user.getFirstName());
+        Assertions.assertEquals("Doe", user.getLastName());
+        Assertions.assertEquals("jdoe", user.getUsername());
+        Assertions.assertEquals("johndoe@example.com", user.getEmail());
+        Assertions.assertEquals("123 Main St", user.getAddress());
+        Assertions.assertEquals("4321a", user.getPassword());
         Assertions.assertEquals(Long.valueOf(1234567L), user.getPhone());
-        assertNotNull(user.getBirthdate());
-        assertEquals(UserRole.USER, user.getRole());
+        Assertions.assertNotNull(user.getBirthdate());
+        Assertions.assertEquals(UserRole.USER, user.getRole());
     }
     @Test
     void testGetUserByUsernameAndPasswordWhenUserNotFound() {
