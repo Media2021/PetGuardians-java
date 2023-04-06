@@ -19,27 +19,13 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
-
-
-
-
     @Override
     public User createUser(User user) {
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(user , userEntity);
         userRepo.save(userEntity);
-      //  UserEntity UserEntity = new UserEntity();
-       // UserEntity.setName(User.getName());
-       // UserEntity.setLastName(User.getLastName());
-       // UserEntity.setUserName(User.getUserName());
-      //  UserEntity.setEmail(User.getEmail());
-
-      //  UserRepo.save(UserEntity);
-
-
         return user;
     }
-
     @Override
     public List<User> getAllUsers() {
         return userRepo.findAll().stream()
@@ -56,7 +42,6 @@ public class UserServiceImpl implements UserService {
                         user.getRole()))
                 .toList();
     }
-
     private static final String USER_NOT_FOUND_MESSAGE = "User with id %s not found";
     @Override
     public void deleteUser(Long id) {
@@ -68,8 +53,6 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
-
-
     @Override
     public User getUserById(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
@@ -82,8 +65,6 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
-
-
     @Override
     public User updateUser(Long id, User user) {
 
@@ -124,6 +105,4 @@ public class UserServiceImpl implements UserService {
         user.setRole(userEntity.getRole());
         return user;
     }
-
-
 }

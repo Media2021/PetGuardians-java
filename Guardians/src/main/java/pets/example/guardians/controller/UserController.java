@@ -15,26 +15,19 @@ public class UserController {
 
     private final UserService userService;
 
-
-
-
-
     @PostMapping()
     public User createUser(@RequestBody User user)
     {
        return userService.createUser(user);
-
     }
     @GetMapping()
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
         return ResponseEntity.ok(users);
     }
-
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id)
     {
-
          userService.deleteUser(id);
         return ResponseEntity.noContent().build();
     }

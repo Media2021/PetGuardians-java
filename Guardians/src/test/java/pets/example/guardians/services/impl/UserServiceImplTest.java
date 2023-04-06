@@ -12,14 +12,8 @@ import pets.example.guardians.model.User;
 import pets.example.guardians.model.UserRole;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
-
-
-
 import java.util.*;
-
-
 import static org.assertj.core.api.Assertions.assertThat;
-
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -28,10 +22,8 @@ import static org.mockito.Mockito.*;
 class UserServiceImplTest {
     @Mock
     private UserRepo userRepo;
-
     @InjectMocks
     private UserServiceImpl userServiceImpl;
-
     @Test
     void createUserTest() {
         User user = new User();
@@ -77,13 +69,8 @@ class UserServiceImplTest {
         assertThrows(DataIntegrityViolationException.class, () -> userServiceImpl.createUser(user));
         verify(userRepo).save(any(UserEntity.class));
     }
-
-
-
-
     @Test
     void testGetAllUsersTest() {
-
         UserEntity userEntity1 = new UserEntity();
         userEntity1.setId(1L);
         userEntity1.setFirstName("John");
@@ -111,7 +98,6 @@ class UserServiceImplTest {
         List<UserEntity> userEntities = Arrays.asList(userEntity1, userEntity2);
         when(userRepo.findAll()).thenReturn(userEntities);
 
-
         List<User> users = userServiceImpl.getAllUsers();
         assertThat(users).hasSize(2);
         assertThat(users.get(0)).isEqualToComparingFieldByField(new User(1L, "John", "Doe", "jdoe", "jdoe@example.com", "123 Main St", "4321a", 1234567890L, userEntity1.getBirthdate(), UserRole.ADMIN));
@@ -120,7 +106,6 @@ class UserServiceImplTest {
     }
     @Test
     void deleteUserTest() {
-        // Arrange
         Long id = 1L;
         UserEntity userEntity = new UserEntity();
         userEntity.setId(id);
@@ -132,10 +117,8 @@ class UserServiceImplTest {
     }
     @Test
     void deleteUser_UserNotFoundTest() {
-
         Long id = 1L;
         when(userRepo.findById(id)).thenReturn(Optional.empty());
-
 
         Exception exception = assertThrows(NoSuchElementException.class, () ->
                 userServiceImpl.deleteUser(id));
@@ -145,12 +128,8 @@ class UserServiceImplTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-
-
-
     @Test
     void getUserByIdTest() {
-
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
         userEntity.setFirstName("John");
@@ -163,12 +142,9 @@ class UserServiceImplTest {
         userEntity.setBirthdate(new Date());
         userEntity.setRole(UserRole.USER);
 
-
         when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
 
-
         User user = userServiceImpl.getUserById(1L);
-
 
         Assertions.assertEquals(1L, user.getId());
         Assertions.assertEquals("John", user.getFirstName());
@@ -181,7 +157,6 @@ class UserServiceImplTest {
 
         Assertions.assertNotNull(user.getBirthdate());
         Assertions.assertEquals(UserRole.USER, user.getRole());
-
     }
     @Test
     void testGetUserById_ThrowsExceptionTest() {
@@ -195,9 +170,6 @@ class UserServiceImplTest {
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-
-
-
     @Test
     void testUpdateUserTest() {
         // Create a User with a specific ID
@@ -212,7 +184,6 @@ class UserServiceImplTest {
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
         user.setRole(UserRole.USER);
-
         // Mock the User repository to return the User with the given ID when findById is called
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
@@ -225,15 +196,11 @@ class UserServiceImplTest {
         userEntity.setPhone(1234567L);
         userEntity.setBirthdate(new Date());
         userEntity.setRole(UserRole.USER);
-
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
-
         // Call the updateUser method in the service
         User updatedUser = userServiceImpl.updateUser(1L, user);
-
         // Verify that the User repository's findById method was called with the correct ID
         verify(userRepo).findById(1L);
-
         // Verify that the User repository's save method was called with the updated User entity
         ArgumentCaptor<UserEntity> argumentCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepo).save(argumentCaptor.capture());
@@ -248,12 +215,9 @@ class UserServiceImplTest {
         Assertions.assertEquals(user.getPassword(), capturedUserEntity.getPassword());
         Assertions.assertEquals(user.getPhone(), capturedUserEntity.getPhone());
         Assertions.assertEquals(user.getRole(), capturedUserEntity.getRole());
-
         // Verify that the returned User object is the same as the input User object
         Assertions.assertSame(updatedUser, user);
     }
-
-
     @Test
    void testUpdateUserNotFoundTest() {
         // Create a User with a specific ID
@@ -268,21 +232,16 @@ class UserServiceImplTest {
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
         user.setRole(UserRole.USER);
-
         // Mock the User repository to return an empty Optional when findById is called
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
-
         // Call the updateUser method in the service and catch the exception
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> userServiceImpl.updateUser(1L, user));
-
         // Verify that the exception message contains the correct ID
         String expectedMessage = "User with ID 1 not found";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
-
         // Verify that the User repository's findById method was called with the correct ID
         verify(userRepo).findById(1L);
-
         // Verify that the User repository's save method was not called
         verify(userRepo, never()).save(any(UserEntity.class));
     }
@@ -317,13 +276,9 @@ class UserServiceImplTest {
     }
     @Test
     void testGetUserByUsernameAndPasswordWhenUserNotFoundTest() {
-
         when(userRepo.findByUsernameAndPassword("jdoe", "4321a")).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(NoSuchElementException.class,
                 () -> userServiceImpl.getUserByUsernameAndPassword("jdoe", "4321a"));
     }
-
-
 }

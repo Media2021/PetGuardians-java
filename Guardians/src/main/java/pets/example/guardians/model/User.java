@@ -16,7 +16,6 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-
     private long id;
     @NotBlank(message = "name  is required")
     private String firstName;
@@ -32,20 +31,10 @@ public class User {
 
     @NotBlank(message = "password is required")
     private String password;
-
-
-
     @Min(value = 10, message = "phone number  must be at least 10 numbers long")
-
-
     private Long phone;
-
-
-
-
     @DateTimeFormat(pattern = "dd-MM-yyyy")
     @Past(message = "Birth date must be in the past")
     private Date birthdate;
-
     private UserRole role;
 }

@@ -15,26 +15,19 @@ import java.util.Optional;
 public class PetController {
     private final PetService petService;
 
-
-
-
-
     @PostMapping
     public Pet createPet(@RequestBody Pet pet)
     {
         return petService.createPet(pet);
-
     }
     @GetMapping()
     public ResponseEntity<List<Pet>> getAllPets() {
         List<Pet> pets = petService.getAllPets();
         return ResponseEntity.ok(pets);
     }
-
     @DeleteMapping("{petId}")
     public ResponseEntity<Void> deletePet(@PathVariable Long petId)
     {
-
         petService.deletePet(petId);
         return ResponseEntity.noContent().build();
     }

@@ -32,18 +32,11 @@ public class UserEntity {
     private String email;
     @NonNull
     private String address;
-
     private String password;
-
 @Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
-
-
 private Long phone;
-
-
     @DateTimeFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")
-
     private Date birthdate;
     private UserRole role;
 

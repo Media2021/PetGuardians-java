@@ -16,10 +16,8 @@ public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     @NotBlank(message = "name  is required")
     private String name;
-
     private int age;
     @NonNull
     private String description;

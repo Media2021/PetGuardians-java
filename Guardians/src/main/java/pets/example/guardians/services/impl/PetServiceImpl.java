@@ -16,8 +16,6 @@ import java.util.Optional;
 @AllArgsConstructor
 public class PetServiceImpl implements PetService {
     private final PetRepo petRepo;
-
-
     @Override
     public Pet createPet(Pet pet) {
         PetEntity petEntity = new PetEntity();
@@ -26,7 +24,6 @@ public class PetServiceImpl implements PetService {
 
         return pet;
     }
-
     @Override
     public List<Pet> getAllPets() {
         return petRepo.findAll().stream()
@@ -40,7 +37,6 @@ public class PetServiceImpl implements PetService {
                         pet.getGender()))
                 .toList();
     }
-
     @Override
     public void deletePet(Long id) {
         Optional<PetEntity> petEntityOptional = petRepo.findById(id);
@@ -51,8 +47,6 @@ public class PetServiceImpl implements PetService {
             throw new NoSuchElementException("Pet with ID " + id + " not found");
         }
     }
-
-
     @Override
     public Optional<Pet> getPetById(Long id) {
         Optional<PetEntity> petEntityOptional = petRepo.findById(id);
@@ -65,11 +59,10 @@ public class PetServiceImpl implements PetService {
             return Optional.empty();
         }
     }
-
     @Override
     public Pet updatePetById(Long id, Pet pet) {
         Optional<PetEntity> optionalPetEntity = petRepo.findById(id);
-        if (!optionalPetEntity.isPresent()) {
+        if (optionalPetEntity.isEmpty()) {
             throw new NoSuchElementException("Pet with ID " + id + " not found");
         }
         PetEntity petEntity = optionalPetEntity.get();
@@ -82,6 +75,5 @@ public class PetServiceImpl implements PetService {
         petRepo.save(petEntity);
         return pet;
     }
-
 
 }

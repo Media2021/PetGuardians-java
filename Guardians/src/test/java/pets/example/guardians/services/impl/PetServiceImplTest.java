@@ -27,10 +27,8 @@ class PetServiceImplTest {
     private PetRepo petRepo;
     @InjectMocks
     private PetServiceImpl petServiceImpl;
-
     @Test
      void testCreatePet() {
-
         Pet pet = new Pet();
         pet.setName("Fluffy");
         pet.setAge(2);
@@ -39,14 +37,9 @@ class PetServiceImplTest {
         pet.setStatus("Available");
         pet.setGender("Female");
 
-
-
         Pet result = petServiceImpl.createPet(pet);
 
-
         verify(petRepo).save(any(PetEntity.class));
-
-
         Assertions.assertNotNull(result);
         Assertions.assertEquals(pet.getName(), result.getName());
         Assertions.assertEquals(pet.getAge(),result.getAge());
@@ -58,7 +51,6 @@ class PetServiceImplTest {
     }
     @Test
      void testCreatePet_PetNameExists() {
-
         Pet pet = new Pet();
         pet.setName("Fluffy");
         pet.setAge(2);
@@ -66,7 +58,6 @@ class PetServiceImplTest {
         pet.setType(PetType.DOG);
         pet.setStatus("Available");
         pet.setGender("Female");
-
 
         doThrow(new DataIntegrityViolationException("Pet name is already exist")).when(petRepo).save(any(PetEntity.class));
 
@@ -84,7 +75,6 @@ class PetServiceImplTest {
         entity.setGender(pet.getGender());
         return entity;
     }
-
     @Test
      void testGetAllPets() {
 
@@ -104,25 +94,15 @@ class PetServiceImplTest {
         pet2.setStatus("Available");
         pet2.setGender("Male");
 
-
-
         List<PetEntity> petEntities = new ArrayList<>();
         petEntities.add(toEntity(pet1));
         petEntities.add(toEntity(pet2));
 
-
         when(petRepo.findAll()).thenReturn(petEntities);
-
-
         when(petRepo.findAll()).thenReturn(petEntities);
-
-
         List<Pet> result = petServiceImpl.getAllPets();
 
-
         verify(petRepo).findAll();
-
-
         Assertions.assertEquals(petEntities.size(), result.size());
         for (int i = 0; i < petEntities.size(); i++) {
             Assertions.assertEquals(petEntities.get(i).getName(), result.get(i).getName());
@@ -143,11 +123,8 @@ class PetServiceImplTest {
         verify(petRepo).findAll();
         Assertions.assertTrue(result.isEmpty());
     }
-
-
     @Test
     void deletePet() {
-
         Long id = 1L;
         PetEntity petEntity = new PetEntity();
         petEntity.setId(id);
@@ -164,10 +141,8 @@ class PetServiceImplTest {
 
         verify(petRepo, never()).delete(any(PetEntity.class));
     }
-
     @Test
     void testGetPetById() {
-
         Long id = 1L;
         PetEntity petEntity = new PetEntity();
         petEntity.setId(id);
@@ -179,10 +154,7 @@ class PetServiceImplTest {
         petEntity.setGender("MALE");
 
         when(petRepo.findById(id)).thenReturn(Optional.of(petEntity));
-
-
         Optional<Pet> result = petServiceImpl.getPetById(id);
-
 
         Assertions.assertTrue(result.isPresent());
         Pet pet = result.get();
@@ -197,20 +169,14 @@ class PetServiceImplTest {
     }
     @Test
     void testGetPetById_InvalidId() {
-
         Long id = 1L;
         when(petRepo.findById(id)).thenReturn(Optional.empty());
 
-
         Optional<Pet> result = petServiceImpl.getPetById(id);
-
-
         Assertions.assertTrue(result.isEmpty(), "Expected an empty Optional");
-
 
         verify(petRepo).findById(id);
     }
-
     @Test
     void testGetPetById_IdNotFound() {
         Long id = 1L;
@@ -220,9 +186,6 @@ class PetServiceImplTest {
 
         Assertions.assertFalse(result.isPresent());
     }
-
-
-
     @Test
      void testUpdatePetById() {
 
@@ -235,7 +198,6 @@ class PetServiceImplTest {
         pet.setStatus("Available");
         pet.setGender("Female");
 
-
         PetEntity expectedPetEntity = new PetEntity();
         expectedPetEntity.setId(1L);
         expectedPetEntity.setName("Fluffy");
@@ -245,13 +207,9 @@ class PetServiceImplTest {
         expectedPetEntity.setStatus("Available");
         expectedPetEntity.setGender("Female");
 
-
         Mockito.when(petRepo.findById(1L)).thenReturn(Optional.of(expectedPetEntity));
-
-
         pet.setName("Fido");
         pet.setAge(3);
-
 
         PetEntity expectedUpdatedPetEntity = new PetEntity();
         expectedUpdatedPetEntity.setId(1L);
@@ -262,12 +220,8 @@ class PetServiceImplTest {
         expectedUpdatedPetEntity.setStatus("Available");
         expectedUpdatedPetEntity.setGender("Female");
 
-
         Mockito.when(petRepo.save(any(PetEntity.class))).thenReturn(expectedUpdatedPetEntity);
-
-
         Pet result = petServiceImpl.updatePetById(1L, pet);
-
 
         Assertions.assertNotNull(result);
         Assertions.assertEquals(expectedUpdatedPetEntity.getId(), result.getId());
@@ -277,7 +231,6 @@ class PetServiceImplTest {
         Assertions.assertEquals(expectedUpdatedPetEntity.getType(), result.getType());
         Assertions.assertEquals(expectedUpdatedPetEntity.getStatus(), result.getStatus());
         Assertions.assertEquals(expectedUpdatedPetEntity.getGender(), result.getGender());
-
 
         verify(petRepo).findById(1L);
         verify(petRepo).save(any(PetEntity.class));
@@ -294,25 +247,14 @@ class PetServiceImplTest {
         pet.setStatus("Available");
         pet.setGender("Female");
 
-
         Mockito.when(petRepo.findById(1L)).thenReturn(Optional.empty());
-
-
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> petServiceImpl.updatePetById(1L, pet));
-
 
         String expectedMessage = "Pet with ID 1 not found";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
 
-
         verify(petRepo).findById(1L);
-
-
         verify(petRepo, never()).save(any(PetEntity.class));
     }
-
-
-
-
 }
