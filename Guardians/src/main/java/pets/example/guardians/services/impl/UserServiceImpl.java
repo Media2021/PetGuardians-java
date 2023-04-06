@@ -88,7 +88,7 @@ public class UserServiceImpl implements UserService {
     public User updateUser(Long id, User user) {
 
         Optional<UserEntity> optionalUserEntity = userRepo.findById(id);
-        if (!optionalUserEntity.isPresent()) {
+        if (optionalUserEntity.isEmpty()) {
             throw new NoSuchElementException(String.format("User with ID %d not found", id));
         }
         UserEntity userEntity = optionalUserEntity.get();
@@ -107,7 +107,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsernameAndPassword(String username, String password) {
         Optional<UserEntity> optionalUserEntity = userRepo.findByUsernameAndPassword(username, password);
-        if (!optionalUserEntity.isPresent()) {
+        if (optionalUserEntity.isEmpty()) {
             throw new NoSuchElementException("Username " + username + " not found");
         }
         UserEntity userEntity = optionalUserEntity.get();

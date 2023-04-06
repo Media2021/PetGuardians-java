@@ -61,7 +61,10 @@ tasks.named('test') {
 tasks.named('jacocoTestReport') {
         reports {
             xml.required = true
+            html.destination = file("$buildDir/customJacocoReportDir")
+            csv.enabled true
         }
+    dependsOn(test)
     }
 test {
     testLogging {
