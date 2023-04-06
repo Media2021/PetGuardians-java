@@ -73,6 +73,7 @@ test {
     useJUnitPlatform()
 }
 
+
 compileJava {
     options.compilerArgs += '-Xlint:deprecation'
 }
