@@ -14,6 +14,7 @@ import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
 
 
+import javax.persistence.EntityNotFoundException;
 import java.util.*;
 
 
@@ -129,6 +130,24 @@ class UserServiceImplTest {
 
         verify(userRepo).delete(userEntity);
     }
+    @Test
+    void deleteUser_UserNotFound() {
+
+        Long id = 1L;
+        when(userRepo.findById(id)).thenReturn(Optional.empty());
+
+
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            userServiceImpl.deleteUser(id);
+        });
+
+        String expectedMessage = "User with id " + id + " not found";
+        String actualMessage = exception.getMessage();
+
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
 
     @Test
     void getUserById() {
@@ -165,6 +184,22 @@ class UserServiceImplTest {
         Assertions.assertEquals(UserRole.USER, user.getRole());
 
     }
+    @Test
+    void testGetUserById_ThrowsException() {
+        Long userId = 1L;
+        when(userRepo.findById(userId)).thenReturn(Optional.empty());
+
+        Exception exception = assertThrows(NoSuchElementException.class, () -> {
+            userServiceImpl.getUserById(userId);
+        });
+
+        String expectedMessage = "User with id " + userId + " not found";
+        String actualMessage = exception.getMessage();
+        Assertions.assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
+
     @Test
     void testUpdateUser() {
         // Create a User with a specific ID
@@ -282,6 +317,15 @@ class UserServiceImplTest {
         Assertions.assertEquals(Long.valueOf(1234567L), user.getPhone());
         assertNotNull(user.getBirthdate());
         assertEquals(UserRole.USER, user.getRole());
+    }
+    @Test
+    void testGetUserByUsernameAndPasswordWhenUserNotFound() {
+
+        when(userRepo.findByUsernameAndPassword("jdoe", "4321a")).thenReturn(Optional.empty());
+
+        // Act & Assert
+        assertThrows(NoSuchElementException.class,
+                () -> userServiceImpl.getUserByUsernameAndPassword("jdoe", "4321a"));
     }
 
 

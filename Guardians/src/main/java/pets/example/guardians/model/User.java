@@ -12,7 +12,7 @@ import java.util.Date;
 
 
 @Data
-@Builder
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {

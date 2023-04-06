@@ -55,14 +55,21 @@ dependencies {
 
 tasks.named('test') {
     useJUnitPlatform()
-}
+
+    }
 
 tasks.named('jacocoTestReport') {
-    reports {
-        xml.required = true
+        reports {
+            xml.required = true
+        }
     }
-}
-tasks.compileJava {
-    options.compilerArgs += '-Xlint:deprecation'
+test {
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+    useJUnitPlatform()
 }
 
+compileJava {
+    options.compilerArgs += '-Xlint:deprecation'
+}
