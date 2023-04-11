@@ -25,4 +25,5 @@ public class PetEntity {
     @NotBlank(message = "status is required")
     private String status;
     private String gender;
+
 }

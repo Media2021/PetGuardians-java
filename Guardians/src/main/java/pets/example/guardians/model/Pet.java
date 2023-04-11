@@ -18,4 +18,5 @@ public class Pet {
     private String status;
     private String gender;
 
+
 }

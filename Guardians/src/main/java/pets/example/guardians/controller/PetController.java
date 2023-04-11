@@ -8,7 +8,7 @@ import pets.example.guardians.services.PetService;
 
 import java.util.List;
 import java.util.Optional;
-
+@CrossOrigin(origins = "http://localhost:3000")
 @RestController
 @RequestMapping("/pets")
 @AllArgsConstructor
@@ -25,10 +25,10 @@ public class PetController {
         List<Pet> pets = petService.getAllPets();
         return ResponseEntity.ok(pets);
     }
-    @DeleteMapping("{petId}")
-    public ResponseEntity<Void> deletePet(@PathVariable Long petId)
+    @DeleteMapping("{Id}")
+    public ResponseEntity<Void> deletePet(@PathVariable Long Id)
     {
-        petService.deletePet(petId);
+        petService.deletePet(Id);
         return ResponseEntity.noContent().build();
     }
     @GetMapping("{id}")

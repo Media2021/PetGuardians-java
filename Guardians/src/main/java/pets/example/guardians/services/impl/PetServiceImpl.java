@@ -35,6 +35,7 @@ public class PetServiceImpl implements PetService {
                         pet.getType(),
                         pet.getStatus(),
                         pet.getGender()))
+
                 .toList();
     }
     @Override
@@ -72,6 +73,7 @@ public class PetServiceImpl implements PetService {
         petEntity.setType(pet.getType());
         petEntity.setStatus(pet.getStatus());
         petEntity.setGender(pet.getGender());
+
         petRepo.save(petEntity);
         return pet;
     }
