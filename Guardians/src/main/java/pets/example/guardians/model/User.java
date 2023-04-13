@@ -37,4 +37,6 @@ public class User {
     @Past(message = "Birth date must be in the past")
     private Date birthdate;
     private UserRole role;
+
+
 }

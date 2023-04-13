@@ -25,10 +25,10 @@ public class PetController {
         List<Pet> pets = petService.getAllPets();
         return ResponseEntity.ok(pets);
     }
-    @DeleteMapping("{Id}")
-    public ResponseEntity<Void> deletePet(@PathVariable Long Id)
+    @DeleteMapping("{id}")
+    public ResponseEntity<Void> deletePet(@PathVariable Long id)
     {
-        petService.deletePet(Id);
+        petService.deletePet(id);
         return ResponseEntity.noContent().build();
     }
     @GetMapping("{id}")

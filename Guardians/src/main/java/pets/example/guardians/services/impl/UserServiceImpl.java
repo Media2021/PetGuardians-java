@@ -19,6 +19,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+
     @Override
     public User createUser(User user) {
         UserEntity userEntity = new UserEntity();
@@ -26,6 +27,33 @@ public class UserServiceImpl implements UserService {
         userRepo.save(userEntity);
         return user;
     }
+//    @Override
+//    public User createUser(User user) {
+//        // Check if username is taken
+//        if (userService.checkIfUsernameIsTaken(user.getUsername())) {
+//            // Set an error message on the user object and return it
+//            user.setErrorMessage("Username already taken");
+//            return user;
+//        }
+//
+//        // Create a new user entity and save it to the database
+//        UserEntity userEntity = new UserEntity();
+//        BeanUtils.copyProperties(user, userEntity);
+//        userRepo.save(userEntity);
+//
+//        // Return the created user
+//        return user;
+//    }
+
+//    @Override
+//    public boolean checkIfUsernameIsTaken(String username) throws RuntimeException {
+//        UserEntity existingUser = userRepo.findByUsername(username);
+//        if(existingUser != null) {
+//            throw new RuntimeException("Username already taken");
+//        }
+//        return false;
+//    }
+
     @Override
     public List<User> getAllUsers() {
         return userRepo.findAll().stream()
@@ -105,4 +133,8 @@ public class UserServiceImpl implements UserService {
         user.setRole(userEntity.getRole());
         return user;
     }
+
+
+
+
 }
