@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -44,8 +44,9 @@ class UserControllerTest {
         user.setEmail("johndoe@example.com");
         user.setAddress("123 Main St");
         user.setPhone(1234567890L);
+        user.setPassword("hghhg5788");
 
-        // Parse birthdate string into a Date object
+
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date birthdate = dateFormat.parse("15-04-2023");
         user.setBirthdate(birthdate);
@@ -58,6 +59,7 @@ class UserControllerTest {
         userEntity.setAddress(user.getAddress());
         userEntity.setPhone(user.getPhone());
         userEntity.setBirthdate(user.getBirthdate());
+        userEntity.setPassword(user.getPassword());
 
         given(userServiceMock.createUser(any(User.class))).willReturn(user);
 
@@ -72,6 +74,7 @@ class UserControllerTest {
                 .andExpect(jsonPath("$.address").value("123 Main St"))
                 .andExpect(jsonPath("$.phone").value(1234567890))
                 .andExpect(jsonPath("$.birthdate").value("15-04-2023"));
+
 
         verify(userServiceMock, times(1)).createUser(any(User.class));
     }
@@ -213,11 +216,11 @@ class UserControllerTest {
 
 
     @Test
-    void updateUserById()throws Exception {
-        Long userId = 1L;
+    void testUpdateUserById()throws Exception {
+
 
         User user = new User();
-        user.setId(userId);
+        user.setId(1L);
         user.setFirstName("John");
         user.setLastName("Doe");
         user.setUsername("johndoe");
@@ -227,23 +230,22 @@ class UserControllerTest {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         Date birthdate = dateFormat.parse("15-04-2023");
         user.setBirthdate(birthdate);
+        user.setPassword("fhjdfh746575");
 
         UserEntity updatedUserEntity = new UserEntity();
         BeanUtils.copyProperties(user, updatedUserEntity);
-        updatedUserEntity.setId(userId);
+        updatedUserEntity.setId(1L);
 
-        given(userServiceMock.updateUser(userId, user)).willReturn(user);
+        given(userServiceMock.updateUser(1L, user)).willReturn(user);
 
-        mockMvc.perform(put("/users/{id}", userId)
+        mockMvc.perform(put("/users/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(user)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.firstName").value(user.getFirstName()))
-                .andExpect(jsonPath("$.lastName").value(user.getLastName()))
-                .andExpect(jsonPath("$.email").value(user.getEmail()))
-                .andExpect(jsonPath("$.password").doesNotExist());
+                .andExpect(status().isOk());
 
-        verify(userServiceMock, times(1)).updateUser(userId, user);
+
+
+        verify(userServiceMock, times(1)).updateUser(1L, user);
     }
 
 

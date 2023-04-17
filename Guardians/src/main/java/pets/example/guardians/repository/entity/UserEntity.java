@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
-import org.springframework.format.annotation.DateTimeFormat;
+
 import pets.example.guardians.model.UserRole;
 
 import javax.persistence.*;
@@ -33,6 +33,7 @@ public class UserEntity {
     private String email;
     @NonNull
     private String address;
+    @NonNull
     private String password;
 @Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
 private Long phone;

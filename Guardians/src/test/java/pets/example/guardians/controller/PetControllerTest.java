@@ -89,7 +89,7 @@ class PetControllerTest {
 
         given(petServiceMock.getAllPets()).willReturn(pets);
 
-        // Get all pets
+
         mockMvc.perform(get("/pets")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
