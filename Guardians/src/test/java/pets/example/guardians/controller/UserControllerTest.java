@@ -8,9 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.UserService;
@@ -99,8 +101,32 @@ class UserControllerTest {
                 .andExpect(status().isBadRequest())
                 .andExpect(content().string("Invalid user data: all user fields including password are required and cannot be empty"));
 
-        verify(userServiceMock, never()).createUser(any(User.class)); // verify that the createUser method was never called
+        verify(userServiceMock, never()).createUser(any(User.class));
     }
+
+
+    @Test
+    void testCreateUserWithDataIntegrityViolationException() throws Exception {
+
+        User user = new User();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setUsername("johndoe");
+        user.setEmail("johndoe@example.com");
+        user.setAddress("123 Main St");
+        user.setPassword("password");
+
+        given(userServiceMock.createUser(any(User.class))).willThrow(DataIntegrityViolationException.class);
+
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(user)))
+
+
+                .andExpect(status().isBadRequest())
+                .andExpect(content().string("Invalid user data: " ));
+    }
+
     @Test
     void getAllUsers()throws Exception {
 
@@ -213,6 +239,23 @@ class UserControllerTest {
 
         verify(userServiceMock, times(1)).getUserById(userId);
     }
+    @Test
+    void testGetUserByIdWithNoSuchElementException() throws Exception {
+
+        User user = new User();
+        user.setId(1L);
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setUsername("johndoe");
+        user.setEmail("johndoe@example.com");
+        user.setAddress("123 Main St");
+        user.setPassword("password");
+
+        given(userServiceMock.getUserById(1L)).willThrow(new NoSuchElementException());
+
+        mockMvc.perform(get("/users/{id}", 1L))
+                .andExpect(status().isNotFound());
+    }
 
 
     @Test
@@ -242,12 +285,46 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(new ObjectMapper().writeValueAsString(user)))
                 .andExpect(status().isOk());
-
-
-
         verify(userServiceMock, times(1)).updateUser(1L, user);
     }
+    @Test
+    void testUpdateUserByIdWithNoSuchElementException() throws Exception {
 
+        User user = new User();
+        user.setFirstName("John");
+        user.setLastName("Doe");
+        user.setUsername("johndoe");
+        user.setEmail("johndoe@example.com");
+        user.setAddress("123 Main St");
+        user.setPassword("password");
+
+        given(userServiceMock.updateUser(anyLong(), any(User.class))).willThrow(new NoSuchElementException());
+
+        mockMvc.perform(put("/users/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(user)))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void testLoginUser() throws Exception {
+
+        User user = new User();
+        user.setUsername("johndoe");
+        user.setPassword("password");
+
+
+        given(userServiceMock.getUserByUsernameAndPassword(user.getUsername(), user.getPassword()))
+                .willReturn(user);
+
+        mockMvc.perform(post("/users/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(new ObjectMapper().writeValueAsString(user)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.username").value(user.getUsername()))
+                .andExpect(jsonPath("$.password").value(user.getPassword()));
+    }
 
 
 }

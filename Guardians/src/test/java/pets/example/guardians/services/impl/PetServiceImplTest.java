@@ -64,6 +64,14 @@ class PetServiceImplTest {
         assertThrows(DataIntegrityViolationException.class, () -> petServiceImpl.createPet(pet));
         verify(petRepo).save(any(PetEntity.class));
     }
+    @Test
+    void testCreatePetWithEmptyName() {
+        Pet pet = new Pet();
+        pet.setName("");
+
+        assertThrows(DataIntegrityViolationException.class, () -> petServiceImpl.createPet(pet));
+    }
+
     private PetEntity toEntity(Pet pet) {
         PetEntity entity = new PetEntity();
         entity.setId(pet.getId());

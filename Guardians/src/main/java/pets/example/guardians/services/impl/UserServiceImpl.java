@@ -88,9 +88,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setAddress(user.getAddress());
         userEntity.setUsername(user.getUsername());
         userEntity.setBirthdate(user.getBirthdate());
-        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
-            userEntity.setPassword(user.getPassword());
-        }
+      userEntity.setPassword(user.getPassword());
         userEntity.setPhone(user.getPhone());
         userEntity.setRole(user.getRole());
 

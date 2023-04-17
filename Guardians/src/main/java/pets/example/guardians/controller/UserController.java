@@ -30,7 +30,7 @@ public class UserController {
             User createdUser = userService.createUser(user);
             return ResponseEntity.ok(createdUser);
         } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.badRequest().body("Invalid user data: " + e.getMessage());
+            return ResponseEntity.badRequest().body("Invalid user data: " );
         }
 
     }
@@ -77,8 +77,14 @@ public class UserController {
     }
     @PostMapping("/login")
     public ResponseEntity<User> loginUser(@RequestBody User user) {
-        User loggedUser = userService.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
-        return ResponseEntity.ok(loggedUser);
+        try{
+            User loggedUser = userService.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
+            return ResponseEntity.ok(loggedUser);
+        }catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+
+        }
+
     }
 
 
