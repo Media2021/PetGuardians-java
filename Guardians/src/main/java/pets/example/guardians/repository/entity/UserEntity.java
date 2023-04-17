@@ -1,5 +1,6 @@
 package pets.example.guardians.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -35,7 +36,7 @@ public class UserEntity {
     private String password;
 @Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
 private Long phone;
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")
     private Date birthdate;
     private UserRole role;

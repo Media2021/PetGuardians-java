@@ -2,12 +2,14 @@ package pets.example.guardians.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.repository.PetRepo;
 import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.services.PetService;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -18,15 +20,27 @@ public class PetServiceImpl implements PetService {
     private final PetRepo petRepo;
     @Override
     public Pet createPet(Pet pet) {
-        PetEntity petEntity = new PetEntity();
-        BeanUtils.copyProperties(pet, petEntity);
-        petRepo.save(petEntity);
-
-        return pet;
+        if (pet.getName() == null || pet.getName().isEmpty()) {
+            throw new DataIntegrityViolationException("Invalid pet data: Pet name cannot be empty");
+        }
+        try {
+            PetEntity petEntity = new PetEntity();
+            BeanUtils.copyProperties(pet, petEntity);
+            petRepo.save(petEntity);
+            return pet;
+        } catch (Exception e) {
+            throw new DataIntegrityViolationException("Failed to create pet", e);
+        }
     }
     @Override
     public List<Pet> getAllPets() {
-        return petRepo.findAll().stream()
+        List<PetEntity> petEntities = petRepo.findAll();
+
+        if (petEntities.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        return petEntities.stream()
                 .map(pet -> new Pet(
                         pet.getId(),
                         pet.getName(),
@@ -35,7 +49,6 @@ public class PetServiceImpl implements PetService {
                         pet.getType(),
                         pet.getStatus(),
                         pet.getGender()))
-
                 .toList();
     }
     @Override

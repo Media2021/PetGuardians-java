@@ -7,6 +7,7 @@ import pets.example.guardians.model.Pet;
 import pets.example.guardians.services.PetService;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -22,7 +23,12 @@ public class PetController {
     }
     @GetMapping()
     public ResponseEntity<List<Pet>> getAllPets() {
-        List<Pet> pets = petService.getAllPets();
+        List<Pet> pets;
+        try {
+            pets = petService.getAllPets();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(pets);
     }
     @DeleteMapping("{id}")
@@ -32,13 +38,11 @@ public class PetController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("{id}")
-    public ResponseEntity<Optional<Pet>> getPetById(@PathVariable Long id)
-    {
-        Optional<Pet> pet;
-
-        pet= petService. getPetById(id);
-        return ResponseEntity.ok(pet);
+    public ResponseEntity<Pet> getPetById(@PathVariable Long id) {
+        Optional<Pet> pet = petService.getPetById(id);
+        return pet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
+
     @PutMapping("{id}")
     public ResponseEntity<Pet> updatePetById(@PathVariable Long id , @RequestBody Pet pet)
     {
