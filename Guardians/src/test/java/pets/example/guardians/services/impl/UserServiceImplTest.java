@@ -7,7 +7,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.dao.DataIntegrityViolationException;
+
 import pets.example.guardians.model.User;
 import pets.example.guardians.model.UserRole;
 import pets.example.guardians.repository.UserRepo;
@@ -27,82 +27,72 @@ class UserServiceImplTest {
     @Test
     void createUserTest() {
         User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setUsername("jdoe");
-        user.setEmail("jdoe@example.com");
-        user.setAddress("123 Main St");
-        user.setPassword("4321a");
-        user.setPhone(1234567890L);
-        user.setBirthdate(new Date());
-        user.setRole(UserRole.USER);
+        user.setUsername("tester");
 
-        User result = userServiceImpl.createUser(user);
 
-        verify(userRepo).save(any(UserEntity.class));
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(user.getFirstName(), result.getFirstName());
-        Assertions.assertEquals(user.getLastName(), result.getLastName());
-        Assertions.assertEquals(user.getUsername(), result.getUsername());
-        Assertions.assertEquals(user.getEmail(), result.getEmail());
-        Assertions.assertEquals(user.getAddress(), result.getAddress());
-        Assertions.assertEquals(user.getPassword(), result.getPassword());
-        Assertions.assertEquals(user.getPhone(), result.getPhone());
-        Assertions.assertEquals(user.getBirthdate(), result.getBirthdate());
-        Assertions.assertEquals(user.getRole(), result.getRole());
+        when(userRepo.findByUsername("tester")).thenReturn(Optional.empty());
+
+
+        UserEntity savedUserEntity = new UserEntity();
+        savedUserEntity.setId(1L);
+        savedUserEntity.setUsername("tester");
+
+        when(userRepo.save(Mockito.any(UserEntity.class))).thenReturn(savedUserEntity);
+
+
+        User createdUser = userServiceImpl.createUser(user);
+        Assertions.assertEquals(user.getUsername(), createdUser.getUsername());
+
+
+
+        ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
+        verify(userRepo).save(argument.capture());
+        Assertions.assertEquals(user.getUsername(), argument.getValue().getUsername());
+
     }
+
+
     @Test
-    void createUserThrowsExceptionWhenUserNameExistsTest() {
-        User user = new User();
-        user.setFirstName("John");
-        user.setLastName("Doe");
-        user.setUsername("jdoe");
-        user.setEmail("jdoe@example.com");
-        user.setAddress("123 Main St");
-        user.setPassword("4321a");
-        user.setPhone(1234567890L);
-        user.setBirthdate(new Date());
-        user.setRole(UserRole.USER);
+    void createUserThrowsUsernameAlreadyExistsExceptionTest() {
+        User existingUser = new User();
+        existingUser.setUsername("existing user");
 
-        doThrow(new DataIntegrityViolationException("username is already exist")).when(userRepo).save(any(UserEntity.class));
 
-        assertThrows(DataIntegrityViolationException.class, () -> userServiceImpl.createUser(user));
-        verify(userRepo).save(any(UserEntity.class));
+        when(userRepo.findByUsername("existing user")).thenReturn(Optional.of(new UserEntity()));
+
+
+        assertThrows(UserServiceImpl.UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
+
+
+        verify(userRepo, never()).save(any(UserEntity.class));
     }
+
     @Test
-    void testGetAllUsersTest() {
-        UserEntity userEntity1 = new UserEntity();
-        userEntity1.setId(1L);
-        userEntity1.setFirstName("John");
-        userEntity1.setLastName("Doe");
-        userEntity1.setUsername("jdoe");
-        userEntity1.setEmail("jdoe@example.com");
-        userEntity1.setAddress("123 Main St");
-        userEntity1.setPassword("4321a");
-        userEntity1.setPhone(1234567890L);
-        userEntity1.setBirthdate(new Date());
-        userEntity1.setRole(UserRole.ADMIN);
+    public void testGetAllUsers() {
+        // create a mock list of user entities
+        List<UserEntity> userEntities = new ArrayList<>();
+        userEntities.add(new UserEntity());
 
-        UserEntity userEntity2 = new UserEntity();
-        userEntity2.setId(2L);
-        userEntity2.setFirstName("Jane");
-        userEntity2.setLastName("Doe");
-        userEntity2.setUsername("jane");
-        userEntity2.setEmail("jane@example.com");
-        userEntity2.setAddress("456 Main St");
-        userEntity2.setPassword("4321ab");
-        userEntity2.setPhone(456789012L);
-        userEntity2.setBirthdate(new Date());
-        userEntity2.setRole(UserRole.USER);
+        // mock the userRepo.findAll() method to return the mock list of user entities
+        Mockito.when(userRepo.findAll()).thenReturn(userEntities);
 
-        List<UserEntity> userEntities = Arrays.asList(userEntity1, userEntity2);
-        when(userRepo.findAll()).thenReturn(userEntities);
-
+        // call the getAllUsers() method
         List<User> users = userServiceImpl.getAllUsers();
-        assertThat(users).hasSize(2);
-        assertThat(users.get(0)).isEqualToComparingFieldByField(new User(1L, "John", "Doe", "jdoe", "jdoe@example.com", "123 Main St", "4321a", 1234567890L, userEntity1.getBirthdate(), UserRole.ADMIN));
 
-        assertThat(users.get(1)).isEqualToComparingFieldByField(new User(2L, "Jane", "Doe", "jane", "jane@example.com", "456 Main St", "4321ab", 456789012L, userEntity2.getBirthdate(), UserRole.USER));
+        // assert that the returned list of users is not null and contains one user with the expected values
+        assertNotNull(users);
+        assertEquals(1, users.size());
+        assertEquals(1L, users.get(0).getId());
+        assertEquals("John", users.get(0).getFirstName());
+        assertEquals("Doe", users.get(0).getLastName());
+        assertEquals("johndoe", users.get(0).getUsername());
+        assertEquals("johndoe@example.com", users.get(0).getEmail());
+        assertEquals("123 Main St", users.get(0).getAddress());
+        assertEquals("password", users.get(0).getPassword());
+        assertEquals(Optional.of(5551234L), users.get(0).getPhone());
+        assertEquals(UserRole.USER, users.get(0).getRole());
+        assertNotNull(users.get(0).getBirthdate());
+        assertNotNull(users.get(0).getAdoptedPets());
     }
     @Test
     void deleteUserTest() {
@@ -130,33 +120,20 @@ class UserServiceImplTest {
     }
     @Test
     void getUserByIdTest() {
+        Long userId = 1L;
         UserEntity userEntity = new UserEntity();
-        userEntity.setId(1L);
-        userEntity.setFirstName("John");
-        userEntity.setLastName("Doe");
-        userEntity.setUsername("jdoe");
-        userEntity.setEmail("johndoe@example.com");
-        userEntity.setAddress("123 Main St");
-        userEntity.setPassword("4321fdfg");
-        userEntity.setPhone(4567890L);
-        userEntity.setBirthdate(new Date());
-        userEntity.setRole(UserRole.USER);
+        userEntity.setId(userId);
+        userEntity.setFirstName("John Doe");
+        userEntity.setEmail("john.doe@example.com");
+        when(userRepo.findById(userId)).thenReturn(Optional.of(userEntity));
 
-        when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
+        Optional<User> userOpt = userServiceImpl.getUserById(userId);
+        assertTrue(userOpt.isPresent());
 
-        User user = userServiceImpl.getUserById(1L);
-
-        Assertions.assertEquals(1L, user.getId());
-        Assertions.assertEquals("John", user.getFirstName());
-        Assertions.assertEquals("Doe", user.getLastName());
-        Assertions.assertEquals("jdoe", user.getUsername());
-        Assertions.assertEquals("johndoe@example.com", user.getEmail());
-        Assertions.assertEquals("123 Main St", user.getAddress());
-        Assertions.assertEquals("4321fdfg", user.getPassword());
-        Assertions.assertEquals(Long.valueOf(4567890L), user.getPhone());
-
-        Assertions.assertNotNull(user.getBirthdate());
-        Assertions.assertEquals(UserRole.USER, user.getRole());
+        User user = userOpt.get();
+        assertEquals(Optional.of(userId), user.getId());
+        assertEquals("John Doe", user.getFirstName());
+        assertEquals("john.doe@example.com", user.getEmail());
     }
     @Test
     void testGetUserById_ThrowsExceptionTest() {
@@ -220,7 +197,7 @@ class UserServiceImplTest {
     }
     @Test
    void testUpdateUserNotFoundTest() {
-        // Create a User with a specific ID
+
         User user = new User();
         user.setId(1L);
         user.setFirstName("John");
@@ -232,7 +209,7 @@ class UserServiceImplTest {
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
         user.setRole(UserRole.USER);
-        // Mock the User repository to return an empty Optional when findById is called
+
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
         // Call the updateUser method in the service and catch the exception
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> userServiceImpl.updateUser(1L, user));

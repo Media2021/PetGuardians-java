@@ -223,7 +223,7 @@ class UserControllerTest {
         Date birthdate = dateFormat.parse("15-04-2023");
         user.setBirthdate(birthdate);
 
-        given(userServiceMock.getUserById(userId)).willReturn(user);
+        given(userServiceMock.getUserById(userId)).willReturn(Optional.of(user));
 
         mockMvc.perform(get("/users/{id}", userId)
                         .contentType(MediaType.APPLICATION_JSON))

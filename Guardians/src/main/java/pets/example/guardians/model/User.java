@@ -1,8 +1,10 @@
 package pets.example.guardians.model;
 
 import lombok.*;
-import javax.persistence.Column;
+
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @Data
@@ -16,7 +18,7 @@ public class User {
 
     private String lastName ;
 
-    @Column(name = "username")
+
     private String username;
 
     private String email;
@@ -30,6 +32,16 @@ public class User {
 
     private Date birthdate;
     private UserRole role;
+
+
+    private Set<Pet> adoptedPets = new HashSet<>();
+
+    public void adoptPet(Pet pet) {
+        adoptedPets.add(pet);
+    }
+    public void deletePet(Pet pet) {
+        adoptedPets.remove(pet);
+    }
 
 
 }

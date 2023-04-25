@@ -9,7 +9,8 @@ import pets.example.guardians.repository.PetRepo;
 import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.services.PetService;
 
-import java.util.Collections;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -35,22 +36,17 @@ public class PetServiceImpl implements PetService {
     @Override
     public List<Pet> getAllPets() {
         List<PetEntity> petEntities = petRepo.findAll();
+        List<Pet> pets = new ArrayList<>();
 
-        if (petEntities.isEmpty()) {
-            return Collections.emptyList();
+        for (PetEntity petEntity : petEntities) {
+            Pet pet = new Pet();
+            BeanUtils.copyProperties(petEntity, pet);
+            pets.add(pet);
         }
 
-        return petEntities.stream()
-                .map(pet -> new Pet(
-                        pet.getId(),
-                        pet.getName(),
-                        pet.getAge(),
-                        pet.getDescription(),
-                        pet.getType(),
-                        pet.getStatus(),
-                        pet.getGender()))
-                .toList();
+        return pets;
     }
+
     @Override
     public void deletePet(Long id) {
         Optional<PetEntity> petEntityOptional = petRepo.findById(id);
@@ -86,6 +82,7 @@ public class PetServiceImpl implements PetService {
         petEntity.setType(pet.getType());
         petEntity.setStatus(pet.getStatus());
         petEntity.setGender(pet.getGender());
+
 
         petRepo.save(petEntity);
         return pet;

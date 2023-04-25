@@ -1,25 +1,34 @@
 package pets.example.guardians.model;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
+
+import java.util.Date;
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Pet {
-    private long id;
-    private String name;
-    private int age;
-    private String description;
-    private PetType type;
-    private String status;
-    private String gender;
+public class AdoptionRequest {
 
-    private User adopter ;
+    private long id;
+
+
+    private User user;
+
+
+    private Pet pet;
+
+    private String status;
+
+    private String notes;
+
+
+    private Date requestDate;
 
 
 

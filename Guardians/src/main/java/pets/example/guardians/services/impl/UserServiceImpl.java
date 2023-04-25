@@ -2,7 +2,7 @@ package pets.example.guardians.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
-import org.springframework.dao.DataIntegrityViolationException;
+
 import org.springframework.stereotype.Service;
 
 import pets.example.guardians.model.User;
@@ -10,8 +10,10 @@ import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.UserService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+
 import java.util.Optional;
 
 
@@ -23,34 +25,36 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        Optional<UserEntity> existingUser = userRepo.findByUsername(user.getUsername());
+        if (existingUser.isPresent()) {
+            throw new UsernameAlreadyExistsException("Username already taken");
+        }
 
-        try {
-            UserEntity userEntity = new UserEntity();
-            BeanUtils.copyProperties(user, userEntity);
-            userRepo.save(userEntity);
-            return user;
-        } catch (Exception e) {
-            throw new DataIntegrityViolationException("Failed to create user", e);
+                UserEntity userEntity = new UserEntity();
+                BeanUtils.copyProperties(user, userEntity);
+                userRepo.save(userEntity);
+                return user;
+    }
+    public static class UsernameAlreadyExistsException extends RuntimeException {
+        public UsernameAlreadyExistsException(String message) {
+            super(message);
         }
     }
 
-
     @Override
     public List<User> getAllUsers() {
-        return userRepo.findAll().stream()
-                .map(user -> new User(
-                        user.getId(),
-                        user.getFirstName(),
-                        user.getLastName(),
-                        user.getUsername(),
-                        user.getEmail().trim(),
-                        user.getAddress(),
-                        user.getPassword(),
-                        user.getPhone(),
-                        user.getBirthdate(),
-                        user.getRole()))
-                .toList();
+        List<UserEntity> userEntities = userRepo.findAll();
+        List<User> users = new ArrayList<>();
+
+        for (UserEntity userEntity : userEntities) {
+            User user = new User();
+            BeanUtils.copyProperties(userEntity, user);
+            users.add(user);
+        }
+
+        return users;
     }
+
     private static final String USER_NOT_FOUND_MESSAGE = "User with id %s not found";
     @Override
     public void deleteUser(Long id) {
@@ -63,13 +67,13 @@ public class UserServiceImpl implements UserService {
         }
     }
     @Override
-    public User getUserById(Long id) {
+    public Optional<User> getUserById(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
         if (userEntityOpt.isPresent()) {
             UserEntity userEntity = userEntityOpt.get();
             User user = new User();
             BeanUtils.copyProperties(userEntity, user);
-            return user;
+            return Optional.of(user);
         } else {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }

@@ -8,6 +8,7 @@ import pets.example.guardians.model.PetType;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+
 @Entity
 @Data
 @Table(name = "pets")
@@ -25,5 +26,8 @@ public class PetEntity {
     @NotBlank(message = "status is required")
     private String status;
     private String gender;
+    @ManyToOne
+    private UserEntity adopter;
+
 
 }

@@ -9,6 +9,7 @@ import pets.example.guardians.services.UserService;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -54,10 +55,10 @@ public class UserController {
         }
     }
     @GetMapping("{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id)
+    public ResponseEntity<Optional<User>> getUserById(@PathVariable Long id)
     {
         try{
-            User user = userService.getUserById(id);
+            Optional<User> user = userService.getUserById(id);
             return ResponseEntity.ok(user);
         } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();

@@ -3,7 +3,7 @@ package pets.example.guardians.repository.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
+
 
 import pets.example.guardians.model.UserRole;
 
@@ -13,6 +13,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -31,9 +33,9 @@ public class UserEntity {
     private String username;
     @NotBlank(message = "email is required")
     private String email;
-    @NonNull
+
     private String address;
-    @NonNull
+    @NotBlank
     private String password;
 @Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
 private Long phone;
@@ -41,5 +43,10 @@ private Long phone;
    @Past(message = "Birth date must be in the past")
     private Date birthdate;
     private UserRole role;
+    @OneToMany(mappedBy = "adopter" , cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<PetEntity> adoptedPets = new HashSet<>();
+
+
+
 
 }
