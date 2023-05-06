@@ -1,10 +1,7 @@
 package pets.example.guardians.services.impl;
 
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwt;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,12 +48,15 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
                 .signWith(key)
                 .compact();
     }
-
     @Override
     public AccessToken decode(String accessTokenEncoded) {
         try {
-            Jwt jwt = Jwts.parserBuilder().setSigningKey(key).build().parse(accessTokenEncoded);
-            Claims claims = (Claims) jwt.getBody();
+            Jws<Claims> jws = Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(accessTokenEncoded);
+
+            Claims claims = jws.getBody();
 
             List<String> roles = claims.get("roles", List.class);
 
@@ -69,4 +69,23 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
             throw new InvalidAccessTokenException(e.getMessage());
         }
     }
+
+
+//    @Override
+//    public AccessToken decode(String accessTokenEncoded) {
+//        try {
+//            Jwt jwt = Jwts.parserBuilder().setSigningKey(key).build().parse(accessTokenEncoded);
+//            Claims claims = (Claims) jwt.getBody();
+//
+//            List<String> roles = claims.get("roles", List.class);
+//
+//            return AccessToken.builder()
+//                    .subject(claims.getSubject())
+//                    .roles(roles)
+//                    .userId(claims.get("userId", Long.class))
+//                    .build();
+//        } catch (JwtException e) {
+//            throw new InvalidAccessTokenException(e.getMessage());
+//        }
+//    }
 }

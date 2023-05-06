@@ -55,13 +55,17 @@ public class LoginUseCaseImpl implements Login {
     }
 
     private String generateAccessToken(Optional<UserEntity> user) {
-        Long userId = userRepository.findByUsername(user.get().getUsername()).isPresent() ? user.get().getId() : null;
-        List<String> roles = user.map(UserEntity::getRole)
-                .map(userRole -> Collections.singletonList(userRole.toString()))
-                .orElse(Collections.emptyList());
+        Long userId = null;
+        List<String> roles = Collections.emptyList();
+        if (user.isPresent()) {
+            userId = userRepository.findByUsername(user.get().getUsername()).isPresent() ? user.get().getId() : null;
+            roles = user.map(UserEntity::getRole)
+                    .map(userRole -> Collections.singletonList(userRole.toString()))
+                    .orElse(Collections.emptyList());
+        }
         return accessTokenEncoder.encode(
                 AccessToken.builder()
-                        .subject(user.get().getUsername())
+                        .subject(user.map(UserEntity::getUsername).orElse(null))
                         .userId(userId)
                         .roles(roles)
                         .build());
