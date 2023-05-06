@@ -3,18 +3,16 @@ package pets.example.guardians.services.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+
 
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.UserService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-
-import java.util.Optional;
+import java.util.*;
 
 
 @Service
@@ -22,6 +20,7 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
     public User createUser(User user) {
@@ -30,11 +29,18 @@ public class UserServiceImpl implements UserService {
             throw new UsernameAlreadyExistsException("Username already taken");
         }
 
-                UserEntity userEntity = new UserEntity();
-                BeanUtils.copyProperties(user, userEntity);
-                userRepo.save(userEntity);
-                return user;
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(user, userEntity);
+        saveNewUser(userEntity, user.getPassword());
+        return user;
     }
+
+    public void saveNewUser(UserEntity user, String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        user.setPassword(encodedPassword);
+        userRepo.save(user);
+    }
+
     public static class UsernameAlreadyExistsException extends RuntimeException {
         public UsernameAlreadyExistsException(String message) {
             super(message);
@@ -56,6 +62,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private static final String USER_NOT_FOUND_MESSAGE = "User with id %s not found";
+
     @Override
     public void deleteUser(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
@@ -66,6 +73,7 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
+
     @Override
     public Optional<User> getUserById(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
@@ -78,9 +86,12 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
+
     @Override
     public User updateUser(Long id, User user) {
-
+//        if (!Objects.equals(requestAccessToken.getUserId(), id)) {
+//            throw new UnauthorizedDataAccessException("USER_ID_NOT_FROM_LOGGED_IN_USER");
+//        }
         Optional<UserEntity> optionalUserEntity = userRepo.findById(id);
         if (optionalUserEntity.isEmpty()) {
             throw new NoSuchElementException(String.format("User with ID %d not found", id));
@@ -91,10 +102,19 @@ public class UserServiceImpl implements UserService {
         userEntity.setEmail(user.getEmail());
         userEntity.setAddress(user.getAddress());
         userEntity.setUsername(user.getUsername());
-        userEntity.setBirthdate(user.getBirthdate());
-      userEntity.setPassword(user.getPassword());
+
+
         userEntity.setPhone(user.getPhone());
-        userEntity.setRole(user.getRole());
+
+
+        String newUsername = user.getUsername();
+        if (!newUsername.equals(userEntity.getUsername())) {
+            Optional<UserEntity> existingUser = userRepo.findByUsername(newUsername);
+            if (existingUser.isPresent() && existingUser.get().getId() != id) {
+                throw new UsernameAlreadyExistsException("Username already taken");
+            }
+            userEntity.setUsername(newUsername);
+        }
 
         userRepo.save(userEntity);
         return user;
@@ -119,8 +139,14 @@ public class UserServiceImpl implements UserService {
         user.setRole(userEntity.getRole());
         return user;
     }
+    @Override
+    public Optional<User> login(String username, String password) {
+        return getAllUsers().stream()
+                .filter(user -> user.getEmail().equals(username) && user.getPassword().equals(password))
+                .findFirst();
+
+    }
+    }
 
 
 
-
-}

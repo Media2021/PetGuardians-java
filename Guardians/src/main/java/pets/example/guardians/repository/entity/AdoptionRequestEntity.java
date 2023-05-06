@@ -1,11 +1,11 @@
 package pets.example.guardians.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
+
 import java.util.Date;
 
 @Entity

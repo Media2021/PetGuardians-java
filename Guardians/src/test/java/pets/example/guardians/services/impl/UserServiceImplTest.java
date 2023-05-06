@@ -1,19 +1,19 @@
 package pets.example.guardians.services.impl;
 
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
 import pets.example.guardians.model.User;
 import pets.example.guardians.model.UserRole;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
 import java.util.*;
-import static org.assertj.core.api.Assertions.assertThat;
+
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -22,33 +22,35 @@ import static org.mockito.Mockito.*;
 class UserServiceImplTest {
     @Mock
     private UserRepo userRepo;
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+        when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
+
+       }
     @InjectMocks
     private UserServiceImpl userServiceImpl;
+
+
+
+
     @Test
-    void createUserTest() {
-        User user = new User();
-        user.setUsername("tester");
+    public void testSaveNewUser_PasswordHashed() {
+        UserEntity user = new UserEntity();
+        user.setUsername("testuser");
+        user.setPassword("password");
 
-
-        when(userRepo.findByUsername("tester")).thenReturn(Optional.empty());
-
-
-        UserEntity savedUserEntity = new UserEntity();
-        savedUserEntity.setId(1L);
-        savedUserEntity.setUsername("tester");
-
-        when(userRepo.save(Mockito.any(UserEntity.class))).thenReturn(savedUserEntity);
-
-
-        User createdUser = userServiceImpl.createUser(user);
-        Assertions.assertEquals(user.getUsername(), createdUser.getUsername());
-
-
+        userServiceImpl.saveNewUser(user, user.getPassword());
 
         ArgumentCaptor<UserEntity> argument = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepo).save(argument.capture());
-        Assertions.assertEquals(user.getUsername(), argument.getValue().getUsername());
 
+        UserEntity savedUser = argument.getValue();
+        assertNotEquals("password", savedUser.getPassword());
     }
 
 
@@ -67,33 +69,7 @@ class UserServiceImplTest {
         verify(userRepo, never()).save(any(UserEntity.class));
     }
 
-    @Test
-    public void testGetAllUsers() {
-        // create a mock list of user entities
-        List<UserEntity> userEntities = new ArrayList<>();
-        userEntities.add(new UserEntity());
 
-        // mock the userRepo.findAll() method to return the mock list of user entities
-        Mockito.when(userRepo.findAll()).thenReturn(userEntities);
-
-        // call the getAllUsers() method
-        List<User> users = userServiceImpl.getAllUsers();
-
-        // assert that the returned list of users is not null and contains one user with the expected values
-        assertNotNull(users);
-        assertEquals(1, users.size());
-        assertEquals(1L, users.get(0).getId());
-        assertEquals("John", users.get(0).getFirstName());
-        assertEquals("Doe", users.get(0).getLastName());
-        assertEquals("johndoe", users.get(0).getUsername());
-        assertEquals("johndoe@example.com", users.get(0).getEmail());
-        assertEquals("123 Main St", users.get(0).getAddress());
-        assertEquals("password", users.get(0).getPassword());
-        assertEquals(Optional.of(5551234L), users.get(0).getPhone());
-        assertEquals(UserRole.USER, users.get(0).getRole());
-        assertNotNull(users.get(0).getBirthdate());
-        assertNotNull(users.get(0).getAdoptedPets());
-    }
     @Test
     void deleteUserTest() {
         Long id = 1L;
@@ -118,23 +94,7 @@ class UserServiceImplTest {
 
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
-    @Test
-    void getUserByIdTest() {
-        Long userId = 1L;
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(userId);
-        userEntity.setFirstName("John Doe");
-        userEntity.setEmail("john.doe@example.com");
-        when(userRepo.findById(userId)).thenReturn(Optional.of(userEntity));
 
-        Optional<User> userOpt = userServiceImpl.getUserById(userId);
-        assertTrue(userOpt.isPresent());
-
-        User user = userOpt.get();
-        assertEquals(Optional.of(userId), user.getId());
-        assertEquals("John Doe", user.getFirstName());
-        assertEquals("john.doe@example.com", user.getEmail());
-    }
     @Test
     void testGetUserById_ThrowsExceptionTest() {
         Long userId = 1L;

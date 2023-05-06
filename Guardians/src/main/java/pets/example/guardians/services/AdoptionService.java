@@ -1,8 +1,7 @@
 package pets.example.guardians.services;
 
 import pets.example.guardians.model.AdoptionRequest;
-import pets.example.guardians.model.Pet;
-import pets.example.guardians.model.User;
+
 import pets.example.guardians.repository.entity.AdoptionRequestEntity;
 
 

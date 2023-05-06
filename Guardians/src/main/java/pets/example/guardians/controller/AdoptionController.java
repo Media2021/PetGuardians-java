@@ -17,8 +17,7 @@ import pets.example.guardians.services.PetService;
 import pets.example.guardians.services.UserService;
 
 import java.util.List;
-import java.util.Map;
-import java.util.NoSuchElementException;
+
 import java.util.Optional;
 
 

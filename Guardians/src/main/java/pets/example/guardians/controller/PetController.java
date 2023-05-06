@@ -3,9 +3,11 @@ package pets.example.guardians.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pets.example.guardians.configuration.isauthenticated.IsAuthenticated;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.services.PetService;
 
+import javax.annotation.security.RolesAllowed;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -42,7 +44,8 @@ public class PetController {
         Optional<Pet> pet = petService.getPetById(id);
         return pet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-
+    @IsAuthenticated
+    @RolesAllowed({ "ROLE_ADMIN"})
     @PutMapping("{id}")
     public ResponseEntity<Pet> updatePetById(@PathVariable Long id , @RequestBody Pet pet)
     {

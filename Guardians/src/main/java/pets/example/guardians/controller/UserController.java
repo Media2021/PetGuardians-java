@@ -2,11 +2,19 @@ package pets.example.guardians.controller;
 
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import pets.example.guardians.configuration.isauthenticated.IsAuthenticated;
+import pets.example.guardians.model.LoginResponse;
 import pets.example.guardians.model.User;
+
+import pets.example.guardians.services.Login;
 import pets.example.guardians.services.UserService;
 
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -16,9 +24,12 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/users")
 @AllArgsConstructor
+
 public class UserController {
 
     private final UserService userService;
+    private final Login login;
+
 
     @PostMapping()
     public ResponseEntity<Object> createUser(@RequestBody User user) {
@@ -44,6 +55,8 @@ public class UserController {
         }
         return ResponseEntity.ok(users);
     }
+    @IsAuthenticated
+    @RolesAllowed({ "ROLE_USER"})
     @DeleteMapping("{id}")
     public ResponseEntity<Void> deleteUser(@PathVariable Long id)
     {
@@ -54,18 +67,22 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
+    @IsAuthenticated
+    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
     @GetMapping("{id}")
-    public ResponseEntity<Optional<User>> getUserById(@PathVariable Long id)
+    public ResponseEntity<User> getUserById(@PathVariable Long id)
     {
         try{
             Optional<User> user = userService.getUserById(id);
-            return ResponseEntity.ok(user);
+            return ResponseEntity.ok(user.orElseThrow());
         } catch (NoSuchElementException ex) {
             return ResponseEntity.notFound().build();
 
         }
 
     }
+   @IsAuthenticated
+    @RolesAllowed({"ROLE_USER"})
     @PutMapping("{id}")
     public ResponseEntity<User> updateUserById(@PathVariable Long id , @RequestBody User user) {
         try {
@@ -77,14 +94,10 @@ public class UserController {
         }
     }
     @PostMapping("/login")
-    public ResponseEntity<User> loginUser(@RequestBody User user) {
-        try{
-            User loggedUser = userService.getUserByUsernameAndPassword(user.getUsername(), user.getPassword());
-            return ResponseEntity.ok(loggedUser);
-        }catch (NoSuchElementException ex) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<LoginResponse> loginUser(@RequestBody @Valid User user) {
+        LoginResponse loginResponse = login.login(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(loginResponse);
 
-        }
 
     }
 

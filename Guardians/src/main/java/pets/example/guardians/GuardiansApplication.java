@@ -8,7 +8,7 @@ import pets.example.guardians.configuration.DateConfig;
 
 @SpringBootApplication
 @Configuration
-@Import(DateConfig.class)
+//@Import(DateConfig.class)
 public class GuardiansApplication {
 
 	public static void main(String[] args) {
