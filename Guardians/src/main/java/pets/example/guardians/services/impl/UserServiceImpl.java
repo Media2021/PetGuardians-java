@@ -139,13 +139,7 @@ public class UserServiceImpl implements UserService {
         user.setRole(userEntity.getRole());
         return user;
     }
-    @Override
-    public Optional<User> login(String username, String password) {
-        return getAllUsers().stream()
-                .filter(user -> user.getEmail().equals(username) && user.getPassword().equals(password))
-                .findFirst();
 
-    }
     }
 
 

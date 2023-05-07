@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
+import org.springframework.beans.BeanUtils;
 import org.springframework.boot.test.context.SpringBootTest;
+
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import pets.example.guardians.model.User;
@@ -35,7 +37,46 @@ class UserServiceImplTest {
     @InjectMocks
     private UserServiceImpl userServiceImpl;
 
+    @Test
+    void testCreateUser() {
 
+        User newUser = new User();
+        newUser.setUsername("john.doe");
+        newUser.setPassword("password");
+
+
+        UserEntity userEntity = new UserEntity();
+        BeanUtils.copyProperties(newUser, userEntity);
+        userEntity.setId(1L);
+
+        when(userRepo.findByUsername("john.doe")).thenReturn(Optional.empty());
+        when(userRepo.save(any(UserEntity.class))).thenReturn(userEntity);
+
+
+        User createdUser = userServiceImpl.createUser(newUser);
+
+
+        verify(userRepo, times(1)).findByUsername("john.doe");
+        verify(userRepo, times(1)).save(any(UserEntity.class));
+        assertEquals(newUser.getUsername(), createdUser.getUsername());
+
+        assertNotNull(createdUser.getId());
+    }
+    @Test
+    void testCreateUser_UsernameAlreadyExists() {
+        // Arrange
+        User existingUser = new User();
+        existingUser.setUsername("john.doe");
+        existingUser.setPassword("password");
+
+        when(userRepo.findByUsername("john.doe")).thenReturn(Optional.of(new UserEntity()));
+
+        // Act & Assert
+        assertThrows(UserServiceImpl.UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
+
+        verify(userRepo, times(1)).findByUsername("john.doe");
+        verify(userRepo, never()).save(any(UserEntity.class));
+    }
 
 
     @Test
@@ -54,6 +95,9 @@ class UserServiceImplTest {
     }
 
 
+
+
+
     @Test
     void createUserThrowsUsernameAlreadyExistsExceptionTest() {
         User existingUser = new User();
@@ -67,6 +111,38 @@ class UserServiceImplTest {
 
 
         verify(userRepo, never()).save(any(UserEntity.class));
+    }
+    @Test
+    void testGetAllUsers() {
+
+        List<UserEntity> userEntities = new ArrayList<>();
+        UserEntity user1 = new UserEntity();
+        user1.setUsername("john.doe");
+        userEntities.add(user1);
+        UserEntity user2 = new UserEntity();
+        user2.setUsername("jane.doe");
+        userEntities.add(user2);
+        when(userRepo.findAll()).thenReturn(userEntities);
+
+        List<User> users = userServiceImpl.getAllUsers();
+
+
+        verify(userRepo, times(1)).findAll();
+        assertEquals(2, users.size());
+        assertEquals("john.doe", users.get(0).getUsername());
+        assertEquals("jane.doe", users.get(1).getUsername());
+    }
+    @Test
+    void testGetAllUsers_EmptyList() {
+
+        when(userRepo.findAll()).thenReturn(new ArrayList<>());
+
+
+        List<User> users = userServiceImpl.getAllUsers();
+
+
+        verify(userRepo, times(1)).findAll();
+        assertTrue(users.isEmpty());
     }
 
 
@@ -95,6 +171,7 @@ class UserServiceImplTest {
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
     }
 
+
     @Test
     void testGetUserById_ThrowsExceptionTest() {
         Long userId = 1L;
@@ -109,7 +186,7 @@ class UserServiceImplTest {
     }
     @Test
     void testUpdateUserTest() {
-        // Create a User with a specific ID
+
         User user = new User();
         user.setId(1L);
         user.setFirstName("John");
@@ -121,7 +198,7 @@ class UserServiceImplTest {
         user.setPhone(1234567890L);
         user.setBirthdate(new Date());
         user.setRole(UserRole.USER);
-        // Mock the User repository to return the User with the given ID when findById is called
+
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
         userEntity.setFirstName("John");
@@ -134,11 +211,11 @@ class UserServiceImplTest {
         userEntity.setBirthdate(new Date());
         userEntity.setRole(UserRole.USER);
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.of(userEntity));
-        // Call the updateUser method in the service
+
         User updatedUser = userServiceImpl.updateUser(1L, user);
-        // Verify that the User repository's findById method was called with the correct ID
+
         verify(userRepo).findById(1L);
-        // Verify that the User repository's save method was called with the updated User entity
+
         ArgumentCaptor<UserEntity> argumentCaptor = ArgumentCaptor.forClass(UserEntity.class);
         verify(userRepo).save(argumentCaptor.capture());
         UserEntity capturedUserEntity = argumentCaptor.getValue();
@@ -152,9 +229,11 @@ class UserServiceImplTest {
         Assertions.assertEquals(user.getPassword(), capturedUserEntity.getPassword());
         Assertions.assertEquals(user.getPhone(), capturedUserEntity.getPhone());
         Assertions.assertEquals(user.getRole(), capturedUserEntity.getRole());
-        // Verify that the returned User object is the same as the input User object
+
         Assertions.assertSame(updatedUser, user);
     }
+
+
     @Test
    void testUpdateUserNotFoundTest() {
 
@@ -171,15 +250,15 @@ class UserServiceImplTest {
         user.setRole(UserRole.USER);
 
         Mockito.when(userRepo.findById(1L)).thenReturn(Optional.empty());
-        // Call the updateUser method in the service and catch the exception
+
         Exception exception = Assertions.assertThrows(NoSuchElementException.class, () -> userServiceImpl.updateUser(1L, user));
-        // Verify that the exception message contains the correct ID
+
         String expectedMessage = "User with ID 1 not found";
         String actualMessage = exception.getMessage();
         Assertions.assertTrue(actualMessage.contains(expectedMessage));
-        // Verify that the User repository's findById method was called with the correct ID
+
         verify(userRepo).findById(1L);
-        // Verify that the User repository's save method was not called
+
         verify(userRepo, never()).save(any(UserEntity.class));
     }
     @Test

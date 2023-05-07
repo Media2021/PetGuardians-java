@@ -31,15 +31,10 @@ public class LoginUseCaseImpl implements Login {
         if (userEntity.isEmpty()) {
             throw new InvalidCredentialsException();
         }
-
         if (!matchesPassword(user.getPassword(), userEntity.get().getPassword())) {
             throw new InvalidCredentialsException();
         }
-
         String accessToken = generateAccessToken(userEntity);
-
-      // get the user id from the user entity
-
 
         return LoginResponse.builder()
                 .accessToken(accessToken)
