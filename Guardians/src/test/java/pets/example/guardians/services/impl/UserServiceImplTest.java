@@ -39,11 +39,9 @@ class UserServiceImplTest {
 
     @Test
     void testCreateUser() {
-
         User newUser = new User();
         newUser.setUsername("john.doe");
         newUser.setPassword("password");
-
 
         UserEntity userEntity = new UserEntity();
         BeanUtils.copyProperties(newUser, userEntity);
@@ -52,16 +50,15 @@ class UserServiceImplTest {
         when(userRepo.findByUsername("john.doe")).thenReturn(Optional.empty());
         when(userRepo.save(any(UserEntity.class))).thenReturn(userEntity);
 
-
         User createdUser = userServiceImpl.createUser(newUser);
-
 
         verify(userRepo, times(1)).findByUsername("john.doe");
         verify(userRepo, times(1)).save(any(UserEntity.class));
         assertEquals(newUser.getUsername(), createdUser.getUsername());
 
-        assertNotNull(createdUser.getId());
+        assertNotNull(String.valueOf(createdUser.getId()), "Created user should have an ID.");
     }
+
     @Test
     void testCreateUser_UsernameAlreadyExists() {
         // Arrange
