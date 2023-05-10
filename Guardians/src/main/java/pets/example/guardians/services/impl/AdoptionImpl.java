@@ -3,6 +3,7 @@ package pets.example.guardians.services.impl;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pets.example.guardians.model.AdoptionRequest;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.model.User;
@@ -30,25 +31,35 @@ public class AdoptionImpl implements AdoptionService {
 
     @Override
     public AdoptionRequest createAdoptionRequest(AdoptionRequestEntity adoptionRequestEntity) {
-        Optional<UserEntity> existingUser = userRepo.findById(adoptionRequestEntity.getUser().getId());
-        Optional<PetEntity> existingPet = petRepo.findById(adoptionRequestEntity.getPet().getId());
 
-        UserEntity userEntity = existingUser.orElseThrow(() -> new NoSuchElementException("User not found with id " + adoptionRequestEntity.getUser().getId()));
-        PetEntity petEntity = existingPet.orElseThrow(() -> new NoSuchElementException("Pet not found with id " + adoptionRequestEntity.getPet().getId()));
+        Optional<UserEntity> existingUser = userRepo.findById(adoptionRequestEntity.getUser().getId());
+        if (existingUser.isEmpty()) {
+            throw new NoSuchElementException("User not found with id " + adoptionRequestEntity.getId());
+        }
+
+
+        PetEntity pet = adoptionRequestEntity.getPet();
+        if (pet == null) {
+            throw new IllegalArgumentException("Pet cannot be null");
+        }
+        Optional<PetEntity> existingPet = petRepo.findById(pet.getId());
+        if (existingPet.isEmpty()) {
+            throw new NoSuchElementException("Pet not found with id " + pet.getId());
+        }
 
         AdoptionRequestEntity savedEntity = new AdoptionRequestEntity();
-        savedEntity.setUser(userEntity);
-        savedEntity.setPet(petEntity);
+        savedEntity.setUser(existingUser.get());
+        savedEntity.setPet(existingPet.get());
         savedEntity.setNotes(adoptionRequestEntity.getNotes());
         savedEntity.setRequestDate(new Date());
         savedEntity.setStatus("PENDING");
 
         savedEntity = adoptionRepo.save(savedEntity);
 
-        AdoptionRequest adoptionRequest = AdoptionRequestMapper.toModel(savedEntity);
-
-        return adoptionRequest;
+        return AdoptionRequestMapper.toModel(savedEntity);
     }
+
+
     @Override
     public List<AdoptionRequest> getAllAdoptionRequests() {
         List<AdoptionRequestEntity> adoptionRequestEntities = adoptionRepo.findAll();
@@ -60,6 +71,7 @@ public class AdoptionImpl implements AdoptionService {
 
         return adoptionRequests;
     }
+    @Transactional
     @Override
     public Optional<AdoptionRequest> getAdoptionRequestById(Long id) {
         Optional<AdoptionRequestEntity> adoptionRequestEntityOptional = adoptionRepo.findById(id);
@@ -104,6 +116,47 @@ public class AdoptionImpl implements AdoptionService {
 
 
 
+
+    @Override
+    public AdoptionRequest acceptAdoptionRequest(Long id) {
+        Optional<AdoptionRequestEntity> adoptionRequestEntity = adoptionRepo.findById(id);
+        if (adoptionRequestEntity.isEmpty()) {
+            throw new NoSuchElementException("Adoption request not found with id " + id);
+        }
+        AdoptionRequestEntity savedEntity = adoptionRequestEntity.get();
+        savedEntity.setStatus("ACCEPTED");
+        savedEntity = adoptionRepo.save(savedEntity);
+
+        UserEntity userEntity = savedEntity.getUser();
+        PetEntity petEntity = savedEntity.getPet();
+        userEntity.adoptPet(petEntity);
+        userRepo.save(userEntity);
+
+
+         petEntity.setAdopter(userEntity);
+        petRepo.save(petEntity);
+        return AdoptionRequestMapper.toModel(savedEntity);
+    }
+
+
+
+    @Override
+    public AdoptionRequest declineAdoptionRequest(Long id) {
+        Optional<AdoptionRequestEntity> existingRequest = adoptionRepo.findById(id);
+        if (existingRequest .isEmpty()) {
+            throw new NoSuchElementException("Adoption request not found with id " + id);
+        }
+        AdoptionRequestEntity requestEntity = existingRequest.get();
+
+
+        requestEntity.setStatus("DECLINED");
+
+
+        AdoptionRequestEntity savedEntity = adoptionRepo.save(requestEntity);
+
+
+        return AdoptionRequestMapper.toModel(savedEntity);
+    }
 
 
 

@@ -1,5 +1,7 @@
 package pets.example.guardians.services.Mapper;
 
+import lombok.AllArgsConstructor;
+import org.hibernate.Hibernate;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.entity.PetEntity;
@@ -8,7 +10,7 @@ import pets.example.guardians.repository.entity.UserEntity;
 
 import java.util.Set;
 import java.util.stream.Collectors;
-
+@AllArgsConstructor
 public class UserMapper {
 
     public static User toModel(UserEntity entity) {
@@ -23,6 +25,7 @@ public class UserMapper {
         model.setPhone(entity.getPhone());
         model.setBirthdate(entity.getBirthdate());
         model.setRole(entity.getRole());
+        Hibernate.initialize(entity.getAdoptedPets());
         if (entity.getAdoptedPets() != null) {
             Set<Pet> adoptedPets = entity.getAdoptedPets().stream()
                     .map(PetMapper::toModel)
@@ -44,6 +47,7 @@ public class UserMapper {
         entity.setPhone(model.getPhone());
         entity.setBirthdate(model.getBirthdate());
         entity.setRole(model.getRole());
+        Hibernate.initialize(model.getAdoptedPets());
         if (model.getAdoptedPets() != null) {
             Set<PetEntity> adoptedPets = model.getAdoptedPets().stream()
                     .map(PetMapper::toEntity)

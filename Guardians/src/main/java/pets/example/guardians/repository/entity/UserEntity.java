@@ -1,14 +1,9 @@
 package pets.example.guardians.repository.entity;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-
+import com.fasterxml.jackson.annotation.*;
+import lombok.*;
 import pets.example.guardians.model.UserRole;
-
 import javax.persistence.*;
-
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Past;
@@ -20,6 +15,7 @@ import java.util.Set;
 @Data
 @Table(name = "pet_users")
 @NoArgsConstructor
+
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,15 +33,22 @@ public class UserEntity {
     private String address;
     @NotBlank
     private String password;
-@Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
-private Long phone;
+    @Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
+    private Long phone;
     @JsonFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")
     private Date birthdate;
     private UserRole role;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
     @OneToMany(mappedBy = "adopter" , cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<PetEntity> adoptedPets = new HashSet<>();
 
+    public void adoptPet(PetEntity pet) {
+
+        adoptedPets.add(pet);
+    }
 
 
 

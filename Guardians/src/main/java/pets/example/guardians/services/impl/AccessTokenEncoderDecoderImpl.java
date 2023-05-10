@@ -71,21 +71,4 @@ public class AccessTokenEncoderDecoderImpl implements AccessTokenEncoder, Access
     }
 
 
-//    @Override
-//    public AccessToken decode(String accessTokenEncoded) {
-//        try {
-//            Jwt jwt = Jwts.parserBuilder().setSigningKey(key).build().parse(accessTokenEncoded);
-//            Claims claims = (Claims) jwt.getBody();
-//
-//            List<String> roles = claims.get("roles", List.class);
-//
-//            return AccessToken.builder()
-//                    .subject(claims.getSubject())
-//                    .roles(roles)
-//                    .userId(claims.get("userId", Long.class))
-//                    .build();
-//        } catch (JwtException e) {
-//            throw new InvalidAccessTokenException(e.getMessage());
-//        }
-//    }
 }

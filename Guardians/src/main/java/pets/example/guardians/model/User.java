@@ -36,12 +36,7 @@ public class User {
 
     private Set<Pet> adoptedPets = new HashSet<>();
 
-    public void adoptPet(Pet pet) {
-        adoptedPets.add(pet);
-    }
-    public void deletePet(Pet pet) {
-        adoptedPets.remove(pet);
-    }
+
 
 
 }

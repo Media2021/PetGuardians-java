@@ -54,9 +54,9 @@ class UserServiceImplTest {
 
         verify(userRepo, times(1)).findByUsername("john.doe");
         verify(userRepo, times(1)).save(any(UserEntity.class));
-        assertEquals(newUser.getUsername(), createdUser.getUsername());
+        Assertions.assertEquals(newUser.getUsername(), createdUser.getUsername());
 
-        assertNotNull(String.valueOf(createdUser.getId()), "Created user should have an ID.");
+        Assertions.assertNotNull("Created user should have an ID.", String.valueOf(createdUser.getId()));
     }
 
     @Test
@@ -88,7 +88,7 @@ class UserServiceImplTest {
         verify(userRepo).save(argument.capture());
 
         UserEntity savedUser = argument.getValue();
-        assertNotEquals("password", savedUser.getPassword());
+        Assertions.assertNotEquals("password", savedUser.getPassword());
     }
 
 
@@ -125,9 +125,9 @@ class UserServiceImplTest {
 
 
         verify(userRepo, times(1)).findAll();
-        assertEquals(2, users.size());
-        assertEquals("john.doe", users.get(0).getUsername());
-        assertEquals("jane.doe", users.get(1).getUsername());
+        Assertions.assertEquals(2, users.size());
+        Assertions.assertEquals("john.doe", users.get(0).getUsername());
+        Assertions.assertEquals("jane.doe", users.get(1).getUsername());
     }
     @Test
     void testGetAllUsers_EmptyList() {
@@ -139,7 +139,7 @@ class UserServiceImplTest {
 
 
         verify(userRepo, times(1)).findAll();
-        assertTrue(users.isEmpty());
+        Assertions.assertTrue(users.isEmpty());
     }
 
 

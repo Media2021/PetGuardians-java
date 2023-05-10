@@ -13,11 +13,17 @@ public interface AdoptionService {
 
    AdoptionRequest createAdoptionRequest(AdoptionRequestEntity adoptionRequestEntity);
 
-   List<AdoptionRequest> getAllAdoptionRequests();
+
+
+    List<AdoptionRequest> getAllAdoptionRequests();
 
    Optional<AdoptionRequest>getAdoptionRequestById(Long id);
 
 
 
    Optional<AdoptionRequest> updateAdoptionRequestById(Long id, AdoptionRequest updatedRequest);
+
+   AdoptionRequest acceptAdoptionRequest(Long requestId);
+
+   AdoptionRequest declineAdoptionRequest(Long id);
 }

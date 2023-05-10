@@ -1,5 +1,4 @@
 package pets.example.guardians.repository.entity;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -13,6 +12,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Table(name = "pets")
 @NoArgsConstructor
+
 public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +26,10 @@ public class PetEntity {
     @NotBlank(message = "status is required")
     private String status;
     private String gender;
+
     @ManyToOne
     private UserEntity adopter;
+
 
 
 }

@@ -67,8 +67,7 @@ public class UserController {
             return ResponseEntity.notFound().build();
         }
     }
-    @IsAuthenticated
-    @RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+
     @GetMapping("{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id)
     {
@@ -81,8 +80,7 @@ public class UserController {
         }
 
     }
-   @IsAuthenticated
-    @RolesAllowed({"ROLE_USER"})
+
     @PutMapping("{id}")
     public ResponseEntity<User> updateUserById(@PathVariable Long id , @RequestBody User user) {
         try {

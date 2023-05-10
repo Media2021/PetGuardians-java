@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 
 @Configuration
 public class DateConfig {
-//    @Primary
+
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder1() {
         Jackson2ObjectMapperBuilder builder = new Jackson2ObjectMapperBuilder();

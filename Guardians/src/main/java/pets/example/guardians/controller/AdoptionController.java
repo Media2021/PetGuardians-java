@@ -3,6 +3,7 @@ package pets.example.guardians.controller;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import pets.example.guardians.model.AdoptionRequest;
 import pets.example.guardians.model.Pet;
@@ -10,19 +11,21 @@ import pets.example.guardians.model.User;
 
 import pets.example.guardians.repository.entity.AdoptionRequestEntity;
 import pets.example.guardians.services.AdoptionService;
+
+import pets.example.guardians.services.PetService;
+import pets.example.guardians.services.UserService;
 import pets.example.guardians.services.Mapper.AdoptionRequestMapper;
 import pets.example.guardians.services.Mapper.PetMapper;
 import pets.example.guardians.services.Mapper.UserMapper;
-import pets.example.guardians.services.PetService;
-import pets.example.guardians.services.UserService;
 
 import java.util.List;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
 @RestController
-@RequestMapping("/requests")
+@RequestMapping("/adoption")
 @AllArgsConstructor
 public class AdoptionController {
     private final AdoptionService adoptionService;
@@ -30,14 +33,11 @@ public class AdoptionController {
     private final UserService userService;
     @PostMapping
     public ResponseEntity<AdoptionRequest> createAdoptionRequest(@RequestBody AdoptionRequest request) {
-        Optional<Long> optionalUserId = Optional.of(request.getUser().getId());
-        Optional<Long> optionalPetId = Optional.of(request.getPet().getId());
+        Optional<Long> optionalUserId = Optional.ofNullable(request.getUser()).map(User::getId);
+        Optional<Long> optionalPetId = Optional.ofNullable(request.getPet()).map(Pet::getId);
 
-        Long userId = optionalUserId.get();
-        Long petId = optionalPetId.get();
-
-        User user = userService.getUserById(userId).orElse(null);
-        Pet pet = petService.getPetById(petId).orElse(null);
+        User user = optionalUserId.flatMap(userService::getUserById).orElse(null);
+        Pet pet = optionalPetId.flatMap(petService::getPetById).orElse(null);
 
         if (user == null || pet == null) {
             return ResponseEntity.badRequest().build();
@@ -73,6 +73,7 @@ public class AdoptionController {
             return ResponseEntity.ok(adoptionRequests);
         }
     }
+    @Transactional
     @GetMapping("/{id}")
     public ResponseEntity<AdoptionRequest> getAdoptionRequestById(@PathVariable Long id) {
         Optional<AdoptionRequest> optionalAdoptionRequest = adoptionService.getAdoptionRequestById(id);
@@ -97,40 +98,34 @@ public class AdoptionController {
         }
     }
 
+    @Transactional
+    @PutMapping("/{id}/accept")
+    public ResponseEntity<AdoptionRequest> acceptAdoptionRequest(@PathVariable Long id) {
+        try {
+            AdoptionRequest adoptionRequest = adoptionService.acceptAdoptionRequest(id);
+            return ResponseEntity.ok(adoptionRequest);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @PutMapping("/{id}/decline")
+    public ResponseEntity<AdoptionRequest> declineAdoptionRequest(@PathVariable("id") Long id) {
+        try {
+            AdoptionRequest declinedRequest = adoptionService.declineAdoptionRequest(id);
+            return ResponseEntity.ok(declinedRequest);
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
 
-
-
-//    @PostMapping()
-//    public ResponseEntity<Void> adoptPet(@PathVariable Long userId, @PathVariable Long petId) {
-//        User user = userService.getUserById(userId)
-//                .orElseThrow(() -> new NoSuchElementException("User not found with id " + userId));
-//        Pet pet = petService.getPetById(petId)
-//                .orElseThrow(() -> new NoSuchElementException("Pet not found with id " + petId));
-//
-//        user.adoptPet(pet);
-//        adoptionService.adoptPet(user,pet);
-//
-//        return ResponseEntity.ok().build();
-//    }
-//    @DeleteMapping("{userId}/pets/{petId}")
-//    public ResponseEntity<Void> deletePet(@PathVariable Long userId, @PathVariable Long petId) {
-//        User user = userService.getUserById(userId)
-//                .orElseThrow(() -> new NoSuchElementException("User not found with id " + userId));
-//
-//        Pet pet = petService.getPetById(petId)
-//                .orElseThrow(() -> new NoSuchElementException("Pet not found with id " + petId));
-//
-//        if (!user.getAdoptedPets().contains(pet)) {
-//            throw new NoSuchElementException("Pet not found for user with id " + userId);
-//        }
-//
-//        user.deletePet(pet);
-//        adoptionService.deletePet(user,pet);
-//
-//
-//        return ResponseEntity.ok().build();
-//    }
 
 
 }

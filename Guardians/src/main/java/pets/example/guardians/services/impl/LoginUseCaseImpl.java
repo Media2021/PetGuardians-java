@@ -39,7 +39,7 @@ public class LoginUseCaseImpl implements Login {
         return LoginResponse.builder()
                 .accessToken(accessToken)
 
-                .UserId(user.getId()) // set the user id in the LoginResponse
+                .UserId(user.getId())
                 .build();
     }
 
