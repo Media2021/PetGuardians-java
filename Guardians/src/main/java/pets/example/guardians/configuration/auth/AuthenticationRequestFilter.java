@@ -27,6 +27,11 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
     @Autowired
     private AccessTokenDecoder accessTokenDecoder;
 
+    @Autowired
+    public void setAccessTokenDecoder(AccessTokenDecoder accessTokenDecoder) {
+        this.accessTokenDecoder = accessTokenDecoder;
+    }
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
@@ -66,5 +71,6 @@ public class AuthenticationRequestFilter extends OncePerRequestFilter {
         usernamePasswordAuthenticationToken.setDetails(accessToken);
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }
+
 
 }

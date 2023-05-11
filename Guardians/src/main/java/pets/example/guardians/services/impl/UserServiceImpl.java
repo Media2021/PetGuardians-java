@@ -11,6 +11,7 @@ import pets.example.guardians.model.User;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.UserService;
+import pets.example.guardians.services.exception.UsernameAlreadyExistsException;
 
 import java.util.*;
 
@@ -35,17 +36,13 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    public void saveNewUser(UserEntity user, String password) {
+    protected void saveNewUser(UserEntity user, String password) {
         String encodedPassword = passwordEncoder.encode(password);
         user.setPassword(encodedPassword);
         userRepo.save(user);
     }
 
-    public static class UsernameAlreadyExistsException extends RuntimeException {
-        public UsernameAlreadyExistsException(String message) {
-            super(message);
-        }
-    }
+
 
     @Override
     public List<User> getAllUsers() {
@@ -102,19 +99,9 @@ public class UserServiceImpl implements UserService {
         userEntity.setEmail(user.getEmail());
         userEntity.setAddress(user.getAddress());
         userEntity.setUsername(user.getUsername());
-
-
         userEntity.setPhone(user.getPhone());
 
 
-        String newUsername = user.getUsername();
-        if (!newUsername.equals(userEntity.getUsername())) {
-            Optional<UserEntity> existingUser = userRepo.findByUsername(newUsername);
-            if (existingUser.isPresent() && existingUser.get().getId() != id) {
-                throw new UsernameAlreadyExistsException("Username already taken");
-            }
-            userEntity.setUsername(newUsername);
-        }
 
         userRepo.save(userEntity);
         return user;

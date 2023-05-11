@@ -14,6 +14,8 @@ import pets.example.guardians.model.User;
 import pets.example.guardians.model.UserRole;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
+import pets.example.guardians.services.exception.UsernameAlreadyExistsException;
+
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -26,6 +28,7 @@ class UserServiceImplTest {
     private UserRepo userRepo;
     @Mock
     private PasswordEncoder passwordEncoder;
+
 
 
     @Before
@@ -69,7 +72,7 @@ class UserServiceImplTest {
         when(userRepo.findByUsername("john.doe")).thenReturn(Optional.of(new UserEntity()));
 
         // Act & Assert
-        assertThrows(UserServiceImpl.UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
+        assertThrows(UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
 
         verify(userRepo, times(1)).findByUsername("john.doe");
         verify(userRepo, never()).save(any(UserEntity.class));
@@ -104,7 +107,7 @@ class UserServiceImplTest {
         when(userRepo.findByUsername("existing user")).thenReturn(Optional.of(new UserEntity()));
 
 
-        assertThrows(UserServiceImpl.UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
+        assertThrows(UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
 
 
         verify(userRepo, never()).save(any(UserEntity.class));
@@ -294,4 +297,23 @@ class UserServiceImplTest {
         assertThrows(NoSuchElementException.class,
                 () -> userServiceImpl.getUserByUsernameAndPassword("jdoe", "4321a"));
     }
+    @Test
+    void getUserById_UserExists_ReturnsOptionalUser() {
+
+        Long userId = 1L;
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+        when(userRepo.findById(userId)).thenReturn(Optional.of(userEntity));
+
+
+        Optional<User> result = userServiceImpl.getUserById(userId);
+
+        Assertions.assertTrue(result.isPresent());
+        Assertions.assertEquals(Optional.of(userId), Optional.of(result.get().getId()));
+        verify(userRepo, times(1)).findById(userId);
+    }
+
+
+
+
 }

@@ -43,13 +43,13 @@ public class LoginUseCaseImpl implements Login {
                 .build();
     }
 
-    private boolean matchesPassword(String rawPassword, String encodedPassword) {
+    protected boolean matchesPassword(String rawPassword, String encodedPassword) {
 
         return passwordEncoder.matches(rawPassword, encodedPassword);
 
     }
 
-    private String generateAccessToken(Optional<UserEntity> user) {
+    protected String generateAccessToken(Optional<UserEntity> user) {
         Long userId = null;
         List<String> roles = Collections.emptyList();
         if (user.isPresent()) {
