@@ -11,6 +11,8 @@ public interface PetService {
     List<Pet> getAllPets();
 
 
+    List<Pet> getAvailablePets();
+
     void deletePet(Long id);
     Optional<Pet> getPetById(Long id);
     Pet updatePetById(Long id, Pet pet);

@@ -22,12 +22,12 @@ public class AdoptionRequestEntity {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "user_id",referencedColumnName = "id")
+    @JoinColumn(name = "adopter_id",referencedColumnName = "id")
     private UserEntity user;
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne
-    @JoinColumn(name = "pet_id", referencedColumnName = "id")
+    @JoinColumn(name = "adopted_Pets", referencedColumnName = "id")
     private PetEntity pet;
 
     private String status;

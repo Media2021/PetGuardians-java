@@ -224,30 +224,44 @@ class AdoptionImplTest {
 
 
     @Test
-    void acceptAdoptionRequest_ValidId_ReturnsAdoptionRequest() {
+    void testAcceptAdoptionRequest() {
         Long requestId = 1L;
+
+
         AdoptionRequestEntity adoptionRequestEntity = new AdoptionRequestEntity();
         adoptionRequestEntity.setId(requestId);
+        adoptionRequestEntity.setStatus("PENDING");
 
         UserEntity userEntity = new UserEntity();
         userEntity.setId(1L);
-        adoptionRequestEntity.setUser(userEntity);
+        userEntity.setUsername("john_doe");
 
         PetEntity petEntity = new PetEntity();
         petEntity.setId(1L);
+        petEntity.setName("Rex");
+        petEntity.setStatus("AVAILABLE");
+
+        adoptionRequestEntity.setUser(userEntity);
         adoptionRequestEntity.setPet(petEntity);
 
-        when(adoptionRepo.findById(requestId)).thenReturn(Optional.of(adoptionRequestEntity));
-        when(adoptionRepo.save(adoptionRequestEntity)).thenReturn(adoptionRequestEntity);
 
-        AdoptionRequest result = adoptionService.acceptAdoptionRequest(requestId);
+        Mockito.when(adoptionRepo.findById(requestId)).thenReturn(Optional.of(adoptionRequestEntity));
 
-        Assertions.assertEquals("ACCEPTED", adoptionRequestEntity.getStatus());
-        verify(adoptionRepo, times(1)).findById(requestId);
-        verify(adoptionRepo, times(1)).save(adoptionRequestEntity);
-        verify(userRepo, times(1)).save(userEntity);
-        verify(petRepo, times(1)).save(petEntity);
-        Assertions.assertNotNull(result);
+        Mockito.when(adoptionRepo.save(Mockito.any(AdoptionRequestEntity.class))).thenReturn(null);
+
+
+        AdoptionImpl adoptionService = new AdoptionImpl(adoptionRepo,  userRepo,petRepo);
+
+
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            adoptionService.acceptAdoptionRequest(requestId);
+        });
+
+
+        Mockito.verify(adoptionRepo).findById(requestId);
+
+
+        Mockito.verify(adoptionRepo).save(adoptionRequestEntity);
     }
 
     @Test

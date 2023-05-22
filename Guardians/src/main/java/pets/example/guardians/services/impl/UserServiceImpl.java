@@ -3,13 +3,16 @@ package pets.example.guardians.services.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+import org.springframework.transaction.annotation.Transactional;
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
+import pets.example.guardians.services.Mapper.UserMapper;
 import pets.example.guardians.services.UserService;
 import pets.example.guardians.services.exception.UsernameAlreadyExistsException;
 
@@ -21,6 +24,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService {
 
     private final UserRepo userRepo;
+
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
@@ -70,19 +74,30 @@ public class UserServiceImpl implements UserService {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
-
     @Override
+    @Transactional
     public Optional<User> getUserById(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
         if (userEntityOpt.isPresent()) {
             UserEntity userEntity = userEntityOpt.get();
-            User user = new User();
-            BeanUtils.copyProperties(userEntity, user);
-            return Optional.of(user);
+            return Optional.of(UserMapper.toModel(userEntity));
         } else {
             throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
         }
     }
+
+//    @Override
+//    public Optional<User> getUserById(Long id) {
+//        Optional<UserEntity> userEntityOpt = userRepo.findById(id);
+//        if (userEntityOpt.isPresent()) {
+//            UserEntity userEntity = userEntityOpt.get();
+//            User user = new User();
+//            BeanUtils.copyProperties(userEntity, user);
+//            return Optional.of(user);
+//        } else {
+//            throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
+//        }
+//    }
 
     @Override
     public User updateUser(Long id, User user) {

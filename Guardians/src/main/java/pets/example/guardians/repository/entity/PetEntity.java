@@ -1,7 +1,6 @@
 package pets.example.guardians.repository.entity;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.*;
 import pets.example.guardians.model.PetType;
 
 import javax.persistence.*;
@@ -10,9 +9,10 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
+@Builder
 @Table(name = "pets")
 @NoArgsConstructor
-
+@AllArgsConstructor
 public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,7 +27,9 @@ public class PetEntity {
     private String status;
     private String gender;
 
-    @ManyToOne
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "adopter_id", referencedColumnName = "id")
     private UserEntity adopter;
 
 

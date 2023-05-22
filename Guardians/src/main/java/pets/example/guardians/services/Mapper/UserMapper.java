@@ -8,6 +8,7 @@ import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.repository.entity.UserEntity;
 
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 @AllArgsConstructor
@@ -27,9 +28,11 @@ public class UserMapper {
         model.setRole(entity.getRole());
         Hibernate.initialize(entity.getAdoptedPets());
         if (entity.getAdoptedPets() != null) {
-            Set<Pet> adoptedPets = entity.getAdoptedPets().stream()
-                    .map(PetMapper::toModel)
-                    .collect(Collectors.toSet());
+            Set<Pet> adoptedPets = new HashSet<>();
+            for (PetEntity petEntity : entity.getAdoptedPets()) {
+                Pet pet = PetMapper.toModel(petEntity);
+                adoptedPets.add(pet);
+            }
             model.setAdoptedPets(adoptedPets);
         }
         return model;
@@ -49,9 +52,11 @@ public class UserMapper {
         entity.setRole(model.getRole());
         Hibernate.initialize(model.getAdoptedPets());
         if (model.getAdoptedPets() != null) {
-            Set<PetEntity> adoptedPets = model.getAdoptedPets().stream()
-                    .map(PetMapper::toEntity)
-                    .collect(Collectors.toSet());
+            Set<PetEntity> adoptedPets = new HashSet<>();
+            for (Pet pet : model.getAdoptedPets()) {
+                PetEntity petEntity = PetMapper.toEntity(pet);
+                adoptedPets.add(petEntity);
+            }
             entity.setAdoptedPets(adoptedPets);
         }
         return entity;

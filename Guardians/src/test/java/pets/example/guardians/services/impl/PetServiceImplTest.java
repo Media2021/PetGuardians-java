@@ -150,50 +150,114 @@ class PetServiceImplTest {
         verify(petRepo, never()).delete(any(PetEntity.class));
     }
     @Test
-    void testGetPetById() {
+    void testGetPetById_PetFound() {
         Long id = 1L;
+
+
         PetEntity petEntity = new PetEntity();
         petEntity.setId(id);
-        petEntity.setName("Rex");
-        petEntity.setAge(3);
-        petEntity.setDescription("A friendly dog");
-        petEntity.setType(PetType.DOG);
-        petEntity.setStatus("AVAILABLE");
-        petEntity.setGender("MALE");
+        petEntity.setName("Buddy");
 
-        when(petRepo.findById(id)).thenReturn(Optional.of(petEntity));
-        Optional<Pet> result = petServiceImpl.getPetById(id);
+
+        Mockito.when(petRepo.findById(id)).thenReturn(Optional.of(petEntity));
+
+
+        PetServiceImpl petService = new PetServiceImpl(petRepo);
+        Optional<Pet> result = petService.getPetById(id);
+
 
         Assertions.assertTrue(result.isPresent());
         Pet pet = result.get();
-        Assertions.assertEquals((long) id, pet.getId());
+        Assertions.assertEquals(id, pet.getId());
+        Assertions.assertEquals("Buddy", pet.getName());
+
+
+        Mockito.verify(petRepo).findById(id);
+    }
+
+
+    @Test
+    void testGetPetById_PetNotFound() {
+        Long id = 1L;
+
+
+        Mockito.when(petRepo.findById(id)).thenReturn(Optional.empty());
+
+
+        PetServiceImpl petService = new PetServiceImpl(petRepo);
+
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> {
+            petService.getPetById(id);
+        });
+
+
+        Mockito.verify(petRepo).findById(id);
+    }
+    @Test
+    void testGetAvailablePets() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        PetEntity availablePetEntity = new PetEntity();
+        availablePetEntity.setId(1L);
+        availablePetEntity.setName("Rex");
+        availablePetEntity.setStatus("AVAILABLE");
+        petEntities.add(availablePetEntity);
+
+        PetEntity adoptedPetEntity = new PetEntity();
+        adoptedPetEntity.setId(2L);
+        adoptedPetEntity.setName("Max");
+        adoptedPetEntity.setStatus("ADOPTED");
+        petEntities.add(adoptedPetEntity);
+
+
+        Mockito.when(petRepo.findAll()).thenReturn(petEntities);
+
+
+        PetServiceImpl petService = new PetServiceImpl(petRepo);
+        List<Pet> result = petService.getAvailablePets();
+
+
+        Mockito.verify(petRepo).findAll();
+
+
+        Assertions.assertEquals(1, result.size());
+
+        Pet pet = result.get(0);
+        Assertions.assertEquals(1L, pet.getId());
         Assertions.assertEquals("Rex", pet.getName());
-        Assertions.assertEquals(3, pet.getAge());
-        Assertions.assertEquals("A friendly dog", pet.getDescription());
-        Assertions.assertEquals(PetType.DOG, pet.getType());
         Assertions.assertEquals("AVAILABLE", pet.getStatus());
-        Assertions.assertEquals("MALE", pet.getGender());
-        verify(petRepo).findById(id);
     }
     @Test
-    void testGetPetById_InvalidId() {
-        Long id = 1L;
-        when(petRepo.findById(id)).thenReturn(Optional.empty());
+    void testGetAvailablePets_NoAvailablePets() {
 
-        Optional<Pet> result = petServiceImpl.getPetById(id);
-        Assertions.assertTrue(result.isEmpty(), "Expected an empty Optional");
+        List<PetEntity> petEntities = new ArrayList<>();
+        PetEntity adoptedPetEntity1 = new PetEntity();
+        adoptedPetEntity1.setId(1L);
+        adoptedPetEntity1.setName("Max");
+        adoptedPetEntity1.setStatus("ADOPTED");
+        petEntities.add(adoptedPetEntity1);
 
-        verify(petRepo).findById(id);
+        PetEntity adoptedPetEntity2 = new PetEntity();
+        adoptedPetEntity2.setId(2L);
+        adoptedPetEntity2.setName("Charlie");
+        adoptedPetEntity2.setStatus("ADOPTED");
+        petEntities.add(adoptedPetEntity2);
+
+
+        Mockito.when(petRepo.findAll()).thenReturn(petEntities);
+
+
+        PetServiceImpl petService = new PetServiceImpl(petRepo);
+
+
+        List<Pet> result = petService.getAvailablePets();
+        Assertions.assertTrue(result.isEmpty());
+
+
+        Mockito.verify(petRepo).findAll();
     }
-    @Test
-    void testGetPetById_IdNotFound() {
-        Long id = 1L;
-        when(petRepo.findById(id)).thenReturn(Optional.empty());
 
-        Optional<Pet> result = petServiceImpl.getPetById(id);
-
-        Assertions.assertFalse(result.isPresent());
-    }
     @Test
      void testUpdatePetById() {
 

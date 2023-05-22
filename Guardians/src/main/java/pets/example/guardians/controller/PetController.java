@@ -51,5 +51,15 @@ public class PetController {
         pet = petService.updatePetById(id, pet);
         return ResponseEntity.ok(pet);
     }
+    @GetMapping("/available")
+    public ResponseEntity<List<Pet>> getAvailablePets() {
+        List<Pet> pets;
+        try {
+            pets = petService.getAvailablePets();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(pets);
+    }
 
 }

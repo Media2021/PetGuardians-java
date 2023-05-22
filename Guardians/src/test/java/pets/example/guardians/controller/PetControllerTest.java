@@ -27,8 +27,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.BDDMockito.given;
 
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -41,6 +40,69 @@ class PetControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private PetService petServiceMock;
+    @Test
+     void testGetAvailablePets() throws Exception {
+
+        List<Pet> availablePets = new ArrayList<>();
+
+        Pet pet1 = new Pet();
+        pet1.setId(1L);
+        pet1.setName("Rex");
+        pet1.setStatus("AVAILABLE");
+        availablePets.add(pet1);
+
+        Pet pet2 = new Pet();
+        pet2.setId(2L);
+        pet2.setName("Max");
+        pet2.setStatus("AVAILABLE");
+        availablePets.add(pet2);
+
+
+        when(petServiceMock.getAvailablePets()).thenReturn(availablePets);
+
+
+        mockMvc.perform(get("/pets/available")
+                        .header("Origin", "http://localhost:3000")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.size()").value(2)) // Verify the response contains 2 pets
+                .andExpect(jsonPath("$[0].id").value(1L)) // Verify the id of the first pet
+                .andExpect(jsonPath("$[0].name").value("Rex")) // Verify the name of the first pet
+                .andExpect(jsonPath("$[1].id").value(2L)) // Verify the id of the second pet
+                .andExpect(jsonPath("$[1].name").value("Max")); // Verify the name of the second pet
+
+
+        verify(petServiceMock).getAvailablePets();
+    }
+    @Test
+    public void testGetAvailablePets_throwException() throws Exception {
+
+        List<Pet> availablePets = new ArrayList<>();
+
+        Pet pet1 = new Pet();
+        pet1.setId(1L);
+        pet1.setName("Rex");
+        pet1.setStatus("AVAILABLE");
+        availablePets.add(pet1);
+
+        Pet pet2 = new Pet();
+        pet2.setId(2L);
+        pet2.setName("Max");
+        pet2.setStatus("AVAILABLE");
+        availablePets.add(pet2);
+
+
+        when(petServiceMock.getAvailablePets()).thenThrow(NoSuchElementException.class);
+
+
+        mockMvc.perform(get("/pets/available")
+                        .header("Origin", "http://localhost:3000")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+
+
+        verify(petServiceMock).getAvailablePets();
+    }
     @Test
     void testCreatePet() throws Exception {
         Pet pet = new Pet();

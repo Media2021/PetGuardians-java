@@ -3,6 +3,7 @@ package pets.example.guardians.services.Mapper;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.entity.PetEntity;
+import pets.example.guardians.repository.entity.UserEntity;
 
 public class PetMapper {
 
@@ -33,7 +34,9 @@ public class PetMapper {
         entity.setStatus(model.getStatus());
         entity.setGender(model.getGender());
         if (model.getAdopter() != null) {
-            entity.setAdopter(UserMapper.toEntity(model.getAdopter()));
+            UserEntity adopterEntity = new UserEntity();
+            adopterEntity.setId(model.getAdopter().getId());
+            entity.setAdopter(adopterEntity);
         }
         return entity;
     }

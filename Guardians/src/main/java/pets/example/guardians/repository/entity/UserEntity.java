@@ -13,9 +13,10 @@ import java.util.Set;
 
 @Entity
 @Data
+@Builder
 @Table(name = "pet_users")
 @NoArgsConstructor
-
+@AllArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,15 +40,17 @@ public class UserEntity {
    @Past(message = "Birth date must be in the past")
     private Date birthdate;
     private UserRole role;
+    @Column(name = "adopted_Pets")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @JsonIgnore
+
     @OneToMany(mappedBy = "adopter" , cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<PetEntity> adoptedPets = new HashSet<>();
 
     public void adoptPet(PetEntity pet) {
 
         adoptedPets.add(pet);
+        pet.setAdopter(this);
     }
 
 

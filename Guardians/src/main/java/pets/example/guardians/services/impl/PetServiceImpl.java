@@ -4,9 +4,11 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.repository.PetRepo;
 import pets.example.guardians.repository.entity.PetEntity;
+import pets.example.guardians.services.Mapper.PetMapper;
 import pets.example.guardians.services.PetService;
 
 
@@ -39,14 +41,30 @@ public class PetServiceImpl implements PetService {
         List<Pet> pets = new ArrayList<>();
 
         for (PetEntity petEntity : petEntities) {
-            Pet pet = new Pet();
-            BeanUtils.copyProperties(petEntity, pet);
-            pets.add(pet);
+
+                Pet pet = new Pet();
+                BeanUtils.copyProperties(petEntity, pet);
+                pets.add(pet);
+
         }
 
         return pets;
     }
+    @Override
+    public List<Pet> getAvailablePets() {
+        List<PetEntity> petEntities = petRepo.findAll();
+        List<Pet> pets = new ArrayList<>();
 
+        for (PetEntity petEntity : petEntities) {
+            if (!petEntity.getStatus() .equals("ADOPTED"))  {
+                Pet pet = new Pet();
+                BeanUtils.copyProperties(petEntity, pet);
+                pets.add(pet);
+            }
+        }
+
+        return pets;
+    }
     @Override
     public void deletePet(Long id) {
         Optional<PetEntity> petEntityOptional = petRepo.findById(id);
@@ -58,17 +76,18 @@ public class PetServiceImpl implements PetService {
         }
     }
     @Override
+    @Transactional
     public Optional<Pet> getPetById(Long id) {
-        Optional<PetEntity> petEntityOptional = petRepo.findById(id);
-        if (petEntityOptional.isPresent()) {
-            PetEntity petEntity = petEntityOptional.get();
-            Pet pet = new Pet();
-            BeanUtils.copyProperties(petEntity, pet);
-            return Optional.of(pet);
+        Optional<PetEntity> petEntityOpt = petRepo.findById(id);
+        if (petEntityOpt.isPresent()) {
+            PetEntity petEntity = petEntityOpt.get();
+            return Optional.of(PetMapper.toModel(petEntity));
         } else {
-            return Optional.empty();
+            throw new NoSuchElementException(String.format("Pet with ID %d not found", id));
         }
     }
+
+
     @Override
     public Pet updatePetById(Long id, Pet pet) {
         Optional<PetEntity> optionalPetEntity = petRepo.findById(id);

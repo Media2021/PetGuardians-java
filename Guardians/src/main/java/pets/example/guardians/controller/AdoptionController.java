@@ -98,7 +98,7 @@ public class AdoptionController {
         }
     }
 
-    @Transactional
+
     @PutMapping("/{id}/accept")
     public ResponseEntity<AdoptionRequest> acceptAdoptionRequest(@PathVariable Long id) {
         try {

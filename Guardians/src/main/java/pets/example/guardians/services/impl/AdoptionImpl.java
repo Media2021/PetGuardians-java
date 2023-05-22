@@ -77,6 +77,12 @@ public class AdoptionImpl implements AdoptionService {
         Optional<AdoptionRequestEntity> adoptionRequestEntityOptional = adoptionRepo.findById(id);
         if (adoptionRequestEntityOptional.isPresent()) {
             AdoptionRequestEntity adoptionRequestEntity = adoptionRequestEntityOptional.get();
+            if (adoptionRequestEntity.getUser() == null) {
+                throw new IllegalArgumentException("Adoption request is missing a user");
+            }
+            if (adoptionRequestEntity.getPet() == null) {
+                throw new IllegalArgumentException("Adoption request is missing a pet");
+            }
             AdoptionRequest adoptionRequest = AdoptionRequestMapper.toModel(adoptionRequestEntity);
             UserEntity userEntity = adoptionRequestEntity.getUser();
             PetEntity petEntity = adoptionRequestEntity.getPet();
@@ -89,6 +95,7 @@ public class AdoptionImpl implements AdoptionService {
             return Optional.empty();
         }
     }
+
 
     @Override
     public Optional<AdoptionRequest> updateAdoptionRequestById(Long id, AdoptionRequest updatedRequest) {
@@ -129,12 +136,18 @@ public class AdoptionImpl implements AdoptionService {
 
         UserEntity userEntity = savedEntity.getUser();
         PetEntity petEntity = savedEntity.getPet();
+
+
+
+        petEntity.setAdopter(userEntity);
+        petEntity.setStatus("ADOPTED");
+        petRepo.saveAndFlush(petEntity);
         userEntity.adoptPet(petEntity);
-        userRepo.save(userEntity);
+
+        userRepo.saveAndFlush(userEntity);
 
 
-         petEntity.setAdopter(userEntity);
-        petRepo.save(petEntity);
+
         return AdoptionRequestMapper.toModel(savedEntity);
     }
 
