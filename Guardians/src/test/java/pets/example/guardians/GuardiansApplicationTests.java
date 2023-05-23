@@ -18,7 +18,7 @@ class GuardiansApplicationTests {
 
 
     @Test
-    public void testMain() {
+    void testMain() {
 
         GuardiansApplication.main(new String[]{});
 

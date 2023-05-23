@@ -8,23 +8,18 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-
 import pets.example.guardians.model.User;
 import pets.example.guardians.model.UserRole;
 import pets.example.guardians.repository.UserRepo;
 import pets.example.guardians.repository.entity.UserEntity;
-
-
 import pets.example.guardians.services.exception.InvalidCredentialsException;
+
 
 import java.util.Optional;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
-
-import static org.mockito.Mockito.when;
-
+import static org.mockito.Mockito.*;
 
 
 @SpringBootTest
@@ -38,11 +33,13 @@ class LoginUseCaseImplTest {
     @InjectMocks
     private LoginUseCaseImpl loginUseCase;
 
+
+
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-    }
 
+    }
 
     @Test
     void matchesPassword_InvalidPassword_ReturnsFalse() {

@@ -6,15 +6,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
+
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolationException;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 
 class RestCustomExceptionHandlerTest {
+
     private final RestCustomExceptionHandler exceptionHandler = new RestCustomExceptionHandler();
 
     @Test

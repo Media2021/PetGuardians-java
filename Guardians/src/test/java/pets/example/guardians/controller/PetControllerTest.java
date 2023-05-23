@@ -75,7 +75,7 @@ class PetControllerTest {
         verify(petServiceMock).getAvailablePets();
     }
     @Test
-    public void testGetAvailablePets_throwException() throws Exception {
+  void testGetAvailablePets_throwException() throws Exception {
 
         List<Pet> availablePets = new ArrayList<>();
 

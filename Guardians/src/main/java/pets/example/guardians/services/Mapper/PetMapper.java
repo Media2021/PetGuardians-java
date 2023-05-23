@@ -6,7 +6,7 @@ import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.repository.entity.UserEntity;
 
 public class PetMapper {
-
+    private PetMapper() {}
     public static Pet toModel(PetEntity entity) {
         Pet model = new Pet();
         model.setId(entity.getId());

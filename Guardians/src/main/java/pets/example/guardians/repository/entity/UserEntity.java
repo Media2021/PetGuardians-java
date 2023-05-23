@@ -13,10 +13,10 @@ import java.util.Set;
 
 @Entity
 @Data
-@Builder
+
 @Table(name = "pet_users")
 @NoArgsConstructor
-@AllArgsConstructor
+
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

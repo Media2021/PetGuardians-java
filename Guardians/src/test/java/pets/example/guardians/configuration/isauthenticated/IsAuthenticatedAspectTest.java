@@ -1,15 +1,18 @@
 package pets.example.guardians.configuration.isauthenticated;
 
 import org.aspectj.lang.ProceedingJoinPoint;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
@@ -80,4 +83,21 @@ class IsAuthenticatedAspectTest {
 
         verify(proceedingJoinPoint, never()).proceed();
     }
+    @Test
+    void testInterceptMethod_withNullSecurityContext() {
+
+        SecurityContextHolder.clearContext();
+
+        try {
+
+            assertThrows(ResponseStatusException.class, () -> isAuthenticatedAspect.interceptMethod(proceedingJoinPoint));
+        } catch (Throwable throwable) {
+
+            assertTrue(throwable instanceof ResponseStatusException);
+            assertEquals(HttpStatus.UNAUTHORIZED, ((ResponseStatusException) throwable).getStatus());
+
+
+        }
+    }
+
 }

@@ -8,10 +8,10 @@ import java.util.Date;
 
 @Entity
 @Data
-@Builder
+
 @Table(name = "adoption_requests")
 @NoArgsConstructor
-@AllArgsConstructor
+
 
 public class AdoptionRequestEntity {
 

@@ -1,8 +1,9 @@
 package pets.example.guardians.services.impl;
 
-import org.junit.Before;
+
 import org.junit.jupiter.api.Assertions;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.springframework.beans.BeanUtils;
@@ -31,7 +32,7 @@ class UserServiceImplTest {
 
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
@@ -80,7 +81,7 @@ class UserServiceImplTest {
 
 
     @Test
-    public void testSaveNewUser_PasswordHashed() {
+     void testSaveNewUser_PasswordHashed() {
         UserEntity user = new UserEntity();
         user.setUsername("testuser");
         user.setPassword("password");

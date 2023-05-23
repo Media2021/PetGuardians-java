@@ -3,7 +3,7 @@ package pets.example.guardians.services.impl;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -86,18 +86,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-//    @Override
-//    public Optional<User> getUserById(Long id) {
-//        Optional<UserEntity> userEntityOpt = userRepo.findById(id);
-//        if (userEntityOpt.isPresent()) {
-//            UserEntity userEntity = userEntityOpt.get();
-//            User user = new User();
-//            BeanUtils.copyProperties(userEntity, user);
-//            return Optional.of(user);
-//        } else {
-//            throw new NoSuchElementException(String.format(USER_NOT_FOUND_MESSAGE, id));
-//        }
-//    }
+
 
     @Override
     public User updateUser(Long id, User user) {

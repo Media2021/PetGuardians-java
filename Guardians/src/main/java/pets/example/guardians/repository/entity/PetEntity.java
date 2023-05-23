@@ -1,5 +1,5 @@
 package pets.example.guardians.repository.entity;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import lombok.*;
 import pets.example.guardians.model.PetType;
 
@@ -9,10 +9,10 @@ import javax.validation.constraints.NotBlank;
 
 @Entity
 @Data
-@Builder
+
 @Table(name = "pets")
 @NoArgsConstructor
-@AllArgsConstructor
+
 public class PetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

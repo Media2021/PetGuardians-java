@@ -1,6 +1,6 @@
 package pets.example.guardians.services.Mapper;
 
-import lombok.AllArgsConstructor;
+
 import org.hibernate.Hibernate;
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.model.User;
@@ -10,10 +10,10 @@ import pets.example.guardians.repository.entity.UserEntity;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-@AllArgsConstructor
-public class UserMapper {
 
+
+public class UserMapper {
+private UserMapper(){}
     public static User toModel(UserEntity entity) {
         User model = new User();
         model.setId(entity.getId());
