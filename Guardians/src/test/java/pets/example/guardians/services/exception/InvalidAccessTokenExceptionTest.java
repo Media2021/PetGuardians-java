@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class InvalidAccessTokenExceptionTest {
     @Test
-     void constructor_ErrorCause_ReturnsInvalidAccessTokenException() {
+    public void constructor_ErrorCause_ReturnsInvalidAccessTokenException() {
         String errorCause = "Invalid access token";
         InvalidAccessTokenException exception = new InvalidAccessTokenException(errorCause);
 

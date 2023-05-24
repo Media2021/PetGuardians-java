@@ -20,7 +20,7 @@ import org.springframework.web.server.ResponseStatusException;
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
 @Component
 public class IsAuthenticatedAspect {
-    private static final  Logger LOGGER = LoggerFactory.getLogger(IsAuthenticatedAspect.class);
+    private final  static  Logger LOGGER = LoggerFactory.getLogger(IsAuthenticatedAspect.class);
 
     @Pointcut("@annotation(pets.example.guardians.configuration.isauthenticated.IsAuthenticated)")
     public void annotatedMethod() {

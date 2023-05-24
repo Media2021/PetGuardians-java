@@ -13,7 +13,7 @@ import java.util.Set;
 
 
 public class UserMapper {
-private UserMapper(){}
+
     public static User toModel(UserEntity entity) {
         User model = new User();
         model.setId(entity.getId());

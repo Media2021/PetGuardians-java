@@ -1,6 +1,7 @@
 package pets.example.guardians.services.impl;
 
 
+import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +33,7 @@ class UserServiceImplTest {
 
 
 
-    @BeforeEach
+    @Before
     public void setUp() {
         MockitoAnnotations.openMocks(this);
         when(passwordEncoder.encode(any(String.class))).thenReturn("encodedPassword");
@@ -65,14 +66,14 @@ class UserServiceImplTest {
 
     @Test
     void testCreateUser_UsernameAlreadyExists() {
-        // Arrange
+
         User existingUser = new User();
         existingUser.setUsername("john.doe");
         existingUser.setPassword("password");
 
         when(userRepo.findByUsername("john.doe")).thenReturn(Optional.of(new UserEntity()));
 
-        // Act & Assert
+
         assertThrows(UsernameAlreadyExistsException.class, () -> userServiceImpl.createUser(existingUser));
 
         verify(userRepo, times(1)).findByUsername("john.doe");

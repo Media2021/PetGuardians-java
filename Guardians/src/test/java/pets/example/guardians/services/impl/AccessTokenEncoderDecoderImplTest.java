@@ -25,7 +25,7 @@ import io.jsonwebtoken.impl.DefaultJwsHeader;
 
 
 @SpringBootTest
- class AccessTokenEncoderDecoderImplTest {
+public class AccessTokenEncoderDecoderImplTest {
 
     @Mock
     private AccessTokenEncoderDecoderImpl accessTokenEncoderDecoder;

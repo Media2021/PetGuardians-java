@@ -8,9 +8,7 @@ import pets.example.guardians.repository.entity.PetEntity;
 public class AdoptionRequestMapper {
 
 
-    private AdoptionRequestMapper() {
 
-    }
         public static AdoptionRequest toModel(AdoptionRequestEntity entity) {
             AdoptionRequest request = new AdoptionRequest();
             request.setId(entity.getId());
