@@ -53,6 +53,21 @@ public class UserEntity {
         pet.setAdopter(this);
     }
 
-
+    @Override
+    public String toString() {
+        return "UserEntity{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", password='" + password + '\'' +
+                ", phone=" + phone +
+                ", birthdate=" + birthdate +
+                ", role=" + role +
+                ", adoptedPets=" + adoptedPets +
+                '}';
+    }
 
 }

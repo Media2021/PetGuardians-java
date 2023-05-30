@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.StompWebSocketEndpointRegistration;
-
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -19,7 +17,7 @@ class WebSocketConfigTest {
 
 
     @Test
-    public void testMessageBrokerConfiguration() {
+   void testMessageBrokerConfiguration() {
         MessageBrokerRegistry registry = Mockito.mock(MessageBrokerRegistry.class);
 
         webSocketConfig.configureMessageBroker(registry);
@@ -30,7 +28,7 @@ class WebSocketConfigTest {
 
 
     @Test
-    public void testEndpointRegistration() {
+     void testEndpointRegistration() {
         StompEndpointRegistry registry = Mockito.mock(StompEndpointRegistry.class);
         StompWebSocketEndpointRegistration endpointRegistration = Mockito.mock(StompWebSocketEndpointRegistration.class);
 
@@ -42,7 +40,7 @@ class WebSocketConfigTest {
     }
 
     @Test
-    public void testMessageBrokerConfigurationException() {
+ void testMessageBrokerConfigurationException() {
         MessageBrokerRegistry registry = Mockito.mock(MessageBrokerRegistry.class);
 
 
@@ -52,7 +50,7 @@ class WebSocketConfigTest {
     }
 
     @Test
-    public void testEndpointRegistrationException() {
+    void testEndpointRegistrationException() {
         StompEndpointRegistry registry = Mockito.mock(StompEndpointRegistry.class);
 
 
