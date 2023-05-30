@@ -3,11 +3,85 @@ package pets.example.guardians.repository.entity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pets.example.guardians.model.PetType;
-
-import static org.junit.Assert.*;
-
-
 class PetEntityTest {
+
+    @Test
+    void testSettersAndGetters() {
+        PetEntity petEntity = new PetEntity();
+
+
+        petEntity.setId(1L);
+        petEntity.setName("Test Pet");
+        petEntity.setAge(3);
+        petEntity.setDescription("Test pet description");
+        petEntity.setType(PetType.DOG);
+        petEntity.setStatus("Available");
+        petEntity.setGender("Male");
+        UserEntity adopter = new UserEntity();
+        petEntity.setAdopter(adopter);
+
+
+        Assertions.assertEquals(1L, petEntity.getId());
+        Assertions.assertEquals("Test Pet", petEntity.getName());
+        Assertions.assertEquals(3, petEntity.getAge());
+        Assertions.assertEquals("Test pet description", petEntity.getDescription());
+        Assertions.assertEquals(PetType.DOG, petEntity.getType());
+        Assertions.assertEquals("Available", petEntity.getStatus());
+        Assertions.assertEquals("Male", petEntity.getGender());
+        Assertions.assertEquals(adopter, petEntity.getAdopter());
+    }
+
+    @Test
+    void testEqualsAndHashCodeWithNullFields() {
+        PetEntity petEntity1 = new PetEntity();
+        PetEntity petEntity2 = new PetEntity();
+
+
+        Assertions.assertEquals(petEntity1, petEntity2);
+        Assertions.assertEquals(petEntity1.hashCode(), petEntity2.hashCode());
+    }
+
+    @Test
+    void testEqualsAndHashCodeWithDifferentIds() {
+        PetEntity petEntity1 = new PetEntity();
+        petEntity1.setId(1L);
+        PetEntity petEntity2 = new PetEntity();
+        petEntity2.setId(2L);
+
+
+        Assertions.assertNotEquals(petEntity1, petEntity2);
+        Assertions.assertNotEquals(petEntity1.hashCode(), petEntity2.hashCode());
+    }
+
+    @Test
+    void testEqualsAndHashCodeWithDifferentTypes() {
+        PetEntity petEntity1 = new PetEntity();
+        petEntity1.setType(PetType.DOG);
+        PetEntity petEntity2 = new PetEntity();
+        petEntity2.setType(PetType.CAT);
+
+
+        Assertions.assertNotEquals(petEntity1, petEntity2);
+        Assertions.assertNotEquals(petEntity1.hashCode(), petEntity2.hashCode());
+    }
+
+    @Test
+    void testEqualsAndHashCodeWithDifferentObjects() {
+        PetEntity petEntity = new PetEntity();
+        Object otherObject = new Object();
+
+
+        Assertions.assertNotEquals(petEntity, otherObject);
+        Assertions.assertNotEquals(petEntity.hashCode(), otherObject.hashCode());
+    }
+    @Test
+    void testNullDescriptionException() {
+        PetEntity petEntity = new PetEntity();
+
+        Assertions.assertThrows(NullPointerException.class, () -> {
+            petEntity.setDescription(null);
+        });
+    }
 
     @Test
   void testGetterSetter() {
@@ -125,14 +199,14 @@ class PetEntityTest {
     void testEmptyPetEntity() {
         PetEntity petEntity = new PetEntity();
 
-        assertEquals(0L, petEntity.getId());
-        assertNull(petEntity.getName());
-        assertEquals(0, petEntity.getAge());
-        assertNull(petEntity.getDescription());
-        assertNull(petEntity.getType());
-        assertNull(petEntity.getStatus());
-        assertNull(petEntity.getGender());
-        assertNull(petEntity.getAdopter());
+        Assertions.assertEquals(0L, petEntity.getId());
+        Assertions.assertNull(petEntity.getName());
+        Assertions.assertEquals(0, petEntity.getAge());
+        Assertions.assertNull(petEntity.getDescription());
+        Assertions.assertNull(petEntity.getType());
+        Assertions.assertNull(petEntity.getStatus());
+        Assertions.assertNull(petEntity.getGender());
+        Assertions.assertNull(petEntity.getAdopter());
     }
 
     @Test
@@ -147,14 +221,14 @@ class PetEntityTest {
         petEntity.setGender(null);
         petEntity.setAdopter(null);
 
-        assertEquals(1L, petEntity.getId());
-        assertNull(petEntity.getName());
-        assertEquals(0, petEntity.getAge());
+        Assertions.assertEquals(1L, petEntity.getId());
+        Assertions.assertNull(petEntity.getName());
+        Assertions.assertEquals(0, petEntity.getAge());
 
-        assertNull(petEntity.getType());
-        assertNull(petEntity.getStatus());
-        assertNull(petEntity.getGender());
-        assertNull(petEntity.getAdopter());
+        Assertions.assertNull(petEntity.getType());
+        Assertions.assertNull(petEntity.getStatus());
+        Assertions.assertNull(petEntity.getGender());
+        Assertions.assertNull(petEntity.getAdopter());
     }
 
     @Test
@@ -179,8 +253,33 @@ class PetEntityTest {
         petEntity2.setGender("Male");
         petEntity2.setAdopter(new UserEntity());
 
-        assertEquals(petEntity1, petEntity2);
-        assertEquals(petEntity1.hashCode(), petEntity2.hashCode());
-        assertNotSame(petEntity1, petEntity2);
+        Assertions.assertEquals(petEntity1, petEntity2);
+        Assertions.assertEquals(petEntity1.hashCode(), petEntity2.hashCode());
+        Assertions.assertNotSame(petEntity1, petEntity2);
+    }
+    @Test
+    void testDifferentPetEntityInstances() {
+        PetEntity petEntity1 = new PetEntity();
+        petEntity1.setId(1L);
+        petEntity1.setName("Test Pet");
+        petEntity1.setAge(3);
+        petEntity1.setDescription("Test pet description");
+        petEntity1.setType(PetType.DOG);
+        petEntity1.setStatus("Available");
+        petEntity1.setGender("Male");
+        petEntity1.setAdopter(new UserEntity());
+
+        PetEntity petEntity2 = new PetEntity();
+        petEntity2.setId(2L);
+        petEntity2.setName("Different Pet");
+        petEntity2.setAge(5);
+        petEntity2.setDescription("Different pet description");
+        petEntity2.setType(PetType.CAT);
+        petEntity2.setStatus("Adopted");
+        petEntity2.setGender("Female");
+        petEntity2.setAdopter(null);
+
+        Assertions.assertNotEquals(petEntity1, petEntity2);
+        Assertions.assertNotEquals(petEntity1.hashCode(), petEntity2.hashCode());
     }
 }

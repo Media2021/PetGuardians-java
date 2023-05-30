@@ -25,12 +25,28 @@ class AdoptionRequestTest {
         adoptionRequest.setNotes(notes);
         adoptionRequest.setRequestDate(requestDate);
 
+
         Assertions.assertEquals(id, adoptionRequest.getId());
         Assertions.assertEquals(user, adoptionRequest.getUser());
         Assertions.assertEquals(pet, adoptionRequest.getPet());
         Assertions.assertEquals(status, adoptionRequest.getStatus());
         Assertions.assertEquals(notes, adoptionRequest.getNotes());
         Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+
+        adoptionRequest.setId(2L);
+        adoptionRequest.setUser(null);
+        adoptionRequest.setPet(null);
+        adoptionRequest.setStatus(null);
+        adoptionRequest.setNotes(null);
+        adoptionRequest.setRequestDate(null);
+
+        Assertions.assertEquals(2L, adoptionRequest.getId());
+        Assertions.assertNull(adoptionRequest.getUser());
+        Assertions.assertNull(adoptionRequest.getPet());
+        Assertions.assertNull(adoptionRequest.getStatus());
+        Assertions.assertNull(adoptionRequest.getNotes());
+        Assertions.assertNull(adoptionRequest.getRequestDate());
+
     }
 
     @Test
@@ -53,6 +69,17 @@ class AdoptionRequestTest {
         String expectedToString = "AdoptionRequest(id=1, user=" + user + ", pet=" + pet + ", status=pending, notes=Please consider my request., requestDate=" + requestDate + ")";
 
         Assertions.assertEquals(expectedToString, adoptionRequest.toString());
+        AdoptionRequest adoptionRequest2 = new AdoptionRequest();
+        adoptionRequest2.setId(2L);
+        adoptionRequest2.setUser(null);
+        adoptionRequest2.setPet(null);
+        adoptionRequest2.setStatus(null);
+        adoptionRequest2.setNotes(null);
+        adoptionRequest2.setRequestDate(null);
+
+        String expectedToString2 = "AdoptionRequest(id=2, user=null, pet=null, status=null, notes=null, requestDate=null)";
+
+        Assertions.assertEquals(expectedToString2, adoptionRequest2.toString());
     }
     @Test
     void testDataAnnotation() {
@@ -78,6 +105,15 @@ class AdoptionRequestTest {
         Assertions.assertEquals(status, adoptionRequest.getStatus());
         Assertions.assertEquals(notes, adoptionRequest.getNotes());
         Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+
+        adoptionRequest = AdoptionRequest.builder().build();
+
+        Assertions.assertEquals(0L, adoptionRequest.getId());
+        Assertions.assertNull(adoptionRequest.getUser());
+        Assertions.assertNull(adoptionRequest.getPet());
+        Assertions.assertNull(adoptionRequest.getStatus());
+        Assertions.assertNull(adoptionRequest.getNotes());
+        Assertions.assertNull(adoptionRequest.getRequestDate());
     }
 
     @Test
@@ -97,6 +133,15 @@ class AdoptionRequestTest {
         Assertions.assertEquals(status, adoptionRequest.getStatus());
         Assertions.assertEquals(notes, adoptionRequest.getNotes());
         Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+
+        adoptionRequest = new AdoptionRequest(2L, null, null, null, null, null);
+
+        Assertions.assertEquals(2L, adoptionRequest.getId());
+        Assertions.assertNull(adoptionRequest.getUser());
+        Assertions.assertNull(adoptionRequest.getPet());
+        Assertions.assertNull(adoptionRequest.getStatus());
+        Assertions.assertNull(adoptionRequest.getNotes());
+        Assertions.assertNull(adoptionRequest.getRequestDate());
     }
 
     @Test
@@ -123,5 +168,15 @@ class AdoptionRequestTest {
         Assertions.assertEquals(status, adoptionRequest.getStatus());
         Assertions.assertEquals(notes, adoptionRequest.getNotes());
         Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+
+        adoptionRequest = AdoptionRequest.builder().build();
+
+        Assertions.assertEquals(0L, adoptionRequest.getId());
+        Assertions.assertNull(adoptionRequest.getUser());
+        Assertions.assertNull(adoptionRequest.getPet());
+        Assertions.assertNull(adoptionRequest.getStatus());
+        Assertions.assertNull(adoptionRequest.getNotes());
+        Assertions.assertNull(adoptionRequest.getRequestDate());
+
     }
 }

@@ -118,5 +118,50 @@ class NotificationMessageTest {
         Assertions.assertEquals(message1, message2);
         Assertions.assertEquals(message1.hashCode(), message2.hashCode());
     }
+    @Test
+    void testNotificationMessageWithEmptyFields() {
+        String id = "";
+        String from = "";
+        String to = "";
+        String text = "";
 
+        NotificationMessage message = new NotificationMessage();
+        message.setId(id);
+        message.setFrom(from);
+        message.setTo(to);
+        message.setText(text);
+
+        assertEquals(id, message.getId());
+        assertEquals(from, message.getFrom());
+        assertEquals(to, message.getTo());
+        assertEquals(text, message.getText());
+    }
+
+    @Test
+    void testNotificationMessageEqualityWithDifferentFields() {
+        String id1 = "123";
+        String from1 = "John";
+        String to1 = "Alice";
+        String text1 = "Hello, Alice!";
+
+        String id2 = "456";
+        String from2 = "Jane";
+        String to2 = "Bob";
+        String text2 = "Hi, Bob!";
+
+        NotificationMessage message1 = new NotificationMessage();
+        message1.setId(id1);
+        message1.setFrom(from1);
+        message1.setTo(to1);
+        message1.setText(text1);
+
+        NotificationMessage message2 = new NotificationMessage();
+        message2.setId(id2);
+        message2.setFrom(from2);
+        message2.setTo(to2);
+        message2.setText(text2);
+
+        assertNotEquals(message1, message2);
+        assertNotEquals(message1.hashCode(), message2.hashCode());
+    }
 }
