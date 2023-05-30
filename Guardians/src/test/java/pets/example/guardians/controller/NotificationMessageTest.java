@@ -7,6 +7,59 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class NotificationMessageTest {
 
+
+    @Test
+    void testEmptyNotificationMessage() {
+        NotificationMessage message = new NotificationMessage();
+
+        assertNull(message.getId());
+        assertNull(message.getFrom());
+        assertNull(message.getTo());
+        assertNull(message.getText());
+    }
+
+    @Test
+    void testNotificationMessageWithNullFields() {
+        String id = null;
+        String from = null;
+        String to = null;
+        String text = null;
+
+        NotificationMessage message = new NotificationMessage();
+        message.setId(id);
+        message.setFrom(from);
+        message.setTo(to);
+        message.setText(text);
+
+        assertNull(message.getId());
+        assertNull(message.getFrom());
+        assertNull(message.getTo());
+        assertNull(message.getText());
+    }
+
+    @Test
+    void testNotificationMessageEqualityWithDifferentInstances() {
+        String id = "123";
+        String from = "John";
+        String to = "Alice";
+        String text = "Hello, Alice!";
+
+        NotificationMessage message1 = new NotificationMessage();
+        message1.setId(id);
+        message1.setFrom(from);
+        message1.setTo(to);
+        message1.setText(text);
+
+        NotificationMessage message2 = new NotificationMessage();
+        message2.setId(id);
+        message2.setFrom(from);
+        message2.setTo(to);
+        message2.setText(text);
+
+        assertEquals(message1, message2);
+        assertEquals(message1.hashCode(), message2.hashCode());
+        assertNotSame(message1, message2);
+    }
     @Test
     void testNotificationMessage() {
         String id = "123";

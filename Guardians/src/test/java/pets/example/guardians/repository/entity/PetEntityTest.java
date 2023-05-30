@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import pets.example.guardians.model.PetType;
 
+import static org.junit.Assert.*;
 
 
 class PetEntityTest {
@@ -119,5 +120,67 @@ class PetEntityTest {
                 "type=DOG, status=Available, gender=Male, adopter=" + adopter + ")";
 
         Assertions.assertEquals(expectedToString, petEntity.toString());
+    }
+    @Test
+    void testEmptyPetEntity() {
+        PetEntity petEntity = new PetEntity();
+
+        assertEquals(0L, petEntity.getId());
+        assertNull(petEntity.getName());
+        assertEquals(0, petEntity.getAge());
+        assertNull(petEntity.getDescription());
+        assertNull(petEntity.getType());
+        assertNull(petEntity.getStatus());
+        assertNull(petEntity.getGender());
+        assertNull(petEntity.getAdopter());
+    }
+
+    @Test
+    void testPetEntityWithNullFields() {
+        PetEntity petEntity = new PetEntity();
+        petEntity.setId(1L);
+        petEntity.setName(null);
+        petEntity.setAge(0);
+
+        petEntity.setType(null);
+        petEntity.setStatus(null);
+        petEntity.setGender(null);
+        petEntity.setAdopter(null);
+
+        assertEquals(1L, petEntity.getId());
+        assertNull(petEntity.getName());
+        assertEquals(0, petEntity.getAge());
+
+        assertNull(petEntity.getType());
+        assertNull(petEntity.getStatus());
+        assertNull(petEntity.getGender());
+        assertNull(petEntity.getAdopter());
+    }
+
+    @Test
+    void testPetEntityEqualityWithDifferentInstances() {
+        PetEntity petEntity1 = new PetEntity();
+        petEntity1.setId(1L);
+        petEntity1.setName("Test Pet");
+        petEntity1.setAge(3);
+        petEntity1.setDescription("Test pet description");
+        petEntity1.setType(PetType.DOG);
+        petEntity1.setStatus("Available");
+        petEntity1.setGender("Male");
+        petEntity1.setAdopter(new UserEntity());
+
+        PetEntity petEntity2 = new PetEntity();
+        petEntity2.setId(1L);
+        petEntity2.setName("Test Pet");
+        petEntity2.setAge(3);
+        petEntity2.setDescription("Test pet description");
+        petEntity2.setType(PetType.DOG);
+        petEntity2.setStatus("Available");
+        petEntity2.setGender("Male");
+        petEntity2.setAdopter(new UserEntity());
+
+        assertEquals(petEntity1, petEntity2);
+        assertEquals(petEntity1.hashCode(), petEntity2.hashCode());
+        assertNotSame(petEntity1, petEntity2);
     }
 }

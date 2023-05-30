@@ -9,6 +9,57 @@ import java.util.Date;
 
 class AdoptionRequestEntityTest {
 
+
+
+    @Test
+    void testDataAnnotation() {
+        long id = 1L;
+        UserEntity user = new UserEntity();
+        PetEntity pet = new PetEntity();
+        String status = "PENDING";
+        String notes = "Sample notes";
+        Date requestDate = new Date();
+
+        AdoptionRequestEntity adoptionRequestEntity = new AdoptionRequestEntity();
+        adoptionRequestEntity.setId(id);
+        adoptionRequestEntity.setUser(user);
+        adoptionRequestEntity.setPet(pet);
+        adoptionRequestEntity.setStatus(status);
+        adoptionRequestEntity.setNotes(notes);
+        adoptionRequestEntity.setRequestDate(requestDate);
+
+        Assertions.assertEquals(id, adoptionRequestEntity.getId());
+        Assertions.assertEquals(user, adoptionRequestEntity.getUser());
+        Assertions.assertEquals(pet, adoptionRequestEntity.getPet());
+        Assertions.assertEquals(status, adoptionRequestEntity.getStatus());
+        Assertions.assertEquals(notes, adoptionRequestEntity.getNotes());
+        Assertions.assertEquals(requestDate, adoptionRequestEntity.getRequestDate());
+    }
+    @Test
+    void testGetterAndSetter() {
+        long id = 1L;
+        UserEntity user = new UserEntity();
+        PetEntity pet = new PetEntity();
+        String status = "PENDING";
+        String notes = "Sample notes";
+        Date requestDate = new Date();
+
+        AdoptionRequestEntity adoptionRequestEntity = new AdoptionRequestEntity();
+        adoptionRequestEntity.setId(id);
+        adoptionRequestEntity.setUser(user);
+        adoptionRequestEntity.setPet(pet);
+        adoptionRequestEntity.setStatus(status);
+        adoptionRequestEntity.setNotes(notes);
+        adoptionRequestEntity.setRequestDate(requestDate);
+
+        Assertions.assertEquals(id, adoptionRequestEntity.getId());
+        Assertions.assertEquals(user, adoptionRequestEntity.getUser());
+        Assertions.assertEquals(pet, adoptionRequestEntity.getPet());
+        Assertions.assertEquals(status, adoptionRequestEntity.getStatus());
+        Assertions.assertEquals(notes, adoptionRequestEntity.getNotes());
+        Assertions.assertEquals(requestDate, adoptionRequestEntity.getRequestDate());
+    }
+
     @Test
     void testEqualsAndHashCode() {
         long id = 1L;
@@ -40,32 +91,23 @@ class AdoptionRequestEntityTest {
         request2.setNotes(notes2);
         request2.setRequestDate(requestDate2);
 
+
+        Assertions.assertEquals(request1, request1);
+
+
         Assertions.assertEquals(request1, request2);
         Assertions.assertEquals(request1.hashCode(), request2.hashCode());
-    }
 
-    @Test
-    void testDataAnnotation() {
-        long id = 1L;
-        UserEntity user = new UserEntity();
-        PetEntity pet = new PetEntity();
-        String status = "PENDING";
-        String notes = "Sample notes";
-        Date requestDate = new Date();
 
-        AdoptionRequestEntity adoptionRequestEntity = new AdoptionRequestEntity();
-        adoptionRequestEntity.setId(id);
-        adoptionRequestEntity.setUser(user);
-        adoptionRequestEntity.setPet(pet);
-        adoptionRequestEntity.setStatus(status);
-        adoptionRequestEntity.setNotes(notes);
-        adoptionRequestEntity.setRequestDate(requestDate);
+        Assertions.assertNotEquals(request1, null);
 
-        Assertions.assertEquals(id, adoptionRequestEntity.getId());
-        Assertions.assertEquals(user, adoptionRequestEntity.getUser());
-        Assertions.assertEquals(pet, adoptionRequestEntity.getPet());
-        Assertions.assertEquals(status, adoptionRequestEntity.getStatus());
-        Assertions.assertEquals(notes, adoptionRequestEntity.getNotes());
-        Assertions.assertEquals(requestDate, adoptionRequestEntity.getRequestDate());
+
+        Assertions.assertNotEquals(request1, new Object());
+
+
+        AdoptionRequestEntity request3 = new AdoptionRequestEntity();
+        request3.setId(2L);
+        Assertions.assertNotEquals(request1, request3);
+        Assertions.assertNotEquals(request1.hashCode(), request3.hashCode());
     }
 }
