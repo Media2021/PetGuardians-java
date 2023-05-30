@@ -13,7 +13,7 @@ sonar {
     properties {
         property "sonar.projectKey", "StudyMate"
         property "sonar.qualitygate.wait", true
-        property "sonar.coverage.exclusions", "**/lombok/**/*.*, **/pets/example/guardians/repository/entity/**/*.*"
+        property "sonar.coverage.exclusions", "**/lombok/**/*.*"
 
     }
 
