@@ -33,5 +33,16 @@ void testBuilder() {
         Assertions.assertEquals(accessToken, loginResponse.getAccessToken());
         Assertions.assertEquals(userId, loginResponse.getUserId());
     }
+    @Test
+    void testDataAnnotation() {
+        String accessToken = "abc123";
+        long userId = 123456;
 
+        LoginResponse loginResponse = new LoginResponse();
+        loginResponse.setAccessToken(accessToken);
+        loginResponse.setUserId(userId);
+
+        Assertions.assertEquals(accessToken, loginResponse.getAccessToken());
+        Assertions.assertEquals(userId, loginResponse.getUserId());
+    }
 }

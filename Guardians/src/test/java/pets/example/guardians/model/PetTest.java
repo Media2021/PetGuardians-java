@@ -69,4 +69,35 @@ class PetTest {
         Assertions.assertEquals(gender, pet.getGender());
         Assertions.assertEquals(adopter, pet.getAdopter());
     }
+
+    @Test
+    void testDataAnnotation() {
+        long id = 1L;
+        String name = "Buddy";
+        int age = 2;
+        String description = "Friendly and playful";
+        PetType type = PetType.DOG;
+        String status = "AVAILABLE";
+        String gender = "Male";
+        User adopter = new User();
+
+        Pet pet = new Pet();
+        pet.setId(id);
+        pet.setName(name);
+        pet.setAge(age);
+        pet.setDescription(description);
+        pet.setType(type);
+        pet.setStatus(status);
+        pet.setGender(gender);
+        pet.setAdopter(adopter);
+
+        Assertions.assertEquals(id, pet.getId());
+        Assertions.assertEquals(name, pet.getName());
+        Assertions.assertEquals(age, pet.getAge());
+        Assertions.assertEquals(description, pet.getDescription());
+        Assertions.assertEquals(type, pet.getType());
+        Assertions.assertEquals(status, pet.getStatus());
+        Assertions.assertEquals(gender, pet.getGender());
+        Assertions.assertEquals(adopter, pet.getAdopter());
+    }
 }

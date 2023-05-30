@@ -39,6 +39,36 @@ class PetEntityTest {
         Assertions.assertEquals(adopter, petEntity.getAdopter());
     }
     @Test
+    void testDataAnnotation() {
+        long id = 1L;
+        String name = "Fluffy";
+        int age = 2;
+        String description = "A cute and playful pet";
+        PetType type = PetType.CAT;
+        String status = "AVAILABLE";
+        String gender = "Female";
+        UserEntity adopter = new UserEntity();
+
+        PetEntity pet = new PetEntity();
+        pet.setId(id);
+        pet.setName(name);
+        pet.setAge(age);
+        pet.setDescription(description);
+        pet.setType(type);
+        pet.setStatus(status);
+        pet.setGender(gender);
+        pet.setAdopter(adopter);
+
+        Assertions.assertEquals(id, pet.getId());
+        Assertions.assertEquals(name, pet.getName());
+        Assertions.assertEquals(age, pet.getAge());
+        Assertions.assertEquals(description, pet.getDescription());
+        Assertions.assertEquals(type, pet.getType());
+        Assertions.assertEquals(status, pet.getStatus());
+        Assertions.assertEquals(gender, pet.getGender());
+        Assertions.assertEquals(adopter, pet.getAdopter());
+    }
+    @Test
    void testEqualsAndHashCode() {
         PetEntity petEntity1 = new PetEntity();
         petEntity1.setId(1L);

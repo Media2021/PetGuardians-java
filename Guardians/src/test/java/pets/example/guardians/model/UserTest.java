@@ -49,7 +49,42 @@ void testGetterAndSetter() {
         Assertions.assertEquals(role, user.getRole());
         Assertions.assertEquals(adoptedPets, user.getAdoptedPets());
     }
+    @Test
+    void testDataAnnotation() {
+        long id = 1L;
+        String firstName = "John";
+        String lastName = "Doe";
+        String username = "johndoe";
+        String email = "johndoe@example.com";
+        String address = "123 Main St";
+        String password = "password";
+        Long phone = 1234567890L;
+        Date birthdate = new Date();
+        UserRole role = UserRole.ADMIN;
 
+        User user = new User();
+        user.setId(id);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setAddress(address);
+        user.setPassword(password);
+        user.setPhone(phone);
+        user.setBirthdate(birthdate);
+        user.setRole(role);
+
+        Assertions.assertEquals(id, user.getId());
+        Assertions.assertEquals(firstName, user.getFirstName());
+        Assertions.assertEquals(lastName, user.getLastName());
+        Assertions.assertEquals(username, user.getUsername());
+        Assertions.assertEquals(email, user.getEmail());
+        Assertions.assertEquals(address, user.getAddress());
+        Assertions.assertEquals(password, user.getPassword());
+        Assertions.assertEquals(phone, user.getPhone());
+        Assertions.assertEquals(birthdate, user.getBirthdate());
+        Assertions.assertEquals(role, user.getRole());
+    }
     @Test
     void testToString() {
         long id = 1L;

@@ -54,4 +54,74 @@ class AdoptionRequestTest {
 
         Assertions.assertEquals(expectedToString, adoptionRequest.toString());
     }
+    @Test
+    void testDataAnnotation() {
+        long id = 1L;
+        User user = new User();
+        Pet pet = new Pet();
+        String status = "PENDING";
+        String notes = "Sample notes";
+        Date requestDate = new Date();
+
+        AdoptionRequest adoptionRequest = AdoptionRequest.builder()
+                .id(id)
+                .user(user)
+                .pet(pet)
+                .status(status)
+                .notes(notes)
+                .requestDate(requestDate)
+                .build();
+
+        Assertions.assertEquals(id, adoptionRequest.getId());
+        Assertions.assertEquals(user, adoptionRequest.getUser());
+        Assertions.assertEquals(pet, adoptionRequest.getPet());
+        Assertions.assertEquals(status, adoptionRequest.getStatus());
+        Assertions.assertEquals(notes, adoptionRequest.getNotes());
+        Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+    }
+
+    @Test
+    void testAllArgsConstructor() {
+        long id = 1L;
+        User user = new User();
+        Pet pet = new Pet();
+        String status = "PENDING";
+        String notes = "Sample notes";
+        Date requestDate = new Date();
+
+        AdoptionRequest adoptionRequest = new AdoptionRequest(id, user, pet, status, notes, requestDate);
+
+        Assertions.assertEquals(id, adoptionRequest.getId());
+        Assertions.assertEquals(user, adoptionRequest.getUser());
+        Assertions.assertEquals(pet, adoptionRequest.getPet());
+        Assertions.assertEquals(status, adoptionRequest.getStatus());
+        Assertions.assertEquals(notes, adoptionRequest.getNotes());
+        Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+    }
+
+    @Test
+    void testBuilderAnnotation() {
+        long id = 1L;
+        User user = new User();
+        Pet pet = new Pet();
+        String status = "PENDING";
+        String notes = "Sample notes";
+        Date requestDate = new Date();
+
+        AdoptionRequest adoptionRequest = AdoptionRequest.builder()
+                .id(id)
+                .user(user)
+                .pet(pet)
+                .status(status)
+                .notes(notes)
+                .requestDate(requestDate)
+                .build();
+
+        Assertions.assertEquals(id, adoptionRequest.getId());
+        Assertions.assertEquals(user, adoptionRequest.getUser());
+        Assertions.assertEquals(pet, adoptionRequest.getPet());
+        Assertions.assertEquals(status, adoptionRequest.getStatus());
+        Assertions.assertEquals(notes, adoptionRequest.getNotes());
+        Assertions.assertEquals(requestDate, adoptionRequest.getRequestDate());
+    }
 }
