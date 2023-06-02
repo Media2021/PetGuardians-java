@@ -46,8 +46,8 @@ public class PetController {
         Optional<Pet> pet = petService.getPetById(id);
         return pet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @IsAuthenticated
-    @RolesAllowed({ "ROLE_ADMIN"})
+//    @IsAuthenticated
+//    @RolesAllowed({ "ROLE_ADMIN"})
     @PutMapping("{id}")
     public ResponseEntity<Pet> updatePetById(@PathVariable Long id , @RequestBody Pet pet)
     {
