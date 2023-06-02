@@ -5,9 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import pets.example.guardians.model.AdoptionRequest;
-import pets.example.guardians.model.Pet;
-import pets.example.guardians.model.User;
+import pets.example.guardians.model.*;
 
 import pets.example.guardians.repository.entity.AdoptionRequestEntity;
 import pets.example.guardians.services.AdoptionService;
@@ -18,10 +16,8 @@ import pets.example.guardians.services.Mapper.AdoptionRequestMapper;
 import pets.example.guardians.services.Mapper.PetMapper;
 import pets.example.guardians.services.Mapper.UserMapper;
 
-import java.util.List;
 
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RestController
@@ -31,6 +27,11 @@ public class AdoptionController {
     private final AdoptionService adoptionService;
     private final PetService petService;
     private final UserService userService;
+    @GetMapping("/count/{petType}")
+    public ResponseEntity<Long> countAdoptedPetsByType(@PathVariable PetType petType) {
+        long count = adoptionService.countAdoptedPetsByType(petType);
+        return ResponseEntity.ok(count);
+    }
     @PostMapping
     public ResponseEntity<AdoptionRequest> createAdoptionRequest(@RequestBody AdoptionRequest request) {
         Optional<Long> optionalUserId = Optional.ofNullable(request.getUser()).map(User::getId);
@@ -125,6 +126,15 @@ public class AdoptionController {
         }
     }
 
+    @GetMapping("/{userId}/adoption-requests")
+    public ResponseEntity<List<AdoptionRequest>> getAdoptionRequestsByUserId(@PathVariable Long userId) {
+        List<AdoptionRequest> adoptionRequests = adoptionService.getAdoptionRequestsByUserId(userId);
+        if (adoptionRequests.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.ok(adoptionRequests);
+        }
+    }
 
 
 

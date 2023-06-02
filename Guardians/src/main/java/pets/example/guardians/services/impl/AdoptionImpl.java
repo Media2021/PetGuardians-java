@@ -4,9 +4,7 @@ import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pets.example.guardians.model.AdoptionRequest;
-import pets.example.guardians.model.Pet;
-import pets.example.guardians.model.User;
+import pets.example.guardians.model.*;
 import pets.example.guardians.repository.AdoptionRepo;
 import pets.example.guardians.repository.PetRepo;
 import pets.example.guardians.repository.UserRepo;
@@ -18,7 +16,10 @@ import pets.example.guardians.services.Mapper.AdoptionRequestMapper;
 import pets.example.guardians.services.Mapper.PetMapper;
 import pets.example.guardians.services.Mapper.UserMapper;
 
+
 import java.util.*;
+
+
 
 @Service
 @AllArgsConstructor
@@ -27,6 +28,13 @@ public class AdoptionImpl implements AdoptionService {
     private final AdoptionRepo adoptionRepo;
     private final UserRepo userRepo;
     private final PetRepo petRepo;
+
+    @Override
+    public long countAdoptedPetsByType(PetType petType) {
+        String status = "ACCEPTED";
+        List<AdoptionRequestEntity> adoptionRequests = adoptionRepo.findAllByStatusAndPet_Type(status, petType);
+        return adoptionRequests.size();
+    }
 
 
     @Override
@@ -132,10 +140,12 @@ public class AdoptionImpl implements AdoptionService {
         }
         AdoptionRequestEntity savedEntity = adoptionRequestEntity.get();
         savedEntity.setStatus("ACCEPTED");
+        savedEntity.setNotes("congratulations");
         savedEntity = adoptionRepo.save(savedEntity);
 
         UserEntity userEntity = savedEntity.getUser();
         PetEntity petEntity = savedEntity.getPet();
+
 
 
 
@@ -163,14 +173,41 @@ public class AdoptionImpl implements AdoptionService {
 
 
         requestEntity.setStatus("DECLINED");
+        requestEntity.setNotes("our apologize,more info chat admin1  ");
 
 
         AdoptionRequestEntity savedEntity = adoptionRepo.save(requestEntity);
 
-
+        PetEntity petEntity = savedEntity.getPet();
+        petEntity.setStatus("AVAILABLE");
+        petRepo.saveAndFlush(petEntity);
         return AdoptionRequestMapper.toModel(savedEntity);
     }
+    @Override
+    public List<AdoptionRequest> getAdoptionRequestsByUserId(Long userId) {
+        List<AdoptionRequestEntity> adoptionRequestEntities = adoptionRepo.findByUserId(userId);
+        List<AdoptionRequest> adoptionRequests = new ArrayList<>();
 
+        for (AdoptionRequestEntity adoptionRequestEntity : adoptionRequestEntities) {
+            if (adoptionRequestEntity.getUser() == null) {
+                throw new IllegalArgumentException("Adoption request is missing a user");
+            }
+            if (adoptionRequestEntity.getPet() == null) {
+                throw new IllegalArgumentException("Adoption request is missing a pet");
+            }
+
+            AdoptionRequest adoptionRequest = AdoptionRequestMapper.toModel(adoptionRequestEntity);
+            UserEntity userEntity = adoptionRequestEntity.getUser();
+            PetEntity petEntity = adoptionRequestEntity.getPet();
+            User user = UserMapper.toModel(userEntity);
+            Pet pet = PetMapper.toModel(petEntity);
+            adoptionRequest.setUser(user);
+            adoptionRequest.setPet(pet);
+            adoptionRequests.add(adoptionRequest);
+        }
+
+        return adoptionRequests;
+    }
 
 
 

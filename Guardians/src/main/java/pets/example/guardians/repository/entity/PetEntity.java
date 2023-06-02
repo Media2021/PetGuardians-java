@@ -26,8 +26,6 @@ public class PetEntity {
     @NotBlank(message = "status is required")
     private String status;
     private String gender;
-
-
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "adopter_id", referencedColumnName = "id")
     private UserEntity adopter;

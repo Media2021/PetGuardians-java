@@ -6,8 +6,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pets.example.guardians.model.Pet;
+import pets.example.guardians.model.User;
 import pets.example.guardians.repository.PetRepo;
 import pets.example.guardians.repository.entity.PetEntity;
+import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.Mapper.PetMapper;
 import pets.example.guardians.services.PetService;
 
@@ -44,8 +46,16 @@ public class PetServiceImpl implements PetService {
 
                 Pet pet = new Pet();
                 BeanUtils.copyProperties(petEntity, pet);
-                pets.add(pet);
+            UserEntity adopterEntity = petEntity.getAdopter();
+            if (adopterEntity != null) {
+                User adopter = new User();
+                BeanUtils.copyProperties(adopterEntity, adopter);
+                pet.setAdopter(adopter);
+            } else {
+                pet.setAdopter(null);
+            }
 
+            pets.add(pet);
         }
 
         return pets;

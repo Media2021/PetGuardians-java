@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
+    @Transactional
     @Override
     public User createUser(User user) {
         Optional<UserEntity> existingUser = userRepo.findByUsername(user.getUsername());
@@ -47,23 +47,21 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    @Transactional
     @Override
     public List<User> getAllUsers() {
-        List<UserEntity> userEntities = userRepo.findAll();
+        List<UserEntity> userEntities = userRepo.findAllWithAdoptedPets();
         List<User> users = new ArrayList<>();
 
         for (UserEntity userEntity : userEntities) {
-            User user = new User();
-            BeanUtils.copyProperties(userEntity, user);
+            User user = UserMapper.toModel(userEntity);
             users.add(user);
         }
-
         return users;
     }
 
     private static final String USER_NOT_FOUND_MESSAGE = "User with id %s not found";
-
+    @Transactional
     @Override
     public void deleteUser(Long id) {
         Optional<UserEntity> userEntityOpt = userRepo.findById(id);
@@ -87,7 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
 
-
+    @Transactional
     @Override
     public User updateUser(Long id, User user) {
 //        if (!Objects.equals(requestAccessToken.getUserId(), id)) {
