@@ -27,6 +27,8 @@ public class AdoptionController {
     private final AdoptionService adoptionService;
     private final PetService petService;
     private final UserService userService;
+
+
     @GetMapping("/count/{petType}")
     public ResponseEntity<Long> countAdoptedPetsByType(@PathVariable PetType petType) {
         long count = adoptionService.countAdoptedPetsByType(petType);

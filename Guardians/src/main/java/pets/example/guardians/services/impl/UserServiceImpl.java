@@ -50,7 +50,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public List<User> getAllUsers() {
-        List<UserEntity> userEntities = userRepo.findAllWithAdoptedPets();
+        List<UserEntity> userEntities = userRepo.findAll();
         List<User> users = new ArrayList<>();
 
         for (UserEntity userEntity : userEntities) {

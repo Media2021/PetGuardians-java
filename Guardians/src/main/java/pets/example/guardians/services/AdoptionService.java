@@ -2,15 +2,14 @@ package pets.example.guardians.services;
 
 import pets.example.guardians.model.AdoptionRequest;
 
-import pets.example.guardians.model.AdoptionStatistics;
+
 import pets.example.guardians.model.PetType;
 import pets.example.guardians.repository.entity.AdoptionRequestEntity;
 
 
-import java.time.LocalDate;
-import java.util.Date;
+
 import java.util.List;
-import java.util.Map;
+
 import java.util.Optional;
 
 public interface AdoptionService {
