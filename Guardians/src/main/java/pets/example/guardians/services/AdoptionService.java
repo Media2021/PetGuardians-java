@@ -16,9 +16,6 @@ public interface AdoptionService {
 
 
 
-
-    long countAdoptedPetsByType(PetType petType);
-
     AdoptionRequest createAdoptionRequest(AdoptionRequestEntity adoptionRequestEntity);
 
 

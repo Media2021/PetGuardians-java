@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import pets.example.guardians.configuration.isauthenticated.IsAuthenticated;
 import pets.example.guardians.model.*;
 
 import pets.example.guardians.repository.entity.AdoptionRequestEntity;
@@ -17,6 +18,7 @@ import pets.example.guardians.services.Mapper.PetMapper;
 import pets.example.guardians.services.Mapper.UserMapper;
 
 
+import javax.annotation.security.RolesAllowed;
 import java.util.*;
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -29,11 +31,9 @@ public class AdoptionController {
     private final UserService userService;
 
 
-    @GetMapping("/count/{petType}")
-    public ResponseEntity<Long> countAdoptedPetsByType(@PathVariable PetType petType) {
-        long count = adoptionService.countAdoptedPetsByType(petType);
-        return ResponseEntity.ok(count);
-    }
+
+    @IsAuthenticated
+    @RolesAllowed({ "ROLE_USER"})
     @PostMapping
     public ResponseEntity<AdoptionRequest> createAdoptionRequest(@RequestBody AdoptionRequest request) {
         Optional<Long> optionalUserId = Optional.ofNullable(request.getUser()).map(User::getId);

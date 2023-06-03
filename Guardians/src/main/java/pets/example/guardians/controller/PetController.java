@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import pets.example.guardians.configuration.isauthenticated.IsAuthenticated;
 import pets.example.guardians.model.Pet;
+import pets.example.guardians.model.PetType;
 import pets.example.guardians.services.PetService;
 
 
@@ -20,10 +21,61 @@ import java.util.Optional;
 public class PetController {
     private final PetService petService;
 
+    @IsAuthenticated
+    @RolesAllowed({ "ROLE_ADMIN"})
     @PostMapping
     public Pet createPet(@RequestBody Pet pet)
     {
         return petService.createPet(pet);
+    }
+    @IsAuthenticated
+    @RolesAllowed({ "ROLE_ADMIN"})
+    @GetMapping("/available/cats")
+    public ResponseEntity<Long> countAvailableCats() {
+        try {
+            long count = petService.countAvailableCats();
+            return ResponseEntity.ok(count);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/available/dogs")
+    public ResponseEntity<Long> countAvailableDogs() {
+        try {
+            long count = petService.countAvailableDogs();
+            return ResponseEntity.ok(count);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/adopted/dogs")
+    public ResponseEntity<Long> countAdoptedDogs() {
+        try {
+            long count = petService.countAdoptedDogs();
+            return ResponseEntity.ok(count);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/adopted/cats")
+    public ResponseEntity<Long> countAdoptedCats() {
+        try {
+            long count = petService.countAdoptedCats();
+            return ResponseEntity.ok(count);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @GetMapping("/count")
+    public ResponseEntity<Long> countPets() {
+        long petCount;
+        try {
+            petCount = petService.countPets();
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(petCount);
     }
     @GetMapping()
     public ResponseEntity<List<Pet>> getAllPets() {
@@ -46,8 +98,8 @@ public class PetController {
         Optional<Pet> pet = petService.getPetById(id);
         return pet.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
-//    @IsAuthenticated
-//    @RolesAllowed({ "ROLE_ADMIN"})
+    @IsAuthenticated
+    @RolesAllowed({ "ROLE_ADMIN"})
     @PutMapping("{id}")
     public ResponseEntity<Pet> updatePetById(@PathVariable Long id , @RequestBody Pet pet)
     {
@@ -64,5 +116,15 @@ public class PetController {
         }
         return ResponseEntity.ok(pets);
     }
+    @GetMapping("/adoptedCount/{petType}")
+    public ResponseEntity<Long> countAdoptedPets(@PathVariable PetType petType) {
+        try {
+            long count = petService.countAdoptedPets(petType);
+            return ResponseEntity.ok(count);
+        } catch (NoSuchElementException ex) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 }

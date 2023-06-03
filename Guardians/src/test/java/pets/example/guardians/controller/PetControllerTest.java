@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -104,6 +105,7 @@ class PetControllerTest {
         verify(petServiceMock).getAvailablePets();
     }
     @Test
+    @WithMockUser(username = "admin1", roles = {"ADMIN"})
     void testCreatePet() throws Exception {
         Pet pet = new Pet();
         pet.setName("Fluffy");
@@ -250,7 +252,7 @@ class PetControllerTest {
 
 
     @Test
-//    @WithMockUser(username = "admin@fontys.nl", roles = {"ADMIN"})
+    @WithMockUser(username = "admin1", roles = {"ADMIN"})
     void testUpdatePetById_shouldReturn200() throws Exception {
         Long petId = 123L;
         Pet petToUpdate = new Pet();

@@ -6,6 +6,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pets.example.guardians.model.Pet;
+import pets.example.guardians.model.PetType;
 import pets.example.guardians.model.User;
 import pets.example.guardians.repository.PetRepo;
 import pets.example.guardians.repository.entity.PetEntity;
@@ -38,6 +39,12 @@ public class PetServiceImpl implements PetService {
         }
     }
     @Override
+    public long countPets() {
+        List<PetEntity> petEntities = petRepo.findAll();
+        return petEntities.size();
+    }
+
+    @Override
     public List<Pet> getAllPets() {
         List<PetEntity> petEntities = petRepo.findAll();
         List<Pet> pets = new ArrayList<>();
@@ -60,6 +67,21 @@ public class PetServiceImpl implements PetService {
 
         return pets;
     }
+    @Override
+    public long countAdoptedPets(PetType petType) {
+
+        List<PetEntity> petEntities = petRepo.findAll();
+        long count = 0;
+
+        for (PetEntity petEntity : petEntities) {
+            if (petEntity.getStatus().equals("ADOPTED") && petEntity.getType() == petType) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
     @Override
     public List<Pet> getAvailablePets() {
         List<PetEntity> petEntities = petRepo.findAll();
@@ -115,6 +137,61 @@ public class PetServiceImpl implements PetService {
 
         petRepo.save(petEntity);
         return pet;
+    }
+    @Override
+    public long countAvailableCats() {
+        List<PetEntity> petEntities = petRepo.findAll();
+        long count = 0;
+
+        for (PetEntity petEntity : petEntities) {
+
+            if (petEntity.getType().equals(PetType.CAT) && !petEntity.getStatus().contains("ADOPTED")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+    @Override
+    public long countAdoptedCats() {
+        List<PetEntity> petEntities = petRepo.findAll();
+        long count = 0;
+
+        for (PetEntity petEntity : petEntities) {
+
+            if (petEntity.getType().equals(PetType.CAT) && petEntity.getStatus().contains("ADOPTED")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+    @Override
+    public long countAdoptedDogs() {
+        List<PetEntity> petEntities = petRepo.findAll();
+        long count = 0;
+
+        for (PetEntity petEntity : petEntities) {
+
+            if (petEntity.getType().equals(PetType.DOG) && petEntity.getStatus().contains("ADOPTED")) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+    @Override
+    public long countAvailableDogs() {
+        List<PetEntity> petEntities = petRepo.findAll();
+        long count = 0;
+
+        for (PetEntity petEntity : petEntities) {
+            if (petEntity.getType().equals(PetType.DOG) && !petEntity.getStatus().equals("ADOPTED")) {
+                count++;
+            }
+        }
+
+        return count;
     }
 
 }

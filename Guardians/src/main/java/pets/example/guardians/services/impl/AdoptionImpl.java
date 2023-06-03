@@ -29,12 +29,7 @@ public class AdoptionImpl implements AdoptionService {
     private final UserRepo userRepo;
     private final PetRepo petRepo;
 
-    @Override
-    public long countAdoptedPetsByType(PetType petType) {
-        String status = "ACCEPTED";
-        List<AdoptionRequestEntity> adoptionRequests = adoptionRepo.findAllByStatusAndPet_Type(status, petType);
-        return adoptionRequests.size();
-    }
+
 
 
     @Override

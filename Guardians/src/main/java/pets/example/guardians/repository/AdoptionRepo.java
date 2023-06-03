@@ -14,6 +14,6 @@ import java.util.List;
 @Repository
 public interface AdoptionRepo extends JpaRepository<AdoptionRequestEntity, Long> {
     List<AdoptionRequestEntity> findByUserId(Long userId);
-List<AdoptionRequestEntity> findAllByStatusAndPet_Type(String status, PetType petType);
+
 
 }

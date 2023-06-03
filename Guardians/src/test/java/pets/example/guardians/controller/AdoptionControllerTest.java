@@ -10,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import pets.example.guardians.model.AdoptionRequest;
@@ -45,6 +46,7 @@ class AdoptionControllerTest {
     private PetService petService;
 
     @Test
+    @WithMockUser(roles = "USER")
     void createAdoptionRequest() throws Exception{
         User mockUser = new User();
         when(userService.getUserById(any())).thenReturn(Optional.of(mockUser));
@@ -71,6 +73,7 @@ class AdoptionControllerTest {
         verify(adoptionService).createAdoptionRequest(any(AdoptionRequestEntity.class));
     }
     @Test
+    @WithMockUser(roles = "USER")
     void createAdoptionRequest_UnhappyFlow() throws Exception {
 
         when(userService.getUserById(any())).thenReturn(Optional.empty());
