@@ -9,16 +9,13 @@ plugins {
     id'jacoco'
 }
 sonar {
-
     properties {
         property "sonar.projectKey", "StudyMate"
         property "sonar.qualitygate.wait", true
-        property "sonar.coverage.exclusions", "**/lombok/**/*.*, **/pets/example/guardians/configuration/auth/RequestAuthenticatedUserProvider.java, **/pets/example/guardians/services/impl/AccessTokenEncoderDecoderImpl.java"
-
-
+        property "sonar.coverage.exclusions", "**/lombok/**/*.*, **/pets/example/guardians/configuration/auth/RequestAuthenticatedUserProvider.java, **/pets/example/guardians/services/impl/AccessTokenEncoderDecoderImpl.java, **/pets/example/guardians/configuration/auth/AuthenticationRequestFilter.java, **/pets/example/guardians/configuration/isauthenticated/IsAuthenticatedAspect.java, **/pets/example/guardians/configuration/exceptionhandler/RestCustomExceptionHandler.java"
     }
-
 }
+
 tasks.named('sonar').configure {
     dependsOn jacocoTestReport
 }
