@@ -41,6 +41,80 @@ class PetControllerTest {
     private MockMvc mockMvc;
     @MockBean
     private PetService petServiceMock;
+
+    @Test
+  void testCountAdoptedPets() throws Exception {
+        long count = 3L;
+        PetType petType = PetType.CAT;
+        when(petServiceMock.countAdoptedPets(petType)).thenReturn(count);
+
+        mockMvc.perform(get("/pets/adoptedCount/{petType}", petType))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(count)));
+
+        verify(petServiceMock, times(1)).countAdoptedPets(petType);
+    }
+    @Test
+    @WithMockUser(username = "admin1", roles = {"ADMIN"})
+     void testCountAvailableCats() throws Exception {
+        long count = 5L;
+        when(petServiceMock.countAvailableCats()).thenReturn(count);
+
+        mockMvc.perform(get("/pets/available/cats"))
+
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(count)));
+
+        verify(petServiceMock, times(1)).countAvailableCats();
+    }
+
+    @Test
+   void testCountAvailableDogs() throws Exception {
+        long count = 3L;
+        when(petServiceMock.countAvailableDogs()).thenReturn(count);
+
+        mockMvc.perform(get("/pets/available/dogs"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(count)));
+
+        verify(petServiceMock, times(1)).countAvailableDogs();
+    }
+
+    @Test
+     void testCountAdoptedDogs() throws Exception {
+        long count = 2L;
+        when(petServiceMock.countAdoptedDogs()).thenReturn(count);
+
+        mockMvc.perform(get("/pets/adopted/dogs"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(count)));
+
+        verify(petServiceMock, times(1)).countAdoptedDogs();
+    }
+
+    @Test
+     void testCountAdoptedCats() throws Exception {
+        long count = 4L;
+        when(petServiceMock.countAdoptedCats()).thenReturn(count);
+
+        mockMvc.perform(get("/pets/adopted/cats"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(count)));
+
+        verify(petServiceMock, times(1)).countAdoptedCats();
+    }
+
+    @Test
+    void testCountPets() throws Exception {
+        long count = 10L;
+        when(petServiceMock.countPets()).thenReturn(count);
+
+        mockMvc.perform(get("/pets/count"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.valueOf(count)));
+
+        verify(petServiceMock, times(1)).countPets();
+    }
     @Test
      void testGetAvailablePets() throws Exception {
 

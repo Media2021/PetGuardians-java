@@ -20,10 +20,7 @@ import pets.example.guardians.repository.entity.AdoptionRequestEntity;
 import pets.example.guardians.services.AdoptionService;
 import pets.example.guardians.services.PetService;
 import pets.example.guardians.services.UserService;
-
 import java.util.*;
-
-
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;

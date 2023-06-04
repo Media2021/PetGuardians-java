@@ -28,6 +28,127 @@ class PetServiceImplTest {
     @InjectMocks
     private PetServiceImpl petServiceImpl;
     @Test
+    void testCountAvailableCats() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
+        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.DOG, "AVAILABLE"));
+
+        when(petRepo.findAll()).thenReturn(petEntities);
+        long count = petServiceImpl.countAvailableCats();
+        Assertions.assertEquals(1, count);
+    }
+    @Test
+    void testCountAvailableCatsException() {
+
+        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
+        assertThrows(RuntimeException.class, () -> petServiceImpl.countAvailableCats());
+    }
+    @Test
+    void testCountAdoptedCats() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
+        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
+
+        when(petRepo.findAll()).thenReturn(petEntities);
+
+        long count = petServiceImpl.countAdoptedCats();
+        Assertions.assertEquals(1, count);
+    }
+    @Test
+    void testCountAdoptedCatsException() {
+
+        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
+        assertThrows(RuntimeException.class, () -> petServiceImpl.countAdoptedCats());
+    }
+    @Test
+    void testCountAdoptedDogs() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.DOG, "AVAILABLE"));
+
+        when(petRepo.findAll()).thenReturn(petEntities);
+        long count = petServiceImpl.countAdoptedDogs();
+        Assertions.assertEquals(1, count);
+    }
+    @Test
+    void testCountAdoptedDogsException() {
+
+        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
+        assertThrows(RuntimeException.class, () -> petServiceImpl.countAdoptedDogs());
+    }
+    @Test
+    void testCountAvailableDogs() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
+        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.DOG, "AVAILABLE"));
+
+        when(petRepo.findAll()).thenReturn(petEntities);
+        long count = petServiceImpl.countAvailableDogs();
+        Assertions.assertEquals(1, count);
+    }
+    @Test
+    void testCountAvailableDogsException() {
+
+        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
+        assertThrows(RuntimeException.class, () -> petServiceImpl.countAvailableDogs());
+    }
+
+    @Test
+    void testCountAdoptedPets() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
+        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
+
+        when(petRepo.findAll()).thenReturn(petEntities);
+        long count = petServiceImpl.countAdoptedPets(PetType.CAT);
+        Assertions.assertEquals(1, count);
+    }
+
+    private PetEntity createPetEntity(PetType petType, String status) {
+        PetEntity petEntity = new PetEntity();
+
+        petEntity.setType(petType);
+        petEntity.setStatus(status);
+        return petEntity;
+    }
+
+    @Test
+    void testCountAdoptedPetsException() {
+        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
+        assertThrows(RuntimeException.class, () -> petServiceImpl.countAdoptedPets(PetType.CAT));
+    }
+    @Test
+    void testCountPetsException() {
+
+        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
+        assertThrows(RuntimeException.class, () -> petServiceImpl.countPets());
+    }
+
+    @Test
+    void testCountPets() {
+
+        List<PetEntity> petEntities = new ArrayList<>();
+        petEntities.add(new PetEntity());
+        petEntities.add(new PetEntity());
+
+
+        when(petRepo.findAll()).thenReturn(petEntities);
+
+
+        long count = petServiceImpl.countPets();
+        Assertions.assertEquals(2, count);
+    }
+    @Test
      void testCreatePet() {
         Pet pet = new Pet();
         pet.setName("Fluffy");

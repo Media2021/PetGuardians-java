@@ -35,6 +35,71 @@ class AdoptionImplTest {
     @InjectMocks
     private AdoptionImpl adoptionService;
     @Test
+    void testGetAdoptionRequestsByUserId() {
+
+        Long userId = 1L;
+        List<AdoptionRequestEntity> adoptionRequestEntities = new ArrayList<>();
+        adoptionRequestEntities.add(createAdoptionRequestEntity(userId, 1L, 1L));
+        adoptionRequestEntities.add(createAdoptionRequestEntity(userId, 2L, 2L));
+
+
+        when(adoptionRepo.findByUserId(userId)).thenReturn(adoptionRequestEntities);
+        when(userRepo.findById(1L)).thenReturn(Optional.of(createUserEntity(1L)));
+        when(userRepo.findById(2L)).thenReturn(Optional.of(createUserEntity(2L)));
+        when(petRepo.findById(1L)).thenReturn(Optional.of(createPetEntity(1L)));
+        when(petRepo.findById(2L)).thenReturn(Optional.of(createPetEntity(2L)));
+        List<AdoptionRequest> adoptionRequests = adoptionService.getAdoptionRequestsByUserId(userId);
+
+        Assertions.assertEquals(2, adoptionRequests.size());
+
+    }
+    @Test
+    void testGetAdoptionRequestsByUserIdMissingUser() {
+
+        Long userId = 1L;
+        List<AdoptionRequestEntity> adoptionRequestEntities = new ArrayList<>();
+        adoptionRequestEntities.add(createAdoptionRequestEntity(userId, 1L, 1L));
+
+
+        when(adoptionRepo.findByUserId(userId)).thenReturn(adoptionRequestEntities);
+        adoptionRequestEntities.get(0).setUser(null);
+
+        assertThrows(IllegalArgumentException.class, () -> adoptionService.getAdoptionRequestsByUserId(userId));
+    }
+
+    @Test
+    void testGetAdoptionRequestsByUserIdMissingPet() {
+
+        Long userId = 1L;
+        List<AdoptionRequestEntity> adoptionRequestEntities = new ArrayList<>();
+        adoptionRequestEntities.add(createAdoptionRequestEntity(userId, 1L, 1L));
+
+        when(adoptionRepo.findByUserId(userId)).thenReturn(adoptionRequestEntities);
+        adoptionRequestEntities.get(0).setPet(null);
+        assertThrows(IllegalArgumentException.class, () -> adoptionService.getAdoptionRequestsByUserId(userId));
+    }
+
+
+    private AdoptionRequestEntity createAdoptionRequestEntity(Long userId, Long requestId, Long petId) {
+        AdoptionRequestEntity adoptionRequestEntity = new AdoptionRequestEntity();
+        adoptionRequestEntity.setId(requestId);
+        adoptionRequestEntity.setUser(createUserEntity(userId));
+        adoptionRequestEntity.setPet(createPetEntity(petId));
+        return adoptionRequestEntity;
+    }
+
+    private UserEntity createUserEntity(Long userId) {
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(userId);
+        return userEntity;
+    }
+
+    private PetEntity createPetEntity(Long petId) {
+        PetEntity petEntity = new PetEntity();
+        petEntity.setId(petId);
+        return petEntity;
+    }
+    @Test
     void createAdoptionRequest() {
 
         AdoptionRequestEntity adoptionRequestEntity = new AdoptionRequestEntity();
