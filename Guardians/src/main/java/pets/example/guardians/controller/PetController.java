@@ -88,20 +88,20 @@ public class PetController {
             long count = petService.countAllPets();
             return ResponseEntity.ok(count);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
     @GetMapping("/available/count")
     public ResponseEntity<Long> countAvailablePetsByStatus() {
         try {
             long count = petService.countAvailablePetsByStatus();
             return ResponseEntity.ok(count);
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
     @IsAuthenticated
     @RolesAllowed({ "ROLE_ADMIN"})

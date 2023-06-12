@@ -56,25 +56,25 @@ public class PetServiceImpl implements PetService {
 
 
     @Override
-    public long countAllPets()  throws NoSuchElementException {
+    public long countAllPets() throws NoSuchElementException {
         try {
             int count = petRepo.countAllPets();
             return count;
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             throw new NoSuchElementException("Error counting all pets: " + e.getMessage());
         }
     }
+
     @Override
-    public long countAvailablePetsByStatus()  throws NoSuchElementException {
+    public long countAvailablePetsByStatus() throws NoSuchElementException {
         try {
             int count = petRepo.countByStatusAvailable();
             return count;
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
             throw new NoSuchElementException("Error counting available pets: " + e.getMessage());
         }
     }
+
 
     @Override
     public Pet createPet(Pet pet) {
