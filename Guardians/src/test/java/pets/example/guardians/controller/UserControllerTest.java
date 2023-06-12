@@ -1,6 +1,7 @@
 package pets.example.guardians.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.service.spi.ServiceException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -21,6 +22,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import pets.example.guardians.model.LoginResponse;
 import pets.example.guardians.model.User;
 
+import pets.example.guardians.repository.UserRepo;
+import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.Login;
 import pets.example.guardians.services.UserService;
 
@@ -52,7 +55,59 @@ class UserControllerTest {
     @MockBean
     private Login loginInterface ;
 
+    @MockBean
+    private UserRepo userRepoMock;
 
+    @Test
+    void testGetAllUsernames() throws Exception {
+
+        List<UserEntity> users = new ArrayList<>();
+        UserEntity user1 = new UserEntity();
+        user1.setUsername("user1");
+        users.add(user1);
+        UserEntity user2 = new UserEntity();
+        user2.setUsername("user2");
+        users.add(user2);
+        Mockito.when(userRepoMock.findAll()).thenReturn(users);
+
+
+        mockMvc.perform(get("/users/users-usernames"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"user1\", \"user2\"]")); // Adjust the expected JSON response as needed
+    }
+
+    @Test
+    void testGetUsersWithAdoptedPets() throws Exception {
+
+        List<UserEntity> users = new ArrayList<>();
+        UserEntity user1 = new UserEntity();
+        user1.setUsername("user1");
+        users.add(user1);
+        UserEntity user2 = new UserEntity();
+        user2.setUsername("user2");
+        users.add(user2);
+        Mockito.when(userService.findAllUsersWithAdoptedPets()).thenReturn(users);
+
+
+        mockMvc.perform(get("/users/users-with-pets"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[\"user1\", \"user2\"]")); // Adjust the expected JSON response as needed
+    }
+    @Test
+    void testGetAllUsernames_Exception() throws Exception {
+        Mockito.when(userRepoMock.findAll()).thenThrow(new RuntimeException("Error fetching usernames"));
+
+        mockMvc.perform(get("/users/users-usernames"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    void testGetUsersWithAdoptedPets_Exception() throws Exception {
+        Mockito.when(userService.findAllUsersWithAdoptedPets()).thenThrow(new ServiceException("Error fetching users with adopted pets"));
+
+        mockMvc.perform(get("/users/users-with-pets"))
+                .andExpect(status().isInternalServerError());
+    }
     @Test
     void createUser_shouldReturn200_whenUserIsValid() throws Exception {
         User user = new User();

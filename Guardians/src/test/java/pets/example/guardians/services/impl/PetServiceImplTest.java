@@ -21,133 +21,121 @@ import java.util.Optional;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import pets.example.guardians.repository.PetTypeCount;
+import pets.example.guardians.repository.AvailableListPetType;
 @SpringBootTest
 class PetServiceImplTest {
     @Mock
     private PetRepo petRepo;
     @InjectMocks
     private PetServiceImpl petServiceImpl;
+
     @Test
-    void testCountAvailableCats() {
+     void testGetListAvailablePets_WithAvailablePets_ReturnsList() {
 
-        List<PetEntity> petEntities = new ArrayList<>();
-        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
-        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.DOG, "AVAILABLE"));
+        List<PetEntity> availablePets = new ArrayList<>();
+        availablePets.add(new PetEntity());
+        Mockito.when(petRepo.findAvailablePets()).thenReturn(availablePets);
 
-        when(petRepo.findAll()).thenReturn(petEntities);
-        long count = petServiceImpl.countAvailableCats();
-        Assertions.assertEquals(1, count);
-    }
-    @Test
-    void testCountAvailableCatsException() {
 
-        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
-        assertThrows(RuntimeException.class, () -> petServiceImpl.countAvailableCats());
-    }
-    @Test
-    void testCountAdoptedCats() {
+        List<PetEntity> result = petServiceImpl.getListAvailablePets();
 
-        List<PetEntity> petEntities = new ArrayList<>();
-        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
-        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
 
-        when(petRepo.findAll()).thenReturn(petEntities);
-
-        long count = petServiceImpl.countAdoptedCats();
-        Assertions.assertEquals(1, count);
-    }
-    @Test
-    void testCountAdoptedCatsException() {
-
-        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
-        assertThrows(RuntimeException.class, () -> petServiceImpl.countAdoptedCats());
-    }
-    @Test
-    void testCountAdoptedDogs() {
-
-        List<PetEntity> petEntities = new ArrayList<>();
-        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.DOG, "AVAILABLE"));
-
-        when(petRepo.findAll()).thenReturn(petEntities);
-        long count = petServiceImpl.countAdoptedDogs();
-        Assertions.assertEquals(1, count);
-    }
-    @Test
-    void testCountAdoptedDogsException() {
-
-        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
-        assertThrows(RuntimeException.class, () -> petServiceImpl.countAdoptedDogs());
-    }
-    @Test
-    void testCountAvailableDogs() {
-
-        List<PetEntity> petEntities = new ArrayList<>();
-        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
-        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.DOG, "AVAILABLE"));
-
-        when(petRepo.findAll()).thenReturn(petEntities);
-        long count = petServiceImpl.countAvailableDogs();
-        Assertions.assertEquals(1, count);
-    }
-    @Test
-    void testCountAvailableDogsException() {
-
-        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
-        assertThrows(RuntimeException.class, () -> petServiceImpl.countAvailableDogs());
+        Assertions.assertEquals(availablePets, result);
     }
 
     @Test
-    void testCountAdoptedPets() {
+     void testGetListAvailablePets_WithNoAvailablePets_ThrowsRuntimeException() {
 
-        List<PetEntity> petEntities = new ArrayList<>();
-        petEntities.add(createPetEntity(PetType.CAT, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.DOG, "ADOPTED"));
-        petEntities.add(createPetEntity(PetType.CAT, "AVAILABLE"));
+        Mockito.when(petRepo.findAvailablePets()).thenReturn(new ArrayList<>());
 
-        when(petRepo.findAll()).thenReturn(petEntities);
-        long count = petServiceImpl.countAdoptedPets(PetType.CAT);
-        Assertions.assertEquals(1, count);
-    }
 
-    private PetEntity createPetEntity(PetType petType, String status) {
-        PetEntity petEntity = new PetEntity();
-
-        petEntity.setType(petType);
-        petEntity.setStatus(status);
-        return petEntity;
+        Assertions.assertThrows(RuntimeException.class, () -> petServiceImpl.getListAvailablePets());
     }
 
     @Test
-    void testCountAdoptedPetsException() {
-        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
-        assertThrows(RuntimeException.class, () -> petServiceImpl.countAdoptedPets(PetType.CAT));
+     void testCountByStatusAdoptedAndType_ReturnsPetTypeCountList() {
+
+        List<PetTypeCount> petTypeCounts = new ArrayList<>();
+        // Create mock instances of PetTypeCount
+        PetTypeCount petTypeCount1 = Mockito.mock(PetTypeCount.class);
+        PetTypeCount petTypeCount2 = Mockito.mock(PetTypeCount.class);
+        petTypeCounts.add(petTypeCount1);
+        petTypeCounts.add(petTypeCount2);
+        Mockito.when(petRepo.countByStatusAdoptedAndType()).thenReturn(petTypeCounts);
+
+
+        List<PetTypeCount> result = petServiceImpl.countByStatusAdoptedAndType();
+
+
+        Assertions.assertEquals(petTypeCounts, result);
     }
+
+
     @Test
-    void testCountPetsException() {
+     void testCountByStatusAvailableAndType_ReturnsEmptyList() {
 
-        when(petRepo.findAll()).thenThrow(new RuntimeException("Database connection error"));
-        assertThrows(RuntimeException.class, () -> petServiceImpl.countPets());
+        List<AvailableListPetType> petTypes = new ArrayList<>();
+        Mockito.when(petRepo.countByStatusAvailableAndType()).thenReturn(petTypes);
+
+
+        List<AvailableListPetType> result = petServiceImpl.countByStatusAvailableAndType();
+
+
+        Assertions.assertEquals(petTypes, result);
     }
 
     @Test
-    void testCountPets() {
+     void testCountAllPets_ReturnsCount() {
 
-        List<PetEntity> petEntities = new ArrayList<>();
-        petEntities.add(new PetEntity());
-        petEntities.add(new PetEntity());
-
-
-        when(petRepo.findAll()).thenReturn(petEntities);
+        int count = 5;
+        Mockito.when(petRepo.countAllPets()).thenReturn(count);
 
 
-        long count = petServiceImpl.countPets();
-        Assertions.assertEquals(2, count);
+        long result = petServiceImpl.countAllPets();
+
+
+        Assertions.assertEquals(count, result);
     }
+
+    @Test
+     void testCountAllPets_ThrowsNoSuchElementException() {
+
+        Mockito.when(petRepo.countAllPets()).thenThrow(NoSuchElementException.class);
+
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> petServiceImpl.countAllPets());
+    }
+
+    @Test
+    void testCountAvailablePetsByStatus_ReturnsCount() {
+
+        int count = 3;
+        Mockito.when(petRepo.countByStatusAvailable()).thenReturn(count);
+
+
+        long result = petServiceImpl.countAvailablePetsByStatus();
+
+
+        Assertions.assertEquals(count, result);
+    }
+
+    @Test
+    void testCountAvailablePetsByStatus_ThrowsNoSuchElementException() {
+
+        Mockito.when(petRepo.countByStatusAvailable()).thenThrow(NoSuchElementException.class);
+
+
+        Assertions.assertThrows(NoSuchElementException.class, () -> petServiceImpl.countAvailablePetsByStatus());
+    }
+
+
+
+
+
+
+
+
     @Test
      void testCreatePet() {
         Pet pet = new Pet();
@@ -315,69 +303,8 @@ class PetServiceImplTest {
 
         Mockito.verify(petRepo).findById(id);
     }
-    @Test
-    void testGetAvailablePets() {
-
-        List<PetEntity> petEntities = new ArrayList<>();
-        PetEntity availablePetEntity = new PetEntity();
-        availablePetEntity.setId(1L);
-        availablePetEntity.setName("Rex");
-        availablePetEntity.setStatus("AVAILABLE");
-        petEntities.add(availablePetEntity);
-
-        PetEntity adoptedPetEntity = new PetEntity();
-        adoptedPetEntity.setId(2L);
-        adoptedPetEntity.setName("Max");
-        adoptedPetEntity.setStatus("ADOPTED");
-        petEntities.add(adoptedPetEntity);
 
 
-        Mockito.when(petRepo.findAll()).thenReturn(petEntities);
-
-
-        PetServiceImpl petService = new PetServiceImpl(petRepo);
-        List<Pet> result = petService.getAvailablePets();
-
-
-        Mockito.verify(petRepo).findAll();
-
-
-        Assertions.assertEquals(1, result.size());
-
-        Pet pet = result.get(0);
-        Assertions.assertEquals(1L, pet.getId());
-        Assertions.assertEquals("Rex", pet.getName());
-        Assertions.assertEquals("AVAILABLE", pet.getStatus());
-    }
-    @Test
-    void testGetAvailablePets_NoAvailablePets() {
-
-        List<PetEntity> petEntities = new ArrayList<>();
-        PetEntity adoptedPetEntity1 = new PetEntity();
-        adoptedPetEntity1.setId(1L);
-        adoptedPetEntity1.setName("Max");
-        adoptedPetEntity1.setStatus("ADOPTED");
-        petEntities.add(adoptedPetEntity1);
-
-        PetEntity adoptedPetEntity2 = new PetEntity();
-        adoptedPetEntity2.setId(2L);
-        adoptedPetEntity2.setName("Charlie");
-        adoptedPetEntity2.setStatus("ADOPTED");
-        petEntities.add(adoptedPetEntity2);
-
-
-        Mockito.when(petRepo.findAll()).thenReturn(petEntities);
-
-
-        PetServiceImpl petService = new PetServiceImpl(petRepo);
-
-
-        List<Pet> result = petService.getAvailablePets();
-        Assertions.assertTrue(result.isEmpty());
-
-
-        Mockito.verify(petRepo).findAll();
-    }
 
     @Test
      void testUpdatePetById() {

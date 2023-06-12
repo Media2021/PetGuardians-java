@@ -1,6 +1,7 @@
 package pets.example.guardians.services.impl;
 
 import lombok.AllArgsConstructor;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.beans.BeanUtils;
 
 
@@ -26,6 +27,18 @@ public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
+
+    @Override
+    public List<UserEntity> findAllUsersWithAdoptedPets() {
+        try {
+            return userRepo.findAllWithAdoptedPets();
+        } catch (Exception ex) {
+            throw new ServiceException("Error occurred while fetching users with adopted pets", ex);
+        }
+    }
+
     @Transactional
     @Override
     public User createUser(User user) {

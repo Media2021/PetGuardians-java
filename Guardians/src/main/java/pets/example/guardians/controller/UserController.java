@@ -1,6 +1,7 @@
 package pets.example.guardians.controller;
 
 import lombok.AllArgsConstructor;
+import org.hibernate.service.spi.ServiceException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,6 +11,8 @@ import pets.example.guardians.configuration.isauthenticated.IsAuthenticated;
 import pets.example.guardians.model.LoginResponse;
 import pets.example.guardians.model.User;
 
+import pets.example.guardians.repository.UserRepo;
+import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.Login;
 import pets.example.guardians.services.UserService;
 
@@ -18,6 +21,7 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @CrossOrigin(origins = "http://localhost:3000")
@@ -28,8 +32,29 @@ import java.util.Optional;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepo userRepo;
     private final Login login;
 
+    @GetMapping("/users-usernames")
+    public ResponseEntity<List<String>> getAllUsernames() {
+        List<String> usernames = userRepo.findAll().stream()
+                .map(UserEntity::getUsername)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(usernames);
+    }
+    @GetMapping("/users-with-pets")
+    public ResponseEntity<List<String>> getUsersWithAdoptedPets() {
+        try {
+            List<UserEntity> users = userService.findAllUsersWithAdoptedPets();
+            List<String> usernames = users.stream()
+                    .map(UserEntity::getUsername)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(usernames);
+        } catch (ServiceException ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
 
     @PostMapping()
     public ResponseEntity<Object> createUser(@RequestBody User user) {

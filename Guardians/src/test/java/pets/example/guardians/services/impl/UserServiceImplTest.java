@@ -1,6 +1,7 @@
 package pets.example.guardians.services.impl;
 
 
+import org.hibernate.service.spi.ServiceException;
 import org.junit.Before;
 import org.junit.jupiter.api.Assertions;
 
@@ -41,6 +42,33 @@ class UserServiceImplTest {
        }
     @InjectMocks
     private UserServiceImpl userServiceImpl;
+
+    @Test
+    void testFindAllUsersWithAdoptedPets_Exception() {
+
+        String expectedErrorMessage = "Error occurred while fetching users with adopted pets";
+        Mockito.when(userRepo.findAllWithAdoptedPets()).thenThrow(new RuntimeException());
+
+
+        ServiceException exception = Assertions.assertThrows(ServiceException.class, () -> {
+            userServiceImpl.findAllUsersWithAdoptedPets();
+        });
+        Assertions.assertEquals(expectedErrorMessage, exception.getMessage());
+    }
+
+    @Test
+     void testFindAllUsersWithAdoptedPets() {
+
+        List<UserEntity> expectedUsers = new ArrayList<>();
+        expectedUsers.add(new UserEntity());
+        Mockito.when(userRepo.findAllWithAdoptedPets()).thenReturn(expectedUsers);
+
+
+        List<UserEntity> result = userServiceImpl.findAllUsersWithAdoptedPets();
+
+
+        Assertions.assertEquals(expectedUsers, result);
+    }
 
     @Test
     void testCreateUser() {

@@ -3,6 +3,7 @@ package pets.example.guardians.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 
@@ -16,12 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import pets.example.guardians.model.Pet;
 import pets.example.guardians.model.PetType;
+import pets.example.guardians.repository.AvailableListPetType;
+import pets.example.guardians.repository.PetTypeCount;
+import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.services.PetService;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 
 import static org.mockito.ArgumentMatchers.any;
@@ -42,142 +43,81 @@ class PetControllerTest {
     @MockBean
     private PetService petServiceMock;
 
-    @Test
-  void testCountAdoptedPets() throws Exception {
-        long count = 3L;
-        PetType petType = PetType.CAT;
-        when(petServiceMock.countAdoptedPets(petType)).thenReturn(count);
 
-        mockMvc.perform(get("/pets/adoptedCount/{petType}", petType))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(count)));
 
-        verify(petServiceMock, times(1)).countAdoptedPets(petType);
-    }
-    @Test
-    @WithMockUser(username = "admin1", roles = {"ADMIN"})
-     void testCountAvailableCats() throws Exception {
-        long count = 5L;
-        when(petServiceMock.countAvailableCats()).thenReturn(count);
 
-        mockMvc.perform(get("/pets/available/cats"))
 
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(count)));
 
-        verify(petServiceMock, times(1)).countAvailableCats();
-    }
-
-    @Test
-   void testCountAvailableDogs() throws Exception {
-        long count = 3L;
-        when(petServiceMock.countAvailableDogs()).thenReturn(count);
-
-        mockMvc.perform(get("/pets/available/dogs"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(count)));
-
-        verify(petServiceMock, times(1)).countAvailableDogs();
-    }
-
-    @Test
-     void testCountAdoptedDogs() throws Exception {
-        long count = 2L;
-        when(petServiceMock.countAdoptedDogs()).thenReturn(count);
-
-        mockMvc.perform(get("/pets/adopted/dogs"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(count)));
-
-        verify(petServiceMock, times(1)).countAdoptedDogs();
-    }
-
-    @Test
-     void testCountAdoptedCats() throws Exception {
-        long count = 4L;
-        when(petServiceMock.countAdoptedCats()).thenReturn(count);
-
-        mockMvc.perform(get("/pets/adopted/cats"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(count)));
-
-        verify(petServiceMock, times(1)).countAdoptedCats();
-    }
-
-    @Test
-    void testCountPets() throws Exception {
-        long count = 10L;
-        when(petServiceMock.countPets()).thenReturn(count);
-
-        mockMvc.perform(get("/pets/count"))
-                .andExpect(status().isOk())
-                .andExpect(content().string(String.valueOf(count)));
-
-        verify(petServiceMock, times(1)).countPets();
-    }
     @Test
      void testGetAvailablePets() throws Exception {
 
-        List<Pet> availablePets = new ArrayList<>();
-
-        Pet pet1 = new Pet();
-        pet1.setId(1L);
-        pet1.setName("Rex");
-        pet1.setStatus("AVAILABLE");
-        availablePets.add(pet1);
-
-        Pet pet2 = new Pet();
-        pet2.setId(2L);
-        pet2.setName("Max");
-        pet2.setStatus("AVAILABLE");
-        availablePets.add(pet2);
+        List<PetEntity> availablePets = new ArrayList<>();
+        availablePets.add(new PetEntity());
+        Mockito.when(petServiceMock.getListAvailablePets()).thenReturn(availablePets);
 
 
-        when(petServiceMock.getAvailablePets()).thenReturn(availablePets);
-
-
-        mockMvc.perform(get("/pets/available")
-                        .header("Origin", "http://localhost:3000")
-                        .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/pets/available"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.size()").value(2)) // Verify the response contains 2 pets
-                .andExpect(jsonPath("$[0].id").value(1L)) // Verify the id of the first pet
-                .andExpect(jsonPath("$[0].name").value("Rex")) // Verify the name of the first pet
-                .andExpect(jsonPath("$[1].id").value(2L)) // Verify the id of the second pet
-                .andExpect(jsonPath("$[1].name").value("Max")); // Verify the name of the second pet
-
-
-        verify(petServiceMock).getAvailablePets();
+                .andExpect(content().json("[{}]"));
     }
+
     @Test
-  void testGetAvailablePets_throwException() throws Exception {
+    void testCountAdoptedByType() throws Exception {
 
-        List<Pet> availablePets = new ArrayList<>();
+        List<Map<String, Object>> expectedResult = new ArrayList<>();
 
-        Pet pet1 = new Pet();
-        pet1.setId(1L);
-        pet1.setName("Rex");
-        pet1.setStatus("AVAILABLE");
-        availablePets.add(pet1);
-
-        Pet pet2 = new Pet();
-        pet2.setId(2L);
-        pet2.setName("Max");
-        pet2.setStatus("AVAILABLE");
-        availablePets.add(pet2);
+        List<PetTypeCount> petTypeCounts = new ArrayList<>();
+        Mockito.when(petServiceMock.countByStatusAdoptedAndType()).thenReturn(petTypeCounts);
 
 
-        when(petServiceMock.getAvailablePets()).thenThrow(NoSuchElementException.class);
-
-
-        mockMvc.perform(get("/pets/available")
-                        .header("Origin", "http://localhost:3000")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isNotFound());
-
-
-        verify(petServiceMock).getAvailablePets();
+        mockMvc.perform(get("/pets/count-adopted-by-type"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
     }
+
+
+    @Test
+     void testCountAvailableByType() throws Exception {
+
+        List<Map<String, Object>> expectedResult = new ArrayList<>();
+
+
+        List<AvailableListPetType> petTypeCounts = new ArrayList<>();
+
+
+        Mockito.when(petServiceMock.countByStatusAvailableAndType()).thenReturn(petTypeCounts);
+
+
+        mockMvc.perform(get("/pets/count-available-by-type"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[]"));
+    }
+
+    @Test
+     void testCountAllPets() throws Exception {
+
+        long count = 5;
+        Mockito.when(petServiceMock.countAllPets()).thenReturn(count);
+
+
+        mockMvc.perform(get("/pets/all/count"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("5"));
+    }
+
+    @Test
+     void testCountAvailablePetsByStatus() throws Exception {
+
+        long count = 3;
+        Mockito.when(petServiceMock.countAvailablePetsByStatus()).thenReturn(count);
+
+
+        mockMvc.perform(get("/pets/available/count"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("3"));
+    }
+
+
     @Test
     @WithMockUser(username = "admin1", roles = {"ADMIN"})
     void testCreatePet() throws Exception {

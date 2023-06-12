@@ -34,7 +34,7 @@ public class UserEntity {
     private String address;
     @NotBlank
     private String password;
-    @Min(value = 1000000000, message = "phone number  must be at least 10 numbers long")
+
     private Long phone;
     @JsonFormat(pattern = "dd-MM-yyyy")
    @Past(message = "Birth date must be in the past")

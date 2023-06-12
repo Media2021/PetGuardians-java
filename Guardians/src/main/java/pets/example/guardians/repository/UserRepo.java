@@ -16,8 +16,13 @@ public interface UserRepo extends JpaRepository<UserEntity, Long>
     Optional<UserEntity> findByUsernameAndPassword(String username, String password);
 
     Optional<UserEntity> findByUsername(String username);
-    @Query("SELECT DISTINCT u FROM UserEntity u LEFT JOIN FETCH u.adoptedPets")
+
+    @Query("SELECT DISTINCT u" +
+            " FROM UserEntity u" +
+            " LEFT JOIN FETCH u.adoptedPets ap" +
+            " WHERE size(ap) > 0")
     List<UserEntity> findAllWithAdoptedPets();
+
 
 
 

@@ -2,13 +2,15 @@ package pets.example.guardians.services.impl;
 
 import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pets.example.guardians.model.Pet;
-import pets.example.guardians.model.PetType;
 import pets.example.guardians.model.User;
+import pets.example.guardians.repository.AvailableListPetType;
 import pets.example.guardians.repository.PetRepo;
+import pets.example.guardians.repository.PetTypeCount;
 import pets.example.guardians.repository.entity.PetEntity;
 import pets.example.guardians.repository.entity.UserEntity;
 import pets.example.guardians.services.Mapper.PetMapper;
@@ -25,6 +27,56 @@ import java.util.Optional;
 public class PetServiceImpl implements PetService {
     private final PetRepo petRepo;
     @Override
+    public List<PetEntity> getListAvailablePets() {
+        List<PetEntity> availablePets = petRepo.findAvailablePets();
+        if (availablePets.isEmpty()) {
+            throw new RuntimeException("No available pets found.");
+        }
+        return availablePets;
+    }
+
+    @Override
+    public List<PetTypeCount> countByStatusAdoptedAndType() {
+        try {
+            return petRepo.countByStatusAdoptedAndType();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("An error occurred while counting adopted pets by type.", e);
+        }
+    }
+
+    @Override
+    public List<AvailableListPetType> countByStatusAvailableAndType() {
+        try {
+            return petRepo.countByStatusAvailableAndType();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("An error occurred while counting available pets by type.", e);
+        }
+    }
+
+
+
+    @Override
+    public long countAllPets()  throws NoSuchElementException {
+        try {
+            int count = petRepo.countAllPets();
+            return count;
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            throw new NoSuchElementException("Error counting all pets: " + e.getMessage());
+        }
+    }
+    @Override
+    public long countAvailablePetsByStatus()  throws NoSuchElementException {
+        try {
+            int count = petRepo.countByStatusAvailable();
+            return count;
+        } catch (NoSuchElementException e) {
+            e.printStackTrace();
+            throw new NoSuchElementException("Error counting available pets: " + e.getMessage());
+        }
+    }
+
+    @Override
     public Pet createPet(Pet pet) {
         if (pet.getName() == null || pet.getName().isEmpty()) {
             throw new DataIntegrityViolationException("Invalid pet data: Pet name cannot be empty");
@@ -38,11 +90,7 @@ public class PetServiceImpl implements PetService {
             throw new DataIntegrityViolationException("Failed to create pet", e);
         }
     }
-    @Override
-    public long countPets() {
-        List<PetEntity> petEntities = petRepo.findAll();
-        return petEntities.size();
-    }
+
 
     @Override
     public List<Pet> getAllPets() {
@@ -67,36 +115,9 @@ public class PetServiceImpl implements PetService {
 
         return pets;
     }
-    @Override
-    public long countAdoptedPets(PetType petType) {
 
-        List<PetEntity> petEntities = petRepo.findAll();
-        long count = 0;
 
-        for (PetEntity petEntity : petEntities) {
-            if (petEntity.getStatus().equals("ADOPTED") && petEntity.getType() == petType) {
-                count++;
-            }
-        }
 
-        return count;
-    }
-
-    @Override
-    public List<Pet> getAvailablePets() {
-        List<PetEntity> petEntities = petRepo.findAll();
-        List<Pet> pets = new ArrayList<>();
-
-        for (PetEntity petEntity : petEntities) {
-            if (!petEntity.getStatus() .equals("ADOPTED"))  {
-                Pet pet = new Pet();
-                BeanUtils.copyProperties(petEntity, pet);
-                pets.add(pet);
-            }
-        }
-
-        return pets;
-    }
     @Override
     public void deletePet(Long id) {
         Optional<PetEntity> petEntityOptional = petRepo.findById(id);
@@ -138,60 +159,6 @@ public class PetServiceImpl implements PetService {
         petRepo.save(petEntity);
         return pet;
     }
-    @Override
-    public long countAvailableCats() {
-        List<PetEntity> petEntities = petRepo.findAll();
-        long count = 0;
 
-        for (PetEntity petEntity : petEntities) {
-
-            if (petEntity.getType().equals(PetType.CAT) && !petEntity.getStatus().contains("ADOPTED")) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-    @Override
-    public long countAdoptedCats() {
-        List<PetEntity> petEntities = petRepo.findAll();
-        long count = 0;
-
-        for (PetEntity petEntity : petEntities) {
-
-            if (petEntity.getType().equals(PetType.CAT) && petEntity.getStatus().contains("ADOPTED")) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-    @Override
-    public long countAdoptedDogs() {
-        List<PetEntity> petEntities = petRepo.findAll();
-        long count = 0;
-
-        for (PetEntity petEntity : petEntities) {
-
-            if (petEntity.getType().equals(PetType.DOG) && petEntity.getStatus().contains("ADOPTED")) {
-                count++;
-            }
-        }
-
-        return count;
-    }
-    @Override
-    public long countAvailableDogs() {
-        List<PetEntity> petEntities = petRepo.findAll();
-        long count = 0;
-
-        for (PetEntity petEntity : petEntities) {
-            if (petEntity.getType().equals(PetType.DOG) && !petEntity.getStatus().equals("ADOPTED")) {
-                count++;
-            }
-        }
-
-        return count;
-    }
 
 }
