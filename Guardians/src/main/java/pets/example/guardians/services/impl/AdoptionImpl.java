@@ -53,9 +53,10 @@ public class AdoptionImpl implements AdoptionService {
         AdoptionRequestEntity savedEntity = new AdoptionRequestEntity();
         savedEntity.setUser(existingUser.get());
         savedEntity.setPet(existingPet.get());
-        savedEntity.setNotes(adoptionRequestEntity.getNotes());
+
         savedEntity.setRequestDate(new Date());
         savedEntity.setStatus("PENDING");
+        savedEntity.setNotes(" Your request will be handled within a week.");
 
         savedEntity = adoptionRepo.save(savedEntity);
 
@@ -175,6 +176,7 @@ public class AdoptionImpl implements AdoptionService {
 
         PetEntity petEntity = savedEntity.getPet();
         petEntity.setStatus("AVAILABLE");
+        petEntity.setAdopter(null);
         petRepo.saveAndFlush(petEntity);
         return AdoptionRequestMapper.toModel(savedEntity);
     }
