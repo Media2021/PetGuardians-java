@@ -1,13 +1,12 @@
 plugins {
-
-
     id 'java'
     id 'org.springframework.boot' version '2.6.+'
     id 'io.spring.dependency-management' version '1.1.0'
     id 'org.graalvm.buildtools.native' version '0.9.18'
     id "org.sonarqube" version "3.5.0.2730"
-    id'jacoco'
+    id 'jacoco'
 }
+
 sonar {
     properties {
         property "sonar.projectKey", "StudyMate"
@@ -19,11 +18,13 @@ sonar {
 tasks.named('sonar').configure {
     dependsOn jacocoTestReport
 }
+
 test {
     jacoco {
         enabled = true
     }
 }
+
 tasks.named('jacocoTestReport') {
     reports {
         xml.required = true
@@ -48,20 +49,16 @@ repositories {
 }
 
 dependencies {
-
     implementation 'javax.validation:validation-api:2.0.1.Final'
     implementation 'org.glassfish:jakarta.el:3.0.4'
     implementation 'org.hibernate.validator:hibernate-validator:6.2.0.Final'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-
     implementation 'mysql:mysql-connector-java:8.0.28'
-    implementation 'com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
     testImplementation 'junit:junit:4.13.1'
     testImplementation 'org.projectlombok:lombok:1.18.22'
-
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
@@ -69,7 +66,6 @@ dependencies {
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
 
     implementation 'io.jsonwebtoken:jjwt-api:0.11.2'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.2'
@@ -83,10 +79,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
 
-
-
+    // Additional dependencies for SQL Server (if needed)
+//    implementation 'com.microsoft.sqlserver:mssql-jdbc:9.4.1.jre8'
 }
-
 
 test {
     testLogging {
@@ -94,7 +89,6 @@ test {
     }
     useJUnitPlatform()
 }
-
 
 compileJava {
     options.compilerArgs += '-Xlint:deprecation'
